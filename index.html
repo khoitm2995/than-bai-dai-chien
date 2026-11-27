@@ -1,0 +1,3427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thần Bài Đại Chiến Online — Phiên Bản Chibi Vui Nhộn</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #3a233c;
+      --cream: #fffdf7;
+      --cream-warm: #fef6e4;
+      --sunny: #ffd166;
+      --mint: #38b87c;
+      --mint-dark: #269963;
+      --caramel: #d98236;
+      --coral: #ff6b6b;
+      --berry: #9b5de5;
+      --pink: #f15bb5;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    h1, h2, h3, .font-chibi, button {
+      font-family: 'Baloo 2', cursive, sans-serif;
+    }
+
+    /* Cozy Sunny Pastel Polka-Dot Background */
+    body {
+      background-color: #fff3d6;
+      background-image:
+        radial-gradient(rgba(255, 179, 102, 0.28) 2.5px, transparent 2.5px),
+        radial-gradient(rgba(241, 91, 181, 0.16) 2.5px, transparent 2.5px),
+        linear-gradient(180deg, #dff6ff 0%, #fff4db 52%, #ffe5c4 100%);
+      background-size: 36px 36px, 36px 36px, 100% 100%;
+      background-position: 0 0, 18px 18px, 0 0;
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Chunky Cartoon Surfaces */
+    .chibi-card {
+      background: var(--cream);
+      border: 3px solid var(--ink);
+      box-shadow: 0 6px 0 var(--ink);
+      border-radius: 1.5rem;
+    }
+
+    .chibi-panel {
+      background: #fffaf0;
+      border: 2.5px solid var(--ink);
+      box-shadow: 0 4px 0 var(--ink);
+      border-radius: 1.25rem;
+    }
+
+    /* Bouncy 3D Cartoon Buttons */
+    .btn-chibi {
+      border: 2.5px solid var(--ink);
+      box-shadow: 0 4px 0 var(--ink);
+      transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease, filter 0.12s ease;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+    }
+
+    .btn-chibi:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 var(--ink);
+      filter: brightness(1.04);
+    }
+
+    .btn-chibi:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--ink);
+    }
+
+    .btn-chibi:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.45);
+      box-shadow: 0 2px 0 var(--ink);
+    }
+
+    .btn-sunny {
+      background: linear-gradient(180deg, #ffe37d 0%, #ffc947 100%);
+      color: var(--ink);
+    }
+
+    .btn-mint {
+      background: linear-gradient(180deg, #6ee7b7 0%, #34d399 100%);
+      color: var(--ink);
+    }
+
+    .btn-coral {
+      background: linear-gradient(180deg, #ff8fa3 0%, #ff5c77 100%);
+      color: #ffffff;
+    }
+
+    .btn-candy {
+      background: linear-gradient(135deg, #b370f7 0%, #f15bb5 100%);
+      color: #ffffff;
+    }
+
+    .btn-sky {
+      background: linear-gradient(180deg, #93e5ff 0%, #4cc9f0 100%);
+      color: var(--ink);
+    }
+
+    .btn-cream {
+      background: #fffdf7;
+      color: var(--ink);
+    }
+
+    /* Bright Mint-Emerald Cartoon Poker Table */
+    .poker-table {
+      background: radial-gradient(ellipse at center, #46cc8e 0%, #38b87c 58%, #269963 100%);
+      border: 11px solid var(--caramel);
+      box-shadow:
+        0 0 0 3.5px var(--ink),
+        0 12px 0 #8a4b1c,
+        0 16px 0 var(--ink),
+        0 24px 36px rgba(58, 35, 60, 0.25),
+        inset 0 0 32px rgba(15, 77, 47, 0.42);
+      position: relative;
+    }
+
+    .poker-table::after {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border-radius: inherit;
+      border: 3px dashed rgba(255, 253, 247, 0.55);
+      pointer-events: none;
+    }
+
+    /* Cute Rounded Playing Cards */
+    .playing-card {
+      width: 52px;
+      height: 74px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 2.5px solid var(--ink);
+      box-shadow: 0 4px 0 rgba(58, 35, 60, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3px 5px;
+      font-weight: 900;
+      user-select: none;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .playing-card:hover {
+      transform: translateY(-4px) rotate(-1.5deg);
+    }
+
+    .playing-card.lg {
+      width: 66px;
+      height: 92px;
+      padding: 5px 7px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+    }
+
+    .playing-card.sm {
+      width: 38px;
+      height: 54px;
+      padding: 2px 3px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      border-width: 2px;
+      box-shadow: 0 2.5px 0 rgba(58, 35, 60, 0.85);
+    }
+
+    /* Pastel Star-Patterned Card Back */
+    .playing-card.card-back {
+      background-color: #a8dadc;
+      background-image:
+        radial-gradient(#fffdf7 2px, transparent 2px),
+        linear-gradient(135deg, #c77dff 0%, #ff8fab 100%);
+      background-size: 12px 12px, 100% 100%;
+      border: 2.5px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .playing-card.card-back::before {
+      content: '★';
+      color: #fffdf7;
+      text-shadow: 0 2px 0 var(--ink);
+      font-size: 1.45rem;
+    }
+
+    .playing-card.sm.card-back::before {
+      font-size: 0.95rem;
+    }
+
+    .card-red { color: #ef233c; }
+    .card-black { color: #2b193d; }
+
+    /* Active Turn Glow & Idle Float */
+    .seat-active {
+      box-shadow: 0 0 0 4px #ffd166, 0 6px 0 var(--ink) !important;
+      transform: translateY(-3px);
+    }
+
+    .seat-folded {
+      opacity: 0.55;
+      filter: grayscale(0.45);
+    }
+
+    @keyframes chibiBounce {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .chibi-float {
+      animation: chibiBounce 2.6s ease-in-out infinite;
+    }
+
+    @keyframes popBubble {
+      0% { opacity: 0; transform: scale(0.5) translateY(8px); }
+      70% { opacity: 1; transform: scale(1.08) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .speech-bubble {
+      animation: popBubble 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      position: relative;
+      background: #fffdf7;
+      border: 2.5px solid var(--ink);
+      box-shadow: 0 3px 0 var(--ink);
+      border-radius: 14px;
+      color: var(--ink);
+      font-family: 'Baloo 2', cursive;
+      font-weight: 800;
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px 6px 0 6px;
+      border-style: solid;
+      border-color: var(--ink) transparent transparent transparent;
+    }
+
+    /* 3D Role Flip Card */
+    .flip-perspective { perspective: 1200px; }
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 365px;
+      transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+      transform-style: preserve-3d;
+    }
+    .flip-card-inner.flipped { transform: rotateY(180deg); }
+    .flip-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 1.5rem;
+    }
+    .flip-back { transform: rotateY(180deg); }
+
+    @keyframes pulseCandy {
+      0%, 100% { box-shadow: 0 4px 0 var(--ink), 0 0 0 0 rgba(241, 91, 181, 0.6); }
+      50% { box-shadow: 0 4px 0 var(--ink), 0 0 0 10px rgba(241, 91, 181, 0); }
+    }
+    .pulse-candy { animation: pulseCandy 1.7s infinite; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translate(-50%, -18px) scale(0.92); }
+      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+    .toast-anim { animation: slideDown 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #fef1d6; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb { background: #d98236; border-radius: 99px; border: 1.5px solid var(--ink); }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 60;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- Confetti Layer -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex flex-col gap-2 items-center pointer-events-none w-[92%] max-w-md"></div>
+
+  <!-- ==================== SCREEN 1: HOME (ONLINE ENTRY) ==================== -->
+  <div id="screen-home" class="flex-1 flex items-center justify-center p-4">
+    <div class="chibi-card w-full max-w-xl p-6 sm:p-8 relative overflow-hidden">
+      <!-- Mute button top-right -->
+      <button onclick="toggleMute()" class="btn-chibi btn-cream absolute top-4 right-4 px-3 py-1.5 rounded-xl text-xs flex items-center gap-1" title="Bật / Tắt âm thanh">
+        <span class="sound-icon">🔊</span>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold tracking-wide uppercase mb-3 shadow-[0_2px_0_#3a233c]">
+          ✨ Online Chibi Poker • Ẩn Vai Đấu Trí ✨
+        </div>
+
+        <!-- Cute 6-Chibi Mini Banner -->
+        <div id="home-chibi-parade" class="flex items-center justify-center gap-1 sm:gap-2 my-2"></div>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#3a233c] leading-tight">
+          THẦN BÀI <span class="text-[#ff5c77]" style="text-shadow: 2px 2px 0 #ffe37d;">ĐẠI CHIẾN</span>
+        </h1>
+        <p class="text-[#6b4c6e] mt-1.5 text-xs sm:text-sm font-bold">
+          Texas Hold'em Poker kết hợp 6 nhân vật Chibi siêu dễ thương! Tất cả sẵn sàng mới bốc thăm chức năng bí mật~
+        </p>
+      </div>
+
+      <!-- Connection Status & Full User ID -->
+      <div class="mb-4 px-3.5 py-2.5 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] flex flex-col gap-1 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-[#6b4c6e] font-extrabold">Trạng thái máy chủ:</span>
+          <span id="auth-status-badge" class="font-extrabold text-[#d98236]">⏳ Đang kết nối...</span>
+        </div>
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[#6b4c6e] font-extrabold shrink-0">ID của bạn:</span>
+          <span id="home-user-id" class="font-mono text-[11px] font-bold text-[#269963] truncate select-all">...</span>
+        </div>
+      </div>
+
+      <!-- Player Name Input -->
+      <div class="mb-4">
+        <label class="block text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-1.5">🐾 Tên hiển thị của bạn</label>
+        <input id="input-player-name" type="text" maxlength="16" placeholder="Nhập biệt danh đáng yêu (VD: Mèo Thần Bài)"
+          class="w-full px-4 py-3 rounded-2xl bg-white border-2 border-[#3a233c] focus:ring-4 focus:ring-[#ffd166]/60 focus:outline-none text-[#3a233c] font-extrabold text-sm" />
+      </div>
+
+      <!-- Create / Join Actions -->
+      <div class="space-y-3">
+        <button id="btn-create-room" disabled onclick="createOnlineRoom()"
+          class="btn-chibi btn-sunny w-full py-3.5 rounded-2xl text-base uppercase tracking-wide flex items-center justify-center gap-2">
+          <span>🎪 Tạo Phòng Online Mới</span>
+        </button>
+
+        <div class="relative flex items-center py-1">
+          <div class="flex-grow border-t-2 border-dashed border-[#3a233c]/25"></div>
+          <span class="flex-shrink mx-3 text-[11px] font-extrabold uppercase text-[#6b4c6e]">Hoặc vào phòng bạn bè</span>
+          <div class="flex-grow border-t-2 border-dashed border-[#3a233c]/25"></div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input id="input-room-code" type="text" maxlength="6" placeholder="MÃ PHÒNG (6 KÝ TỰ)"
+            class="flex-1 px-4 py-3 rounded-2xl bg-white border-2 border-[#3a233c] focus:ring-4 focus:ring-[#6ee7b7]/60 focus:outline-none text-[#3a233c] font-black tracking-widest uppercase text-center sm:text-left text-sm" />
+          <button id="btn-join-room" disabled onclick="joinOnlineRoom()"
+            class="btn-chibi btn-mint px-6 py-3 rounded-2xl text-sm uppercase tracking-wide">
+            Vào Phòng →
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-5 pt-4 border-t-2 border-dashed border-[#3a233c]/20 flex items-center justify-between gap-2">
+        <button onclick="openRulesModal()" class="btn-chibi btn-cream px-3.5 py-1.5 rounded-xl text-xs">
+          📖 Luật Chơi & 6 Chibi
+        </button>
+        <span class="text-xs font-extrabold text-[#6b4c6e]">👥 2 – 6 người / bàn</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 2: ONLINE LOBBY ==================== -->
+  <div id="screen-lobby" class="hidden flex-1 flex flex-col p-3 sm:p-5 max-w-6xl w-full mx-auto">
+    <!-- Lobby Header -->
+    <div class="chibi-card p-4 mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="text-[11px] font-extrabold uppercase tracking-wider text-[#269963]">🎪 Phòng Chờ Chibi Trực Tuyến</div>
+        <div class="flex items-center gap-2.5 mt-1 flex-wrap">
+          <span class="text-[#6b4c6e] text-xs font-extrabold">Mã phòng:</span>
+          <span id="lobby-room-code" class="px-3 py-1 rounded-xl bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] font-black text-lg tracking-widest">------</span>
+          <button onclick="copyRoomCode()" class="btn-chibi btn-sky px-3 py-1.5 rounded-xl text-xs">
+            📋 Copy Mã
+          </button>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <button onclick="toggleMute()" class="btn-chibi btn-cream px-3 py-2 rounded-xl text-xs">
+          <span class="sound-icon">🔊</span>
+        </button>
+        <button onclick="openRulesModal()" class="btn-chibi btn-sunny px-3.5 py-2 rounded-xl text-xs">
+          📖 Luật & 6 Chibi
+        </button>
+        <button onclick="leaveRoom()" class="btn-chibi btn-coral px-3.5 py-2 rounded-xl text-xs">
+          🚪 Rời Phòng
+        </button>
+      </div>
+    </div>
+
+    <!-- Lobby Main Content -->
+    <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- Left 2/3: 6 Seats & Ready Controls -->
+      <div class="lg:col-span-2 flex flex-col">
+        <div class="chibi-card p-4 sm:p-5 flex-1 flex flex-col">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <div>
+              <h2 class="text-lg sm:text-xl font-extrabold text-[#3a233c]">
+                Ghế Ngồi Quán Bài (<span id="lobby-player-count">0</span>/6)
+              </h2>
+              <p class="text-xs font-bold text-[#6b4c6e]">
+                Bí mật đến phút chót! Khi tất cả bấm Sẵn Sàng mới bắt đầu bốc thăm 6 nhân vật Chibi.
+              </p>
+            </div>
+            <button id="btn-add-bot" onclick="hostAddBot()" class="hidden btn-chibi btn-sky px-3.5 py-2 rounded-xl text-xs">
+              🤖 + Thêm Bot AI
+            </button>
+          </div>
+
+          <!-- 6 Seats Grid -->
+          <div id="lobby-seats-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-5"></div>
+
+          <!-- Ready & Start Draw Bar -->
+          <div class="mt-auto pt-4 border-t-2 border-dashed border-[#3a233c]/20 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div id="lobby-status-hint" class="text-xs sm:text-sm font-extrabold text-[#d98236] text-center sm:text-left">
+              Đang chờ người chơi sẵn sàng...
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-2.5 w-full sm:w-auto">
+              <button id="btn-toggle-ready" onclick="toggleReady()" class="btn-chibi btn-mint px-6 py-3 rounded-2xl text-sm uppercase tracking-wide w-full sm:w-auto">
+                ✓ Sẵn Sàng
+              </button>
+              <button id="btn-start-draw" disabled onclick="hostTriggerRoleDraw()" class="hidden btn-chibi btn-candy px-6 py-3 rounded-2xl text-sm uppercase tracking-wide w-full sm:w-auto">
+                🎲 Bốc Thăm Chức Năng
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right 1/3: Room Chat with Quick Emojis -->
+      <div class="chibi-card p-4 flex flex-col h-[380px] lg:h-auto">
+        <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b-2 border-dashed border-[#3a233c]/20">
+          <h3 class="text-sm font-extrabold text-[#3a233c]">💬 Chat Phòng Chờ</h3>
+          <span class="px-2 py-0.5 rounded-full bg-[#d8f3dc] border border-[#269963] text-[10px] text-[#1b7a4e] font-extrabold">● Trực tuyến</span>
+        </div>
+        <div id="lobby-chat-list" class="flex-1 overflow-y-auto space-y-2 text-xs pr-1 mb-2.5"></div>
+        <!-- Cute Quick Emoji Reactions -->
+        <div class="flex items-center justify-between gap-1 mb-2 bg-[#fef6e4] p-1.5 rounded-xl border-2 border-[#3a233c]/20">
+          <button type="button" onclick="sendQuickEmoji('🎉')" class="hover:scale-125 transition text-base">🎉</button>
+          <button type="button" onclick="sendQuickEmoji('😂')" class="hover:scale-125 transition text-base">😂</button>
+          <button type="button" onclick="sendQuickEmoji('😱')" class="hover:scale-125 transition text-base">😱</button>
+          <button type="button" onclick="sendQuickEmoji('😎')" class="hover:scale-125 transition text-base">😎</button>
+          <button type="button" onclick="sendQuickEmoji('🃏')" class="hover:scale-125 transition text-base">🃏</button>
+          <button type="button" onclick="sendQuickEmoji('🔥')" class="hover:scale-125 transition text-base">🔥</button>
+          <button type="button" onclick="sendQuickEmoji('🥺')" class="hover:scale-125 transition text-base">🥺</button>
+          <button type="button" onclick="sendQuickEmoji('👏')" class="hover:scale-125 transition text-base">👏</button>
+        </div>
+        <form onsubmit="sendChatMessage(event, 'lobby-chat-input')" class="flex gap-2">
+          <input id="lobby-chat-input" type="text" maxlength="120" placeholder="Nhắn tin dễ thương..."
+            class="flex-1 px-3 py-2 rounded-xl bg-white border-2 border-[#3a233c] focus:outline-none text-xs font-bold text-[#3a233c]" />
+          <button type="submit" class="btn-chibi btn-sunny px-3.5 py-2 rounded-xl text-xs">Gửi</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 3: ROLE DRAW (3D CHIBI FLIP) ==================== -->
+  <div id="screen-role-draw" class="hidden fixed inset-0 z-40 bg-[#3a233c]/75 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-lg my-auto text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold tracking-wide uppercase mb-3 shadow-[0_3px_0_#3a233c]">
+        🎲 Bốc Thăm Nhân Vật Chibi Bí Mật
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-1" style="text-shadow: 0 3px 0 #3a233c;">Thân Phận Của Bạn Là...</h2>
+      <p class="text-xs text-[#ffe37d] font-bold mb-4">Suỵt! Chỉ mình bạn thấy thẻ này, mọi người khác đều thấy dấu <strong>?</strong></p>
+
+      <!-- 3D Flip Card -->
+      <div class="flip-perspective w-full max-w-sm mx-auto mb-5">
+        <div id="role-flip-inner" class="flip-card-inner">
+          <!-- Front (Card Back before flip) -->
+          <div class="flip-face bg-gradient-to-br from-[#c77dff] via-[#f15bb5] to-[#ff8fab] border-4 border-[#3a233c] shadow-[0_8px_0_#3a233c] flex flex-col items-center justify-center p-6">
+            <div id="draw-mystery-svg" class="w-28 h-28 chibi-float mb-3"></div>
+            <div class="text-xl font-extrabold text-white tracking-wide uppercase" style="text-shadow: 0 2px 0 #3a233c;">Đang Bốc Thăm...</div>
+            <div class="text-xs text-white/95 font-bold mt-1">Giữ bí mật màn hình nha!</div>
+          </div>
+
+          <!-- Back (Revealed Chibi Role) -->
+          <div class="flip-face flip-back bg-[#fffdf7] border-4 border-[#3a233c] shadow-[0_8px_0_#3a233c] p-5 flex flex-col justify-between text-left">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span id="draw-role-group" class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold border-2 border-[#3a233c]"></span>
+                <span id="draw-role-cd" class="text-xs font-extrabold text-[#d98236] bg-[#fef6e4] px-2.5 py-0.5 rounded-full border-2 border-[#3a233c]"></span>
+              </div>
+              <div class="flex flex-col items-center my-2">
+                <div id="draw-role-svg" class="w-28 h-28 chibi-float"></div>
+                <div id="draw-role-name" class="text-2xl font-extrabold text-[#3a233c] mt-1 leading-tight"></div>
+                <div id="draw-role-skill" class="text-sm font-extrabold text-[#f15bb5]"></div>
+              </div>
+              <p id="draw-role-desc" class="text-xs sm:text-sm text-[#3a233c] font-bold leading-relaxed bg-[#fef6e4] p-3 rounded-2xl border-2 border-[#3a233c]/25"></p>
+            </div>
+            <div class="mt-2.5 pt-2 border-t-2 border-dashed border-[#3a233c]/20 flex items-center justify-between text-[11px] font-extrabold text-[#6b4c6e]">
+              <span>⏱️ Thời điểm dùng:</span>
+              <strong id="draw-role-timing" class="text-[#269963]"></strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other players hidden badges -->
+      <div id="draw-other-players" class="flex flex-wrap items-center justify-center gap-2 mb-5"></div>
+
+      <button id="btn-confirm-role" onclick="confirmRoleDraw()" class="btn-chibi btn-sunny px-8 py-3.5 rounded-2xl text-sm uppercase tracking-wide w-full max-w-sm">
+        Vào Bàn Thôi! (<span id="draw-countdown">5</span>s)
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== SCREEN 4: MAIN ONLINE GAME ARENA ==================== -->
+  <div id="screen-game" class="hidden flex-1 flex flex-col">
+    <!-- Top HUD -->
+    <header class="bg-[#fffdf7] border-b-[3px] border-[#3a233c] px-3 sm:px-5 py-2 flex flex-wrap items-center justify-between gap-2 z-20 shadow-[0_3px_0_rgba(58,35,60,0.12)]">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-[#ffe37d] border-2 border-[#3a233c] shadow-[0_3px_0_#3a233c] flex items-center justify-center text-xl">
+          🃏
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 class="font-extrabold text-sm sm:text-base text-[#3a233c] leading-tight">
+              THẦN BÀI <span class="text-[#ff5c77]">CHIBI</span>
+            </h2>
+            <span id="hud-room-code" class="px-2 py-0.5 rounded-lg bg-[#fef6e4] border-2 border-[#3a233c] text-[#d98236] font-mono text-[11px] font-black"></span>
+          </div>
+          <div class="text-[11px] font-extrabold text-[#6b4c6e] flex items-center gap-2">
+            <span id="hud-hand" class="text-[#269963]">Ván 1 / 20</span>
+            <span>•</span>
+            <span id="hud-blind">Blind: 50 / 100</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 flex-wrap">
+        <div id="hud-turn-timer" class="hidden px-3 py-1 rounded-full bg-[#ff8fa3] border-2 border-[#3a233c] text-white text-xs font-extrabold shadow-[0_2px_0_#3a233c]">
+          ⏱️ 25s
+        </div>
+        <div id="hud-phase" class="px-3 py-1 rounded-full bg-[#6ee7b7] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold uppercase tracking-wide shadow-[0_2px_0_#3a233c]">
+          PREFLOP
+        </div>
+        <button onclick="toggleMute()" class="btn-chibi btn-cream px-2.5 py-1.5 rounded-xl text-xs" title="Âm thanh">
+          <span class="sound-icon">🔊</span>
+        </button>
+        <button onclick="openRulesModal()" class="btn-chibi btn-sunny px-3 py-1.5 rounded-xl text-xs">
+          📖 Luật
+        </button>
+        <button onclick="leaveRoom()" class="btn-chibi btn-coral px-3 py-1.5 rounded-xl text-xs">
+          🚪 Thoát
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Arena -->
+    <main class="flex-1 flex flex-col lg:flex-row gap-3 p-2 sm:p-4 max-w-[1440px] w-full mx-auto">
+      <!-- Left/Center: Poker Table & Controls -->
+      <div class="flex-1 flex flex-col justify-between gap-3">
+
+        <!-- Table Area -->
+        <div class="relative flex-1 min-h-[455px] sm:min-h-[500px] flex items-center justify-center py-8 px-2">
+          <!-- Oval Mint-Emerald Table -->
+          <div class="poker-table w-full max-w-[820px] h-[340px] sm:h-[385px] rounded-[170px] flex flex-col items-center justify-center p-4">
+
+            <!-- Pot Display -->
+            <div class="mb-3 px-4 py-1.5 rounded-full bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] flex items-center gap-2 z-10">
+              <span class="text-xs text-[#6b4c6e] uppercase font-extrabold">🪙 Pot Tổng:</span>
+              <span id="table-pot" class="text-base sm:text-lg font-black text-[#d98236]">0 đ</span>
+            </div>
+
+            <!-- 5 Community Cards -->
+            <div id="community-cards" class="flex items-center justify-center gap-1.5 sm:gap-2.5 min-h-[84px] z-10"></div>
+
+            <!-- Prophet Preview Banner (Only visible to Prophet owner) -->
+            <div id="prophet-preview" class="hidden mt-2.5 px-3.5 py-1.5 rounded-2xl bg-[#f3e8ff] border-2 border-[#3a233c] shadow-[0_3px_0_#3a233c] text-[#3a233c] text-xs font-extrabold flex items-center gap-2 z-10">
+              <span id="prophet-banner-label">🔮 Thấu Thị:</span>
+              <span id="prophet-card-text" class="px-2 py-0.5 rounded-lg bg-white border-2 border-[#3a233c] font-black"></span>
+            </div>
+
+            <!-- Pre-Showdown Countdown Bar -->
+            <div id="preshowdown-bar" class="hidden mt-3 px-4 py-2 rounded-2xl bg-[#fffdf7] border-[3px] border-[#3a233c] shadow-[0_5px_0_#3a233c] flex flex-col sm:flex-row items-center gap-2 z-20">
+              <div class="text-xs sm:text-sm font-extrabold text-[#3a233c] flex items-center gap-2">
+                <span>⏳ Cửa sổ Chốt Chiêu:</span>
+                <span id="preshowdown-timer" class="text-white bg-[#ff5c77] border-2 border-[#3a233c] px-2.5 py-0.5 rounded-xl font-black">10s</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-preshowdown-snitch" onclick="openSkillAction()" class="hidden btn-chibi btn-candy px-3 py-1 rounded-xl text-xs">
+                  🎯 Dùng Chỉ Điểm
+                </button>
+                <button id="btn-skip-preshowdown" onclick="sendSkipPreShowdown()" class="hidden btn-chibi btn-sunny px-3 py-1 rounded-xl text-xs">
+                  Ngửa bài ngay →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Opponent Seats Positioned Clockwise Around Table -->
+          <div id="seat-1" class="hidden absolute left-1 sm:left-3 bottom-[20%] sm:bottom-[15%] z-10 w-[148px] sm:w-[178px]"></div>
+          <div id="seat-2" class="hidden absolute left-1 sm:left-5 top-1 sm:top-2 z-10 w-[148px] sm:w-[178px]"></div>
+          <div id="seat-3" class="hidden absolute left-1/2 -translate-x-1/2 -top-1 sm:top-0 z-10 w-[154px] sm:w-[184px]"></div>
+          <div id="seat-4" class="hidden absolute right-1 sm:right-5 top-1 sm:top-2 z-10 w-[148px] sm:w-[178px]"></div>
+          <div id="seat-5" class="hidden absolute right-1 sm:right-3 bottom-[20%] sm:bottom-[15%] z-10 w-[148px] sm:w-[178px]"></div>
+        </div>
+
+        <!-- Local Player Panel & Action Controls -->
+        <div class="chibi-card p-3 sm:p-4 relative">
+          <!-- Local player comic speech bubble -->
+          <div id="human-speech-bubble" class="hidden absolute -top-10 left-8 z-30 speech-bubble px-3 py-1 text-xs"></div>
+
+          <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+            <!-- Player Chibi Portrait + Hole Cards + Info -->
+            <div class="flex items-center gap-2.5 sm:gap-3 w-full md:w-auto justify-between md:justify-start flex-wrap sm:flex-nowrap">
+              <div class="flex items-center gap-2.5">
+                <div id="human-chibi-avatar" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] shadow-[0_3px_0_#3a233c] p-1 shrink-0 chibi-float"></div>
+                <div id="human-cards" class="flex items-center gap-1.5"></div>
+                <div>
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span id="human-name-label" class="font-extrabold text-[#3a233c] text-sm sm:text-base">BẠN</span>
+                    <span id="human-role-badge" class="px-2 py-0.5 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-[10px] font-extrabold"></span>
+                  </div>
+                  <div class="text-lg sm:text-xl font-black text-[#d98236]" id="human-points">10,000 đ</div>
+                  <div class="text-[11px] font-bold text-[#6b4c6e] flex items-center gap-2">
+                    <span id="human-bet-info">Đã cược: 0</span>
+                    <span id="human-status-tag" class="font-extrabold text-[#269963]"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Skill Button -->
+              <button id="btn-skill" onclick="openSkillAction()" class="btn-chibi px-3.5 py-2.5 rounded-2xl text-left flex flex-col justify-center min-w-[148px]">
+                <div class="text-[10px] uppercase tracking-wider font-extrabold opacity-90" id="skill-btn-sub">Kỹ năng</div>
+                <div class="text-xs sm:text-sm font-extrabold leading-tight" id="skill-btn-name">Sẵn sàng</div>
+              </button>
+            </div>
+
+            <!-- Betting Controls -->
+            <div id="betting-controls" class="flex flex-col gap-2 w-full md:w-auto">
+              <div class="flex flex-wrap items-center justify-end gap-2">
+                <button id="btn-fold" onclick="sendBetAction('fold')" class="btn-chibi btn-coral px-4 py-2.5 rounded-2xl text-xs sm:text-sm">
+                  Bỏ bài
+                </button>
+                <button id="btn-check-call" onclick="sendBetAction('call')" class="btn-chibi btn-mint px-4 py-2.5 rounded-2xl text-xs sm:text-sm min-w-[112px]">
+                  Theo
+                </button>
+                <button id="btn-raise" onclick="sendBetAction('raise')" class="btn-chibi btn-sunny px-4 py-2.5 rounded-2xl text-xs sm:text-sm min-w-[105px]">
+                  Tố
+                </button>
+                <button id="btn-allin" onclick="sendBetAction('allin')" class="btn-chibi btn-candy px-4 py-2.5 rounded-2xl text-xs sm:text-sm">
+                  Tất tay!
+                </button>
+              </div>
+              <!-- Raise Slider -->
+              <div class="flex items-center gap-2 bg-[#fef6e4] px-3 py-1.5 rounded-xl border-2 border-[#3a233c]">
+                <span class="text-[11px] text-[#6b4c6e] font-extrabold">Mức tố:</span>
+                <input id="raise-slider" type="range" min="100" max="10000" step="50" value="200" class="flex-1 accent-[#f15bb5]" oninput="updateRaiseLabel()" />
+                <span id="raise-amount-label" class="text-xs font-black text-[#d98236] min-w-[65px] text-right">200</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar: Tabs for Battle Log & Online Chat -->
+      <aside class="w-full lg:w-[315px] chibi-card p-3 flex flex-col max-h-[320px] lg:max-h-[690px]">
+        <div class="flex items-center gap-1.5 pb-2.5 mb-2 border-b-2 border-dashed border-[#3a233c]/20">
+          <button id="tab-btn-log" onclick="switchSidebarTab('log')" class="btn-chibi btn-sunny flex-1 py-1.5 rounded-xl text-xs">
+            📜 Nhật Ký
+          </button>
+          <button id="tab-btn-chat" onclick="switchSidebarTab('chat')" class="btn-chibi btn-cream flex-1 py-1.5 rounded-xl text-xs">
+            💬 Chat Bàn
+          </button>
+        </div>
+
+        <!-- Tab 1: Battle Log -->
+        <div id="sidebar-log-panel" class="flex-1 flex flex-col overflow-hidden">
+          <div id="battle-log" class="flex-1 overflow-y-auto space-y-1.5 text-xs pr-1"></div>
+        </div>
+
+        <!-- Tab 2: In-Game Chat -->
+        <div id="sidebar-chat-panel" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div id="game-chat-list" class="flex-1 overflow-y-auto space-y-2 text-xs pr-1 mb-2"></div>
+          <div class="flex items-center justify-between gap-1 mb-2 bg-[#fef6e4] p-1 rounded-xl border border-[#3a233c]/25">
+            <button type="button" onclick="sendQuickEmoji('🎉')" class="hover:scale-125 transition text-sm">🎉</button>
+            <button type="button" onclick="sendQuickEmoji('😂')" class="hover:scale-125 transition text-sm">😂</button>
+            <button type="button" onclick="sendQuickEmoji('😱')" class="hover:scale-125 transition text-sm">😱</button>
+            <button type="button" onclick="sendQuickEmoji('😎')" class="hover:scale-125 transition text-sm">😎</button>
+            <button type="button" onclick="sendQuickEmoji('🃏')" class="hover:scale-125 transition text-sm">🃏</button>
+            <button type="button" onclick="sendQuickEmoji('🔥')" class="hover:scale-125 transition text-sm">🔥</button>
+            <button type="button" onclick="sendQuickEmoji('🥺')" class="hover:scale-125 transition text-sm">🥺</button>
+          </div>
+          <form onsubmit="sendChatMessage(event, 'game-chat-input')" class="flex gap-1.5">
+            <input id="game-chat-input" type="text" maxlength="120" placeholder="Chat với bàn..."
+              class="flex-1 px-3 py-2 rounded-xl bg-white border-2 border-[#3a233c] focus:outline-none text-xs font-bold text-[#3a233c]" />
+            <button type="submit" class="btn-chibi btn-sunny px-3 py-2 rounded-xl text-xs">Gửi</button>
+          </form>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- ==================== SKILL TARGET MODAL ==================== -->
+  <div id="modal-target" class="hidden fixed inset-0 z-50 bg-[#3a233c]/65 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="chibi-card max-w-md w-full p-5">
+      <h3 id="target-modal-title" class="text-xl font-extrabold text-[#3a233c] mb-1">Chọn Mục Tiêu</h3>
+      <p id="target-modal-desc" class="text-xs font-bold text-[#6b4c6e] mb-4"></p>
+      <div id="target-list" class="grid grid-cols-1 gap-2.5 mb-4"></div>
+      <button onclick="closeTargetModal()" class="btn-chibi btn-cream w-full py-2.5 rounded-2xl text-xs">
+        Hủy bỏ
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== MAGICIAN SWAP MODAL ==================== -->
+  <div id="modal-magician" class="hidden fixed inset-0 z-50 bg-[#3a233c]/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="chibi-card max-w-md w-full p-5 text-center">
+      <div id="magician-modal-svg" class="w-20 h-20 mx-auto mb-1 chibi-float"></div>
+      <h3 class="text-xl font-extrabold text-[#9b5de5] mb-1">Ảo Thuật Gia: Hoán Đổi!</h3>
+      <p class="text-xs font-bold text-[#6b4c6e] mb-4">Úm ba la! Bạn vừa rút bí mật lá bài mới bên dưới. Chọn 1 lá trên tay để đổi hoặc giữ nguyên bài cũ nha~</p>
+      <div class="flex flex-col items-center mb-4">
+        <span class="text-[11px] uppercase tracking-wider text-[#269963] font-extrabold mb-1.5">✨ Lá bài mới rút ✨</span>
+        <div id="magician-drawn-card"></div>
+      </div>
+      <div class="text-[11px] uppercase tracking-wider text-[#3a233c] font-extrabold mb-2">Chọn lá bài trên tay để thay thế:</div>
+      <div id="magician-hand-choices" class="flex items-center justify-center gap-4 mb-4"></div>
+      <button onclick="sendMagicianChoice(-1)" class="btn-chibi btn-cream w-full py-2.5 rounded-2xl text-xs">
+        Giữ nguyên bài cũ (Bỏ lá mới)
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== PROPHET PREVIEW MODAL ==================== -->
+  <div id="modal-prophet" class="hidden fixed inset-0 z-50 bg-[#3a233c]/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="chibi-card max-w-sm w-full p-5 text-center">
+      <div id="prophet-modal-svg" class="w-20 h-20 mx-auto mb-1 chibi-float"></div>
+      <h3 class="text-xl font-extrabold text-[#9b5de5] mb-1">Nhà Tiên Tri: Thấu Thị!</h3>
+      <p class="text-xs font-bold text-[#6b4c6e] mb-4">Quả cầu pha lê đã hé lộ bí mật lá bài chung sắp lật:</p>
+      <div class="flex flex-col items-center mb-4">
+        <span id="prophet-modal-street" class="px-3 py-0.5 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[11px] uppercase tracking-wider text-[#3a233c] font-extrabold mb-2.5"></span>
+        <div id="prophet-modal-card"></div>
+      </div>
+      <p class="text-[11px] font-bold text-[#6b4c6e] mb-4">Chỉ mình bạn thấy lá bài này và nó sẽ được ghim nhắc trên bàn cho đến khi lật ra!</p>
+      <button onclick="closeProphetModal()" class="btn-chibi btn-sunny w-full py-2.5 rounded-2xl text-xs uppercase tracking-wide">
+        Đã hiểu & Tiếp tục!
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== RESOLUTION MODAL (END OF HAND) ==================== -->
+  <div id="modal-resolution" class="hidden fixed inset-0 z-50 bg-[#3a233c]/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="chibi-card max-w-2xl w-full p-5 my-auto">
+      <div class="flex items-center justify-between border-b-2 border-dashed border-[#3a233c]/25 pb-3 mb-4 flex-wrap gap-2">
+        <div>
+          <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#f15bb5]">✨ Tổng Kết Bất Ngờ (3 Bước)</span>
+          <h3 id="res-title" class="text-2xl font-extrabold text-[#3a233c]">Kết Quả Ván 1</h3>
+        </div>
+        <div id="res-pot-badge" class="px-3.5 py-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-xs font-black shadow-[0_2px_0_#3a233c]"></div>
+      </div>
+
+      <div id="res-steps" class="space-y-3 max-h-[56vh] overflow-y-auto pr-1 mb-5"></div>
+
+      <button id="btn-next-hand" onclick="hostStartNextHand()" class="hidden btn-chibi btn-sunny w-full py-3.5 rounded-2xl text-sm uppercase tracking-wide">
+        Sang Ván Tiếp Theo →
+      </button>
+      <div id="guest-waiting-next" class="hidden text-center py-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] text-xs font-extrabold text-[#d98236]">
+        ⏳ Đang chờ Chủ phòng bắt đầu ván tiếp theo...
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOURNAMENT END MODAL ==================== -->
+  <div id="modal-victory" class="hidden fixed inset-0 z-50 bg-[#3a233c]/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="chibi-card max-w-lg w-full p-6 text-center my-auto">
+      <div class="text-5xl mb-2 chibi-float">🏆</div>
+      <h2 class="text-3xl font-extrabold text-[#ff5c77] mb-1">KẾT THÚC GIẢI ĐẤU!</h2>
+      <p id="victory-subtitle" class="text-sm font-bold text-[#3a233c] mb-4"></p>
+      <div id="victory-leaderboard" class="space-y-2 text-left mb-5"></div>
+      <div class="flex gap-2.5">
+        <button id="btn-rematch-lobby" onclick="hostReturnToLobby()" class="hidden btn-chibi btn-sunny flex-1 py-3 rounded-2xl text-sm uppercase tracking-wide">
+          Về Phòng Chờ
+        </button>
+        <button onclick="leaveRoom()" class="btn-chibi btn-coral flex-1 py-3 rounded-2xl text-sm uppercase tracking-wide">
+          Rời Phòng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== RULES & 6 CHIBI PORTRAITS MODAL ==================== -->
+  <div id="modal-rules" class="hidden fixed inset-0 z-50 bg-[#3a233c]/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="chibi-card max-w-3xl w-full p-5 my-auto">
+      <div class="flex items-center justify-between border-b-2 border-dashed border-[#3a233c]/25 pb-3 mb-4">
+        <h3 class="text-xl font-extrabold text-[#3a233c]">📖 Luật Chơi & 6 Nhân Vật Chibi</h3>
+        <button onclick="closeRulesModal()" class="btn-chibi btn-coral w-9 h-9 rounded-xl text-sm flex items-center justify-center">✕</button>
+      </div>
+      <div class="space-y-3 text-xs sm:text-sm text-[#3a233c] font-bold max-h-[72vh] overflow-y-auto pr-1">
+        <div class="p-3.5 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c]">
+          <strong class="text-[#ff5c77]">🎪 Thể thức Giải đấu:</strong> 2–6 người chơi (10.000 điểm khởi điểm), đấu tối đa 20 ván Texas Hold'em Poker. Blind tăng gấp đôi mỗi 4 ván (50/100 → 100/200 → 200/400 → 400/800 → 800/1600). Không có cược mù Pre-Deal. Chỉ khi <strong>tất cả sẵn sàng</strong> mới tiến hành bốc thăm bí mật 1 trong 6 nhân vật Chibi. Mỗi lượt đánh có <strong>25 giây</strong>.
+        </div>
+        <div id="rules-chibi-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FIREBASE & ONLINE CHIBI GAME ENGINE ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, addDoc, deleteDoc,
+      onSnapshot, collection
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // =========================================================================
+    // 1. CHEERFUL WEB AUDIO API SOUND SYNTHESIZER
+    // =========================================================================
+    let audioCtx = null;
+    let isMuted = false;
+
+    function ensureAudio() {
+      if (isMuted) return null;
+      if (!audioCtx) {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) audioCtx = new Ctx();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+      }
+      return audioCtx;
+    }
+
+    function playTone(freq, duration = 0.12, type = 'sine', vol = 0.14, delay = 0) {
+      const ctx = ensureAudio();
+      if (!ctx) return;
+      const now = ctx.currentTime + delay;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(vol, now + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.02);
+    }
+
+    const SFX = {
+      pop() {
+        const ctx = ensureAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(340, now);
+        osc.frequency.exponentialRampToValueAtTime(680, now + 0.08);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.11);
+      },
+      chime() {
+        playTone(523.25, 0.14, 'triangle', 0.14, 0);
+        playTone(659.25, 0.16, 'triangle', 0.14, 0.07);
+        playTone(783.99, 0.22, 'triangle', 0.16, 0.14);
+      },
+      magic() {
+        [523, 659, 784, 1046].forEach((f, i) => playTone(f, 0.16, 'sine', 0.12, i * 0.055));
+      },
+      boing() {
+        const ctx = ensureAudio();
+        if (!ctx) return;
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(520, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(190, now + 0.28);
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.32);
+      },
+      fanfare() {
+        const notes = [
+          { f: 523.25, t: 0, d: 0.12 },
+          { f: 659.25, t: 0.11, d: 0.12 },
+          { f: 783.99, t: 0.22, d: 0.12 },
+          { f: 1046.5, t: 0.34, d: 0.38 }
+        ];
+        notes.forEach(n => playTone(n.f, n.d, 'triangle', 0.16, n.t));
+      }
+    };
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.querySelectorAll('.sound-icon').forEach(el => {
+        el.textContent = isMuted ? '🔇' : '🔊';
+      });
+      if (!isMuted) SFX.pop();
+    }
+
+    // =========================================================================
+    // 2. CONFETTI CELEBRATION ENGINE
+    // =========================================================================
+    let confettiParticles = [];
+    let confettiRunning = false;
+
+    function launchConfetti(count = 75) {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ['#ffd166', '#ff5c77', '#38b87c', '#4cc9f0', '#f15bb5', '#9b5de5'];
+
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: -20 - Math.random() * 140,
+          vx: (Math.random() - 0.5) * 5,
+          vy: 2.5 + Math.random() * 4.5,
+          size: 7 + Math.random() * 7,
+          rot: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.22,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life: 160 + Math.random() * 60
+        });
+      }
+      if (!confettiRunning) {
+        confettiRunning = true;
+        requestAnimationFrame(tickConfetti);
+      }
+    }
+
+    function tickConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      confettiParticles = confettiParticles.filter(p => p.life > 0 && p.y < canvas.height + 30);
+      for (const p of confettiParticles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05;
+        p.rot += p.vRot;
+        p.life--;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = '#3a233c';
+        ctx.lineWidth = 1.2;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+        ctx.strokeRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+        ctx.restore();
+      }
+
+      if (confettiParticles.length > 0) {
+        requestAnimationFrame(tickConfetti);
+      } else {
+        confettiRunning = false;
+      }
+    }
+
+    // =========================================================================
+    // 3. CUSTOM INLINE CHIBI SVG CHARACTER PORTRAITS (9 EXPRESSIVE AVATARS)
+    // =========================================================================
+    function getChibiSVG(key) {
+      const svgs = {
+        // 1. Thiên Nhãn: Cute chibi with oversized glowing golden magnifying glass & star-pupil monocle
+        thien_nhan: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#fef3c7" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Fluffy hair back -->
+            <circle cx="50" cy="46" r="29" fill="#5e60ce" stroke="#3a233c" stroke-width="3"/>
+            <!-- Cute body -->
+            <path d="M26 88 Q50 72 74 88 Z" fill="#4cc9f0" stroke="#3a233c" stroke-width="3"/>
+            <!-- Head -->
+            <ellipse cx="50" cy="52" rx="24" ry="21" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Bangs -->
+            <path d="M26 48 Q35 28 50 32 Q65 28 74 48 Q64 40 50 43 Q36 40 26 48 Z" fill="#5e60ce" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Left sparkling eye -->
+            <circle cx="40" cy="54" r="5" fill="#3a233c"/>
+            <circle cx="38.5" cy="52" r="2" fill="#ffffff"/>
+            <!-- Right golden star-pupil monocle -->
+            <circle cx="60" cy="54" r="7.5" fill="#fff3b0" stroke="#f4a261" stroke-width="3"/>
+            <circle cx="60" cy="54" r="4" fill="#3a233c"/>
+            <polygon points="60,50 61.3,52.8 64.2,53 62,55 62.7,57.8 60,56.2 57.3,57.8 58,55 55.8,53 58.7,52.8" fill="#ffd166"/>
+            <!-- Rosy cheeks & cute smile -->
+            <ellipse cx="33" cy="60" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <ellipse cx="67" cy="60" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <path d="M46 62 Q50 66 54 62" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Oversized Golden Magnifying Glass -->
+            <line x1="78" y1="68" x2="88" y2="82" stroke="#d98236" stroke-width="6" stroke-linecap="round"/>
+            <line x1="78" y1="68" x2="88" y2="82" stroke="#3a233c" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="72" cy="58" r="11" fill="rgba(255,230,109,0.45)" stroke="#f4a261" stroke-width="3.5"/>
+            <circle cx="72" cy="58" r="11" fill="none" stroke="#3a233c" stroke-width="1.5"/>
+            <path d="M67 54 Q70 51 74 53" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        `,
+
+        // 2. Kẻ Phá Rối: Cheeky chibi imp with tiny pastel horns, mischievous grin & juggling cards
+        ke_pha_roi: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#ffe5ec" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Tiny pastel horns -->
+            <path d="M31 33 Q24 18 37 25 Z" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <path d="M69 33 Q76 18 63 25 Z" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Spiky hair -->
+            <circle cx="50" cy="48" r="27" fill="#ff70a6" stroke="#3a233c" stroke-width="3"/>
+            <!-- Body -->
+            <path d="M28 89 Q50 73 72 89 Z" fill="#3a233c" stroke="#3a233c" stroke-width="3"/>
+            <!-- Head -->
+            <ellipse cx="50" cy="54" rx="23" ry="20" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Cheeky bangs -->
+            <path d="M27 50 Q38 30 50 40 Q62 30 73 50 Q62 42 50 45 Q38 42 27 50 Z" fill="#ff70a6" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Winking mischievous eyes -->
+            <circle cx="40" cy="55" r="4.8" fill="#3a233c"/>
+            <circle cx="38.5" cy="53" r="1.8" fill="#ffffff"/>
+            <path d="M55 55 Q60 50 65 55" fill="none" stroke="#3a233c" stroke-width="3" stroke-linecap="round"/>
+            <!-- Rosy cheeks & cheeky grin -->
+            <ellipse cx="33" cy="61" rx="4" ry="2.2" fill="#ff5c77" opacity="0.65"/>
+            <ellipse cx="67" cy="61" rx="4" ry="2.2" fill="#ff5c77" opacity="0.65"/>
+            <path d="M43 63 Q50 70 57 63 Z" fill="#ff5c77" stroke="#3a233c" stroke-width="2"/>
+            <!-- Juggling mini cards -->
+            <rect x="11" y="48" width="13" height="18" rx="3" transform="rotate(-18 17 57)" fill="#ffffff" stroke="#3a233c" stroke-width="2"/>
+            <text x="14" y="60" font-size="9" font-weight="900" fill="#ef233c">♥</text>
+            <rect x="76" y="45" width="13" height="18" rx="3" transform="rotate(18 82 54)" fill="#ffffff" stroke="#3a233c" stroke-width="2"/>
+            <text x="79" y="58" font-size="9" font-weight="900" fill="#3a233c">♠</text>
+          </svg>
+        `,
+
+        // 3. Người Chỉ Điểm: Energetic chibi detective with tiny deerstalker hat & megaphone
+        nguoi_chi_diem: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#ffedd5" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Body (detective cape) -->
+            <path d="M24 89 Q50 70 76 89 Z" fill="#d98236" stroke="#3a233c" stroke-width="3"/>
+            <!-- Head -->
+            <ellipse cx="50" cy="56" rx="23" ry="20" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Hair -->
+            <path d="M27 52 Q35 34 50 37 Q65 34 73 52 Q62 45 50 47 Q38 45 27 52 Z" fill="#7f4f24" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Cute Deerstalker Hat -->
+            <path d="M28 40 Q50 18 72 40 Z" fill="#e9c46a" stroke="#3a233c" stroke-width="3"/>
+            <path d="M22 41 Q50 35 78 41 Q50 46 22 41 Z" fill="#d98236" stroke="#3a233c" stroke-width="2.5"/>
+            <circle cx="50" cy="24" r="4" fill="#d98236" stroke="#3a233c" stroke-width="2"/>
+            <!-- Determined sparkling eyes -->
+            <circle cx="40" cy="57" r="4.8" fill="#3a233c"/>
+            <circle cx="38.5" cy="55" r="1.8" fill="#ffffff"/>
+            <circle cx="60" cy="57" r="4.8" fill="#3a233c"/>
+            <circle cx="58.5" cy="55" r="1.8" fill="#ffffff"/>
+            <!-- Cheeks & shouty mouth -->
+            <ellipse cx="33" cy="63" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <ellipse cx="67" cy="63" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <ellipse cx="50" cy="66" rx="4.5" ry="3.5" fill="#ff5c77" stroke="#3a233c" stroke-width="2"/>
+            <!-- Cute Megaphone -->
+            <polygon points="69,68 88,58 88,78" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5" stroke-linejoin="round"/>
+            <rect x="66" y="66" width="6" height="8" rx="2" fill="#ffd166" stroke="#3a233c" stroke-width="2"/>
+          </svg>
+        `,
+
+        // 4. Kẻ Phản Đòn: Cool-cute chibi guardian/ninja holding a sparkling star mirror shield
+        ke_phan_don: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#d8f3dc" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Scarf & Body -->
+            <path d="M24 89 Q50 72 76 89 Z" fill="#2b2d42" stroke="#3a233c" stroke-width="3"/>
+            <path d="M32 74 Q50 82 68 74 L65 82 Q50 88 35 82 Z" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Headband tails -->
+            <path d="M72 38 Q86 34 89 45 Q80 46 72 44 Z" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Head -->
+            <ellipse cx="48" cy="52" rx="23" ry="20" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Spiky hair -->
+            <path d="M24 48 Q30 24 48 27 Q66 24 72 48 Q60 39 48 42 Q36 39 24 48 Z" fill="#2b2d42" stroke="#3a233c" stroke-width="2.5"/>
+            <!-- Headband -->
+            <rect x="27" y="37" width="42" height="7" rx="3" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <rect x="42" y="36" width="12" height="9" rx="2" fill="#ffd166" stroke="#3a233c" stroke-width="2"/>
+            <!-- Cool cute eyes -->
+            <circle cx="38" cy="54" r="4.8" fill="#3a233c"/>
+            <circle cx="36.8" cy="52.2" r="1.8" fill="#ffffff"/>
+            <circle cx="58" cy="54" r="4.8" fill="#3a233c"/>
+            <circle cx="56.8" cy="52.2" r="1.8" fill="#ffffff"/>
+            <!-- Cheeks & confident smirk -->
+            <ellipse cx="31" cy="60" rx="3.8" ry="2" fill="#ff8fab" opacity="0.75"/>
+            <ellipse cx="64" cy="60" rx="3.8" ry="2" fill="#ff8fab" opacity="0.75"/>
+            <path d="M44 62 Q49 65 54 61" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Sparkling Mirror Shield -->
+            <path d="M64 56 L86 56 L86 72 Q75 86 64 72 Z" fill="#90e0ef" stroke="#3a233c" stroke-width="3" stroke-linejoin="round"/>
+            <polygon points="75,61 77,66 82,66.5 78,69.5 79.2,74.5 75,71.8 70.8,74.5 72,69.5 68,66.5 73,66" fill="#ffd166" stroke="#3a233c" stroke-width="1.2"/>
+          </svg>
+        `,
+
+        // 5. Nhà Tiên Tri: Dreamy chibi wizard with oversized starry witch hat & glowing crystal ball
+        nha_tien_tri: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#f3e8ff" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Wizard Robe -->
+            <path d="M24 89 Q50 72 76 89 Z" fill="#7209b7" stroke="#3a233c" stroke-width="3"/>
+            <!-- Long pastel hair -->
+            <circle cx="50" cy="55" r="25" fill="#c77dff" stroke="#3a233c" stroke-width="3"/>
+            <!-- Head -->
+            <ellipse cx="50" cy="57" rx="22" ry="19" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Oversized Starry Witch Hat -->
+            <path d="M16 45 Q50 38 84 45 Q50 51 16 45 Z" fill="#5a189a" stroke="#3a233c" stroke-width="3"/>
+            <path d="M29 43 Q45 8 64 14 Q57 28 71 43 Z" fill="#7b2cbf" stroke="#3a233c" stroke-width="3"/>
+            <polygon points="48,24 50,28 54,28.5 51,31 52,35 48,33 44,35 45,31 42,28.5 46,28" fill="#ffd166"/>
+            <!-- Dreamy starry eyes -->
+            <circle cx="40" cy="58" r="4.8" fill="#3a233c"/>
+            <circle cx="38.5" cy="56" r="1.9" fill="#ffd166"/>
+            <circle cx="60" cy="58" r="4.8" fill="#3a233c"/>
+            <circle cx="58.5" cy="56" r="1.9" fill="#ffd166"/>
+            <!-- Cheeks & sweet smile -->
+            <ellipse cx="33" cy="64" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <ellipse cx="67" cy="64" rx="4" ry="2.2" fill="#ff8fab" opacity="0.8"/>
+            <path d="M46 66 Q50 69 54 66" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Glowing Crystal Ball -->
+            <circle cx="76" cy="74" r="11" fill="#4cc9f0" stroke="#3a233c" stroke-width="2.8"/>
+            <circle cx="73" cy="70" r="3.5" fill="#ffffff" opacity="0.85"/>
+          </svg>
+        `,
+
+        // 6. Ảo Thuật Gia: Cheerful chibi magician with cute top hat, rabbit ears & magic wand
+        ao_thuat_gia: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#e0fbfc" stroke="#3a233c" stroke-width="3.5"/>
+            <!-- Rabbit ears peeking out of top hat -->
+            <ellipse cx="42" cy="18" rx="4.5" ry="11" transform="rotate(-12 42 18)" fill="#ffffff" stroke="#3a233c" stroke-width="2.5"/>
+            <ellipse cx="42" cy="18" rx="2" ry="6" transform="rotate(-12 42 18)" fill="#ff8fab"/>
+            <ellipse cx="58" cy="18" rx="4.5" ry="11" transform="rotate(12 58 18)" fill="#ffffff" stroke="#3a233c" stroke-width="2.5"/>
+            <ellipse cx="58" cy="18" rx="2" ry="6" transform="rotate(12 58 18)" fill="#ff8fab"/>
+            <!-- Tuxedo & Bowtie -->
+            <path d="M25 89 Q50 72 75 89 Z" fill="#3a233c" stroke="#3a233c" stroke-width="3"/>
+            <polygon points="44,77 50,81 44,85" fill="#ff5c77" stroke="#3a233c" stroke-width="1.5"/>
+            <polygon points="56,77 50,81 56,85" fill="#ff5c77" stroke="#3a233c" stroke-width="1.5"/>
+            <!-- Head -->
+            <ellipse cx="50" cy="57" rx="22" ry="19" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <!-- Cute Top Hat -->
+            <rect x="33" y="21" width="34" height="21" rx="4" fill="#3a233c" stroke="#3a233c" stroke-width="2.5"/>
+            <rect x="33" y="34" width="34" height="6" fill="#f15bb5"/>
+            <rect x="24" y="40" width="52" height="6" rx="3" fill="#3a233c"/>
+            <!-- Happy sparkling eyes -->
+            <circle cx="40" cy="57" r="4.8" fill="#3a233c"/>
+            <circle cx="38.5" cy="55" r="1.9" fill="#ffffff"/>
+            <circle cx="60" cy="57" r="4.8" fill="#3a233c"/>
+            <circle cx="58.5" cy="55" r="1.9" fill="#ffffff"/>
+            <!-- Cheeks & joyful grin -->
+            <ellipse cx="33" cy="63" rx="4" ry="2.2" fill="#ff8fab" opacity="0.85"/>
+            <ellipse cx="67" cy="63" rx="4" ry="2.2" fill="#ff8fab" opacity="0.85"/>
+            <path d="M44 64 Q50 70 56 64" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Magic Wand -->
+            <line x1="72" y1="82" x2="84" y2="62" stroke="#3a233c" stroke-width="4" stroke-linecap="round"/>
+            <polygon points="85,54 87,59 92,59.5 88,62.5 89.2,67.5 85,64.8 80.8,67.5 82,62.5 78,59.5 83,59" fill="#ffd166" stroke="#3a233c" stroke-width="1.5"/>
+          </svg>
+        `,
+
+        // Mystery Hooded Chibi (?)
+        mystery: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#e9d8fd" stroke="#3a233c" stroke-width="3.5"/>
+            <path d="M22 86 Q24 22 50 20 Q76 22 78 86 Z" fill="#6d597a" stroke="#3a233c" stroke-width="3.5"/>
+            <ellipse cx="50" cy="54" rx="20" ry="18" fill="#3a233c"/>
+            <!-- Cute glowing eyes in hood -->
+            <circle cx="42" cy="53" r="4" fill="#ffd166"/>
+            <circle cx="58" cy="53" r="4" fill="#ffd166"/>
+            <circle cx="43.5" cy="51.5" r="1.4" fill="#ffffff"/>
+            <circle cx="59.5" cy="51.5" r="1.4" fill="#ffffff"/>
+            <!-- Big cute ? badge -->
+            <circle cx="76" cy="26" r="13" fill="#ffd166" stroke="#3a233c" stroke-width="2.8"/>
+            <text x="76" y="32" text-anchor="middle" font-size="18" font-weight="900" fill="#3a233c">?</text>
+          </svg>
+        `,
+
+        // Cute Lobby Cat-Chibi for Human Players
+        lobby_human: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#fff0f3" stroke="#3a233c" stroke-width="3.5"/>
+            <polygon points="28,42 32,20 46,34" fill="#ffb703" stroke="#3a233c" stroke-width="3" stroke-linejoin="round"/>
+            <polygon points="72,42 68,20 54,34" fill="#ffb703" stroke="#3a233c" stroke-width="3" stroke-linejoin="round"/>
+            <ellipse cx="50" cy="55" rx="25" ry="22" fill="#ffe5d9" stroke="#3a233c" stroke-width="3"/>
+            <path d="M25 50 Q38 30 50 38 Q62 30 75 50 Q62 42 50 45 Q38 42 25 50 Z" fill="#ffb703" stroke="#3a233c" stroke-width="2.5"/>
+            <circle cx="40" cy="56" r="4.8" fill="#3a233c"/>
+            <circle cx="38.5" cy="54" r="1.8" fill="#ffffff"/>
+            <circle cx="60" cy="56" r="4.8" fill="#3a233c"/>
+            <circle cx="58.5" cy="54" r="1.8" fill="#ffffff"/>
+            <ellipse cx="33" cy="63" rx="4.2" ry="2.4" fill="#ff8fab" opacity="0.8"/>
+            <ellipse cx="67" cy="63" rx="4.2" ry="2.4" fill="#ff8fab" opacity="0.8"/>
+            <path d="M45 63 Q47.5 67 50 64 Q52.5 67 55 63" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        `,
+
+        // Cute Lobby Robot-Chibi for AI Bots
+        lobby_bot: `
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <circle cx="50" cy="50" r="46" fill="#dff6ff" stroke="#3a233c" stroke-width="3.5"/>
+            <line x1="50" y1="20" x2="50" y2="32" stroke="#3a233c" stroke-width="3.5"/>
+            <circle cx="50" cy="18" r="5" fill="#ff5c77" stroke="#3a233c" stroke-width="2.5"/>
+            <rect x="24" y="32" width="52" height="42" rx="14" fill="#90e0ef" stroke="#3a233c" stroke-width="3"/>
+            <rect x="31" y="40" width="38" height="22" rx="8" fill="#3a233c"/>
+            <circle cx="42" cy="51" r="4.5" fill="#6ee7b7"/>
+            <circle cx="58" cy="51" r="4.5" fill="#6ee7b7"/>
+            <path d="M44 67 Q50 71 56 67" fill="none" stroke="#3a233c" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        `
+      };
+      return svgs[key] || svgs.mystery;
+    }
+
+    // =========================================================================
+    // 4. CONSTANTS & ROLE DEFINITIONS (100% EXACT RULES)
+    // =========================================================================
+    const ROLES = {
+      thien_nhan: {
+        id: 'thien_nhan',
+        name: 'Thiên Nhãn',
+        icon: '👁️',
+        group: 'targeting',
+        groupLabel: 'Nhóm Chỉ Định',
+        skillName: 'Nhìn Thấu',
+        cooldown: 3,
+        validPhases: ['FLOP', 'TURN'],
+        desc: 'Chọn 1 đối thủ và xem bí mật 1 lá bài tẩy ngẫu nhiên của họ.',
+        timingText: 'Vòng Flop hoặc Turn',
+        badgeBg: '#ffe5ec'
+      },
+      ke_pha_roi: {
+        id: 'ke_pha_roi',
+        name: 'Kẻ Phá Rối',
+        icon: '🃏',
+        group: 'targeting',
+        groupLabel: 'Nhóm Chỉ Định',
+        skillName: 'Đánh Tráo',
+        cooldown: 4,
+        validPhases: ['FLOP', 'TURN'],
+        desc: 'Chọn 1 đối thủ, ép đổi ngẫu nhiên 1 lá bài tẩy của họ lấy 1 lá từ bộ bài chưa chia (nạn nhân biết bị phá ngay lập tức nhưng không biết ai làm).',
+        timingText: 'Vòng Flop hoặc Turn',
+        badgeBg: '#ffe5ec'
+      },
+      nguoi_chi_diem: {
+        id: 'nguoi_chi_diem',
+        name: 'Người Chỉ Điểm',
+        icon: '🎯',
+        group: 'targeting',
+        groupLabel: 'Nhóm Chỉ Định',
+        skillName: 'Chỉ Điểm',
+        cooldown: 4,
+        missCooldown: 3,
+        missLabel: '3 nếu sai',
+        validPhases: ['PRE_SHOWDOWN'],
+        desc: 'Chọn 1 đối thủ nghi ngờ đã dùng chiêu trong ván này. Đúng: cướp 100% điểm cược & lộ vai nạn nhân. Sai: phạt 50% điểm cược vào Pot, không lộ vai (CD giảm còn 3 ván).',
+        timingText: 'Pre-Showdown (10s cuối)',
+        badgeBg: '#ffe5ec'
+      },
+      ke_phan_don: {
+        id: 'ke_phan_don',
+        name: 'Kẻ Phản Đòn',
+        icon: '🛡️',
+        group: 'trap',
+        groupLabel: 'Đặt Bẫy',
+        skillName: 'Gậy Ông Đập Lưng Ông',
+        cooldown: 3,
+        missCooldown: 2,
+        missLabel: '2 nếu hụt',
+        validPhases: ['PREFLOP'],
+        desc: 'Đặt bẫy ẩn lên bản thân hoặc 1 người chơi bất kỳ. Cướp 100% điểm cược của kẻ thuộc Nhóm Chỉ Định nhắm vào người mang bẫy (Hướng 2: nếu bẫy B mà Chỉ Điểm chỉ thẳng A thì Chỉ Điểm thắng). Bẫy hụt: phạt 50% vào Pot, không lộ vai (CD còn 2 ván).',
+        timingText: 'Vòng Pre-Flop',
+        badgeBg: '#fef3c7'
+      },
+      nha_tien_tri: {
+        id: 'nha_tien_tri',
+        name: 'Nhà Tiên Tri',
+        icon: '🔮',
+        group: 'self',
+        groupLabel: 'Tự Thân',
+        skillName: 'Thấu Thị',
+        cooldown: 4,
+        validPhases: ['PREFLOP', 'FLOP', 'TURN'],
+        desc: 'Xem trước bí mật 1 lá bài chung tiếp theo (1 lá Flop nếu dùng ở Pre-Flop, lá Turn ở Flop, hoặc lá River ở Turn) trước khi bàn lật.',
+        timingText: 'Pre-Flop, Flop hoặc Turn',
+        badgeBg: '#e0fbfc'
+      },
+      ao_thuat_gia: {
+        id: 'ao_thuat_gia',
+        name: 'Ảo Thuật Gia',
+        icon: '🎩',
+        group: 'self',
+        groupLabel: 'Tự Thân',
+        skillName: 'Hoán Đổi',
+        cooldown: 3,
+        validPhases: ['PREFLOP', 'FLOP', 'TURN'],
+        desc: 'Rút bí mật 1 lá từ bộ bài chưa chia, xem trước rồi chọn GIỮ (đổi lấy 1 lá tẩy trên tay) hoặc BỎ.',
+        timingText: 'Trước vòng River',
+        badgeBg: '#e0fbfc'
+      }
+    };
+
+    const BOT_NAMES = ['Mochi [AI]', 'Bánh Bao [AI]', 'Mèo Mập [AI]', 'Cáo Nhỏ [AI]', 'Gấu Bông [AI]'];
+    const SUITS = [
+      { sym: '♠', color: 'card-black' },
+      { sym: '♥', color: 'card-red' },
+      { sym: '♦', color: 'card-red' },
+      { sym: '♣', color: 'card-black' }
+    ];
+    const RANKS = [
+      { val: 2, label: '2' }, { val: 3, label: '3' }, { val: 4, label: '4' },
+      { val: 5, label: '5' }, { val: 6, label: '6' }, { val: 7, label: '7' },
+      { val: 8, label: '8' }, { val: 9, label: '9' }, { val: 10, label: '10' },
+      { val: 11, label: 'J' }, { val: 12, label: 'Q' }, { val: 13, label: 'K' },
+      { val: 14, label: 'A' }
+    ];
+
+    const TURN_DURATION_MS = 25000;
+    const PRESHOWDOWN_DURATION_MS = 10000;
+    const ROLE_DRAW_DURATION_MS = 7000;
+
+    // =========================================================================
+    // 5. FIREBASE INITIALIZATION (STRICT RULES 1, 2, 3)
+    // =========================================================================
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'than-bai-dai-chien-chibi';
+    let app = null;
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+
+    // Client runtime state
+    let activeRoomCode = null;
+    let roomData = null;
+    let unsubRoom = null;
+    let unsubActions = null;
+    let unsubChat = null;
+    let processedActionIds = new Set();
+    let hostTickInterval = null;
+    let uiTickInterval = null;
+    let botActingLock = false;
+    let lobbyAutoDrawAt = null;
+
+    // Track private notifications & celebrations so they fire once
+    let lastShownDisruptId = null;
+    let lastShownNoticeId = null;
+    let lastShownProphetKey = null;
+    let lastCelebratedResHand = -1;
+    let lastCelebratedVictory = false;
+    let hasFlippedRoleCard = false;
+
+    async function initFirebase() {
+      const badge = document.getElementById('auth-status-badge');
+      try {
+        if (typeof __firebase_config === 'undefined' || !__firebase_config) {
+          badge.textContent = '⚠️ Thiếu cấu hình máy chủ';
+          badge.className = 'font-extrabold text-[#ef233c]';
+          return;
+        }
+        const firebaseConfig = JSON.parse(__firebase_config);
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        // RULE 3: Authenticate FIRST before any Firestore query
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+        currentUser = auth.currentUser;
+
+        badge.textContent = '● Đã kết nối Online!';
+        badge.className = 'font-extrabold text-[#269963]';
+        document.getElementById('home-user-id').textContent = currentUser.uid;
+        document.getElementById('btn-create-room').disabled = false;
+        document.getElementById('btn-join-room').disabled = false;
+      } catch (err) {
+        console.error('Firebase init error:', err);
+        badge.textContent = '✕ Lỗi kết nối máy chủ';
+        badge.className = 'font-extrabold text-[#ef233c]';
+        showToast('Không thể kết nối máy chủ Online. Vui lòng tải lại trang.', 'coral');
+      }
+    }
+
+    // Strict Path Helpers (RULE 1)
+    function getRoomDocRef(code) {
+      return doc(db, 'artifacts', appId, 'public', 'data', 'poker_rooms', code);
+    }
+    function getActionsColRef(code) {
+      return collection(db, 'artifacts', appId, 'public', 'data', `actions_${code}`);
+    }
+    function getChatColRef(code) {
+      return collection(db, 'artifacts', appId, 'public', 'data', `chat_${code}`);
+    }
+
+    // =========================================================================
+    // 6. POKER DECK & 7-CARD EVALUATOR
+    // =========================================================================
+    function createShuffledDeck() {
+      const deck = [];
+      for (const s of SUITS) {
+        for (const r of RANKS) {
+          deck.push({ rank: r.val, label: r.label, suit: s.sym, color: s.color });
+        }
+      }
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+      return deck;
+    }
+
+    function cardToText(c) {
+      return c ? `${c.label}${c.suit}` : '?';
+    }
+
+    function renderCardHTML(card, size = '', hidden = false) {
+      if (hidden || !card) {
+        return `<div class="playing-card ${size} card-back"></div>`;
+      }
+      return `
+        <div class="playing-card ${size} ${card.color}">
+          <div class="leading-none text-left">${card.label}</div>
+          <div class="text-center leading-none ${size === 'sm' ? 'text-base' : size === 'lg' ? 'text-2xl' : 'text-xl'}">${card.suit}</div>
+          <div class="leading-none text-right rotate-180">${card.label}</div>
+        </div>
+      `;
+    }
+
+    function evaluateBestHand(cards) {
+      if (cards.length < 5) {
+        const high = Math.max(...cards.map(c => c.rank));
+        return { tier: 0, score: high, name: 'Mậu Thầu' };
+      }
+      const combos = getCombinations(cards, 5);
+      let best = null;
+      for (const c5 of combos) {
+        const res = evaluate5Cards(c5);
+        if (!best || res.score > best.score) best = res;
+      }
+      return best;
+    }
+
+    function getCombinations(arr, k) {
+      const res = [];
+      function helper(start, combo) {
+        if (combo.length === k) { res.push([...combo]); return; }
+        for (let i = start; i < arr.length; i++) {
+          combo.push(arr[i]);
+          helper(i + 1, combo);
+          combo.pop();
+        }
+      }
+      helper(0, []);
+      return res;
+    }
+
+    function evaluate5Cards(cards) {
+      const ranks = cards.map(c => c.rank).sort((a, b) => b - a);
+      const suits = cards.map(c => c.suit);
+      const isFlush = suits.every(s => s === suits[0]);
+
+      const counts = {};
+      for (const r of ranks) counts[r] = (counts[r] || 0) + 1;
+      const groups = Object.entries(counts)
+        .map(([r, cnt]) => ({ rank: Number(r), cnt }))
+        .sort((a, b) => b.cnt - a.cnt || b.rank - a.rank);
+
+      let isStraight = false;
+      let straightHigh = ranks[0];
+      const uniqueRanks = [...new Set(ranks)];
+      if (uniqueRanks.length === 5) {
+        if (uniqueRanks[0] - uniqueRanks[4] === 4) {
+          isStraight = true;
+          straightHigh = uniqueRanks[0];
+        } else if (
+          uniqueRanks[0] === 14 && uniqueRanks[1] === 5 &&
+          uniqueRanks[2] === 4 && uniqueRanks[3] === 3 && uniqueRanks[4] === 2
+        ) {
+          isStraight = true;
+          straightHigh = 5;
+        }
+      }
+
+      let tier = 0;
+      let name = 'Mậu Thầu';
+      let tiebreakers = ranks;
+
+      if (isFlush && isStraight && straightHigh === 14) {
+        tier = 9; name = 'Sảnh Chúa (Royal Flush)'; tiebreakers = [14];
+      } else if (isFlush && isStraight) {
+        tier = 8; name = 'Thùng Phá Sảnh'; tiebreakers = [straightHigh];
+      } else if (groups[0].cnt === 4) {
+        tier = 7; name = 'Tứ Quý'; tiebreakers = [groups[0].rank, groups[1].rank];
+      } else if (groups[0].cnt === 3 && groups[1].cnt === 2) {
+        tier = 6; name = 'Cù Lũ'; tiebreakers = [groups[0].rank, groups[1].rank];
+      } else if (isFlush) {
+        tier = 5; name = 'Thùng'; tiebreakers = ranks;
+      } else if (isStraight) {
+        tier = 4; name = 'Sảnh'; tiebreakers = [straightHigh];
+      } else if (groups[0].cnt === 3) {
+        tier = 3; name = 'Sám Cô'; tiebreakers = [groups[0].rank, ...groups.slice(1).map(g => g.rank)];
+      } else if (groups[0].cnt === 2 && groups[1].cnt === 2) {
+        tier = 2; name = 'Thú (2 Đôi)'; tiebreakers = [groups[0].rank, groups[1].rank, groups[2].rank];
+      } else if (groups[0].cnt === 2) {
+        tier = 1; name = 'Một Đôi'; tiebreakers = [groups[0].rank, ...groups.slice(1).map(g => g.rank)];
+      }
+
+      let score = tier * Math.pow(15, 5);
+      for (let i = 0; i < tiebreakers.length; i++) {
+        score += tiebreakers[i] * Math.pow(15, 4 - i);
+      }
+      return { tier, score, name };
+    }
+
+    function getBlinds(handNumber) {
+      const level = Math.floor(Math.max(0, handNumber - 1) / 4);
+      const sb = 50 * Math.pow(2, level);
+      return { sb, bb: sb * 2 };
+    }
+
+    // =========================================================================
+    // 7. ROOM CREATION, JOINING & SUBSCRIPTIONS
+    // =========================================================================
+    function generateRoomCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let out = '';
+      for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
+      return out;
+    }
+
+    function createPlayerObject(uid, name, isBot = false) {
+      return {
+        uid,
+        name,
+        isBot,
+        ready: isBot,
+        roleConfirmed: isBot,
+        roleId: null,
+        points: 10000,
+        cards: [],
+        handBet: 0,
+        roundBet: 0,
+        folded: false,
+        allIn: false,
+        eliminated: false,
+        actedThisRound: false,
+        cooldown: 0,
+        usedSkillThisHand: false,
+        revealState: 'hidden', // 'hidden' | 'targeting_group' | 'revealed'
+        lastBubble: null, // { id, text, ts }
+        secretPeek: null,
+        secretProphet: null,
+        secretMagicianDraw: null,
+        secretDisrupted: null,
+        secretNotice: null
+      };
+    }
+
+    async function createOnlineRoom() {
+      if (!currentUser) return;
+      SFX.chime();
+      const nameInput = document.getElementById('input-player-name').value.trim();
+      const playerName = nameInput || `Bé Bài ${currentUser.uid.slice(0, 4)}`;
+      const code = generateRoomCode();
+
+      const initialRoom = {
+        roomCode: code,
+        hostUid: currentUser.uid,
+        status: 'LOBBY',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        handNumber: 0,
+        maxHands: 20,
+        dealerIndex: 0,
+        phase: 'IDLE',
+        deck: [],
+        community: [],
+        futureCommunity: [],
+        pot: 0,
+        currentBet: 0,
+        minRaise: 100,
+        turnIndex: 0,
+        turnDeadline: 0,
+        preShowdownDeadline: 0,
+        roleDrawDeadline: 0,
+        players: [createPlayerObject(currentUser.uid, playerName, false)],
+        skillActions: [],
+        trapTargetUid: null,
+        trapCasterUid: null,
+        resolution: null,
+        logs: [{ id: Date.now(), html: `🎪 Phòng <strong>${code}</strong> đã mở cửa chào đón bởi <strong>${escapeHtml(playerName)}</strong>!`, tone: 'sunny' }]
+      };
+
+      try {
+        await setDoc(getRoomDocRef(code), initialRoom);
+        enterRoomSubscriptions(code);
+        showToast(`Đã tạo phòng ${code}! Chia sẻ mã cho bạn bè nha~`, 'mint');
+      } catch (err) {
+        console.error('Create room error:', err);
+        showToast('Không thể tạo phòng. Vui lòng thử lại.', 'coral');
+      }
+    }
+
+    async function joinOnlineRoom() {
+      if (!currentUser) return;
+      SFX.pop();
+      const code = document.getElementById('input-room-code').value.trim().toUpperCase();
+      if (code.length !== 6) {
+        SFX.boing();
+        showToast('Vui lòng nhập đúng mã phòng gồm 6 ký tự nha!', 'coral');
+        return;
+      }
+      const nameInput = document.getElementById('input-player-name').value.trim();
+      const playerName = nameInput || `Khách ${currentUser.uid.slice(0, 4)}`;
+
+      try {
+        const snap = await getDoc(getRoomDocRef(code));
+        if (!snap.exists()) {
+          SFX.boing();
+          showToast(`Không tìm thấy phòng ${code}.`, 'coral');
+          return;
+        }
+        const data = snap.data();
+        const alreadyIn = data.players.some(p => p.uid === currentUser.uid);
+
+        if (!alreadyIn) {
+          if (data.status !== 'LOBBY') {
+            SFX.boing();
+            showToast('Phòng này đang đấu rồi, chờ ván sau nha!', 'coral');
+            return;
+          }
+          if (data.players.length >= 6) {
+            SFX.boing();
+            showToast('Phòng đã đủ 6 người chơi rồi!', 'coral');
+            return;
+          }
+          await addDoc(getActionsColRef(code), {
+            uid: currentUser.uid,
+            type: 'JOIN_ROOM',
+            payload: { name: playerName },
+            createdAt: Date.now()
+          });
+        }
+
+        enterRoomSubscriptions(code);
+        SFX.chime();
+        showToast(`Chào mừng đến phòng ${code}!`, 'mint');
+      } catch (err) {
+        console.error('Join room error:', err);
+        showToast('Lỗi khi vào phòng. Kiểm tra lại mã phòng nha!', 'coral');
+      }
+    }
+
+    function enterRoomSubscriptions(code) {
+      cleanupSubscriptions();
+      activeRoomCode = code;
+      processedActionIds = new Set();
+      hasFlippedRoleCard = false;
+      lobbyAutoDrawAt = null;
+      lastCelebratedResHand = -1;
+      lastCelebratedVictory = false;
+
+      // 1. Subscribe to Room Document
+      unsubRoom = onSnapshot(getRoomDocRef(code), (snap) => {
+        if (!snap.exists()) {
+          showToast('Phòng chơi đã bị đóng.', 'coral');
+          leaveRoom();
+          return;
+        }
+        roomData = snap.data();
+        onRoomStateUpdated();
+      }, (err) => {
+        console.error('Room snapshot error:', err);
+        showToast('Mất kết nối đồng bộ phòng.', 'coral');
+      });
+
+      // 2. Subscribe to Room Chat (RULE 2: no orderBy in query, sort in memory)
+      unsubChat = onSnapshot(getChatColRef(code), (snap) => {
+        const msgs = [];
+        snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+        msgs.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+        renderChatLists(msgs);
+      }, (err) => {
+        console.error('Chat snapshot error:', err);
+      });
+
+      // 3. Subscribe to Action Queue (Host processes all incoming actions)
+      unsubActions = onSnapshot(getActionsColRef(code), (snap) => {
+        if (!roomData || !currentUser || roomData.hostUid !== currentUser.uid) return;
+        const pending = [];
+        snap.forEach(d => {
+          if (!processedActionIds.has(d.id)) {
+            pending.push({ id: d.id, ref: d.ref, ...d.data() });
+          }
+        });
+        if (pending.length === 0) return;
+        pending.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+        hostProcessActionBatch(pending);
+      }, (err) => {
+        console.error('Actions snapshot error:', err);
+      });
+
+      uiTickInterval = setInterval(updateCountdownDisplays, 350);
+      hostTickInterval = setInterval(hostTickLoop, 900);
+    }
+
+    function cleanupSubscriptions() {
+      if (unsubRoom) { unsubRoom(); unsubRoom = null; }
+      if (unsubActions) { unsubActions(); unsubActions = null; }
+      if (unsubChat) { unsubChat(); unsubChat = null; }
+      if (hostTickInterval) { clearInterval(hostTickInterval); hostTickInterval = null; }
+      if (uiTickInterval) { clearInterval(uiTickInterval); uiTickInterval = null; }
+    }
+
+    async function leaveRoom() {
+      SFX.pop();
+      if (activeRoomCode && currentUser && roomData && roomData.status === 'LOBBY') {
+        try {
+          if (roomData.hostUid !== currentUser.uid) {
+            await addDoc(getActionsColRef(activeRoomCode), {
+              uid: currentUser.uid,
+              type: 'LEAVE_LOBBY',
+              payload: {},
+              createdAt: Date.now()
+            });
+          }
+        } catch (e) { /* ignore */ }
+      }
+      cleanupSubscriptions();
+      activeRoomCode = null;
+      roomData = null;
+      ['screen-lobby', 'screen-role-draw', 'screen-game', 'modal-resolution',
+       'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById('screen-home').classList.remove('hidden');
+    }
+
+    function isHost() {
+      return Boolean(roomData && currentUser && roomData.hostUid === currentUser.uid);
+    }
+
+    function getMe() {
+      if (!roomData || !currentUser) return null;
+      return roomData.players.find(p => p.uid === currentUser.uid) || null;
+    }
+
+    async function sendAction(type, payload = {}) {
+      if (!currentUser || !activeRoomCode) return;
+      try {
+        await addDoc(getActionsColRef(activeRoomCode), {
+          uid: currentUser.uid,
+          type,
+          payload,
+          createdAt: Date.now()
+        });
+      } catch (err) {
+        console.error('Send action error:', err);
+        showToast('Không gửi được thao tác lên phòng.', 'coral');
+      }
+    }
+
+    async function saveRoomState(newRoom) {
+      if (!currentUser || !activeRoomCode) return;
+      newRoom.updatedAt = Date.now();
+      await setDoc(getRoomDocRef(activeRoomCode), newRoom);
+    }
+
+    // =========================================================================
+    // 8. HOST AUTHORITATIVE ACTION PROCESSOR
+    // =========================================================================
+    let hostBusy = false;
+
+    async function hostProcessActionBatch(actions) {
+      if (hostBusy || !roomData) return;
+      hostBusy = true;
+      try {
+        const r = JSON.parse(JSON.stringify(roomData));
+        let mutated = false;
+
+        for (const act of actions) {
+          processedActionIds.add(act.id);
+          deleteDoc(act.ref).catch(() => {});
+          if (applyActionToRoom(r, act)) mutated = true;
+        }
+
+        if (mutated) {
+          await saveRoomState(r);
+        }
+      } catch (err) {
+        console.error('Host batch error:', err);
+      } finally {
+        hostBusy = false;
+      }
+    }
+
+    function pushRoomLog(r, html, tone = 'default') {
+      r.logs = r.logs || [];
+      r.logs.unshift({ id: Date.now() + Math.random(), html, tone });
+      if (r.logs.length > 60) r.logs.pop();
+    }
+
+    function setPlayerBubble(p, text) {
+      p.lastBubble = { id: Date.now() + Math.random(), text, ts: Date.now() };
+    }
+
+    function applyActionToRoom(r, act) {
+      const { uid, type, payload } = act;
+
+      if (type === 'JOIN_ROOM') {
+        if (r.status !== 'LOBBY' || r.players.length >= 6) return false;
+        if (r.players.some(p => p.uid === uid)) return false;
+        r.players.push(createPlayerObject(uid, payload.name || 'Người chơi', false));
+        pushRoomLog(r, `🐾 <strong>${escapeHtml(payload.name)}</strong> vừa bước vào quán bài!`, 'mint');
+        lobbyAutoDrawAt = null;
+        return true;
+      }
+
+      if (type === 'LEAVE_LOBBY') {
+        if (r.status !== 'LOBBY') return false;
+        const idx = r.players.findIndex(p => p.uid === uid);
+        if (idx === -1) return false;
+        const [removed] = r.players.splice(idx, 1);
+        pushRoomLog(r, `👋 <strong>${escapeHtml(removed.name)}</strong> đã rời phòng chờ.`);
+        lobbyAutoDrawAt = null;
+        return true;
+      }
+
+      if (type === 'TOGGLE_READY') {
+        if (r.status !== 'LOBBY') return false;
+        const p = r.players.find(pl => pl.uid === uid);
+        if (!p || p.isBot) return false;
+        p.ready = !p.ready;
+        lobbyAutoDrawAt = null;
+        return true;
+      }
+
+      if (type === 'CONFIRM_ROLE') {
+        if (r.status !== 'ROLE_DRAW') return false;
+        const p = r.players.find(pl => pl.uid === uid);
+        if (!p) return false;
+        p.roleConfirmed = true;
+        if (r.players.every(pl => pl.roleConfirmed)) {
+          setupNextHandOnRoom(r);
+        }
+        return true;
+      }
+
+      if (type === 'BET_ACTION') {
+        if (r.status !== 'PLAYING') return false;
+        if (!['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(r.phase)) return false;
+        const pIdx = r.players.findIndex(pl => pl.uid === uid);
+        if (pIdx === -1 || pIdx !== r.turnIndex) return false;
+        const p = r.players[pIdx];
+        if (p.folded || p.allIn || p.eliminated) return false;
+
+        executeBetMove(r, p, payload.action, payload.raiseTarget);
+        advanceTurnOrPhase(r);
+        return true;
+      }
+
+      if (type === 'CAST_SKILL') {
+        if (r.status !== 'PLAYING') return false;
+        const p = r.players.find(pl => pl.uid === uid);
+        if (!p || !canPlayerCastSkillOnRoom(r, p)) return false;
+        executeSkillOnRoom(r, p, payload.targetUid || null);
+        return true;
+      }
+
+      if (type === 'MAGICIAN_CHOICE') {
+        if (r.status !== 'PLAYING') return false;
+        const p = r.players.find(pl => pl.uid === uid);
+        if (!p || !p.secretMagicianDraw) return false;
+        const idx = payload.swapIndex;
+        if (idx === 0 || idx === 1) {
+          p.cards[idx] = p.secretMagicianDraw;
+        }
+        p.secretMagicianDraw = null;
+        return true;
+      }
+
+      if (type === 'SKIP_PRESHOWDOWN') {
+        if (r.status !== 'PLAYING' || r.phase !== 'PRE_SHOWDOWN') return false;
+        if (uid === r.hostUid) {
+          runResolutionOnRoom(r);
+          return true;
+        }
+        return false;
+      }
+
+      return false;
+    }
+
+    // =========================================================================
+    // 9. HOST TICK LOOP (AUTO-DRAW, ROLE CONFIRM, BOT AI, TURN TIMEOUT)
+    // =========================================================================
+    async function hostTickLoop() {
+      if (!isHost() || !roomData || hostBusy) return;
+      const now = Date.now();
+
+      // A. LOBBY: Auto 3s countdown when ALL players (>=2) are ready
+      if (roomData.status === 'LOBBY') {
+        const allReady = roomData.players.length >= 2 && roomData.players.every(p => p.ready);
+        if (allReady) {
+          if (!lobbyAutoDrawAt) {
+            lobbyAutoDrawAt = now + 3000;
+          } else if (now >= lobbyAutoDrawAt) {
+            lobbyAutoDrawAt = null;
+            await hostTriggerRoleDraw();
+          }
+        } else {
+          lobbyAutoDrawAt = null;
+        }
+        return;
+      }
+
+      // B. ROLE_DRAW: Auto start Hand 1 after countdown expires
+      if (roomData.status === 'ROLE_DRAW') {
+        if (now >= roomData.roleDrawDeadline) {
+          hostBusy = true;
+          try {
+            const r = JSON.parse(JSON.stringify(roomData));
+            setupNextHandOnRoom(r);
+            await saveRoomState(r);
+          } finally {
+            hostBusy = false;
+          }
+        }
+        return;
+      }
+
+      // C. PLAYING: Pre-Showdown expiration
+      if (roomData.status === 'PLAYING' && roomData.phase === 'PRE_SHOWDOWN') {
+        if (now >= roomData.preShowdownDeadline) {
+          hostBusy = true;
+          try {
+            const r = JSON.parse(JSON.stringify(roomData));
+            runResolutionOnRoom(r);
+            await saveRoomState(r);
+          } finally {
+            hostBusy = false;
+          }
+        }
+        return;
+      }
+
+      // D. PLAYING: Active betting round -> Bot turn or Human turn timeout
+      if (roomData.status === 'PLAYING' && ['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(roomData.phase)) {
+        const curPlayer = roomData.players[roomData.turnIndex];
+        if (!curPlayer) return;
+
+        if (curPlayer.isBot && !botActingLock) {
+          botActingLock = true;
+          setTimeout(async () => {
+            if (!isHost() || !roomData || roomData.status !== 'PLAYING') {
+              botActingLock = false;
+              return;
+            }
+            if (hostBusy) { botActingLock = false; return; }
+            hostBusy = true;
+            try {
+              const r = JSON.parse(JSON.stringify(roomData));
+              const bot = r.players[r.turnIndex];
+              if (bot && bot.isBot && !bot.folded && !bot.allIn && !bot.eliminated) {
+                runBotTurnOnRoom(r, bot);
+                advanceTurnOrPhase(r);
+                await saveRoomState(r);
+              }
+            } finally {
+              hostBusy = false;
+              botActingLock = false;
+            }
+          }, 750);
+        } else if (!curPlayer.isBot && roomData.turnDeadline > 0 && now >= roomData.turnDeadline) {
+          hostBusy = true;
+          try {
+            const r = JSON.parse(JSON.stringify(roomData));
+            const p = r.players[r.turnIndex];
+            if (p && !p.isBot && !p.folded && !p.allIn) {
+              const toCall = r.currentBet - p.roundBet;
+              if (toCall <= 0) {
+                executeBetMove(r, p, 'call', 0);
+                pushRoomLog(r, `⏱️ ${escapeHtml(p.name)} hết giờ — tự động Xem bài (Check).`);
+              } else {
+                executeBetMove(r, p, 'fold', 0);
+                pushRoomLog(r, `⏱️ ${escapeHtml(p.name)} hết giờ — tự động Úp bài (Fold).`);
+              }
+              advanceTurnOrPhase(r);
+              await saveRoomState(r);
+            }
+          } finally {
+            hostBusy = false;
+          }
+        }
+      }
+    }
+
+    // =========================================================================
+    // 10. HOST LOBBY & ROLE DRAW CONTROLS
+    // =========================================================================
+    async function hostAddBot() {
+      if (!isHost() || !roomData || roomData.status !== 'LOBBY') return;
+      if (roomData.players.length >= 6) return;
+      SFX.pop();
+      const r = JSON.parse(JSON.stringify(roomData));
+      const usedNames = new Set(r.players.map(p => p.name));
+      const botName = BOT_NAMES.find(n => !usedNames.has(n)) || `Bot Chibi #${r.players.length}`;
+      const botUid = `bot_${Date.now()}_${Math.floor(Math.random() * 999)}`;
+      r.players.push(createPlayerObject(botUid, botName, true));
+      pushRoomLog(r, `🤖 Chủ phòng đã mời <strong>${botName}</strong> vào bàn!`);
+      await saveRoomState(r);
+    }
+
+    async function hostRemoveBot(botUid) {
+      if (!isHost() || !roomData || roomData.status !== 'LOBBY') return;
+      SFX.pop();
+      const r = JSON.parse(JSON.stringify(roomData));
+      const idx = r.players.findIndex(p => p.uid === botUid && p.isBot);
+      if (idx === -1) return;
+      const [removed] = r.players.splice(idx, 1);
+      pushRoomLog(r, `🤖 Đã mời <strong>${removed.name}</strong> nghỉ ngơi.`);
+      lobbyAutoDrawAt = null;
+      await saveRoomState(r);
+    }
+
+    async function hostTriggerRoleDraw() {
+      if (!isHost() || !roomData || roomData.status !== 'LOBBY') return;
+      if (roomData.players.length < 2 || !roomData.players.every(p => p.ready)) {
+        SFX.boing();
+        showToast('Tất cả mọi người phải Sẵn Sàng (tối thiểu 2 người) mới được bốc thăm!', 'coral');
+        return;
+      }
+      hostBusy = true;
+      try {
+        const r = JSON.parse(JSON.stringify(roomData));
+        const pool = Object.keys(ROLES);
+        for (let i = pool.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+
+        r.players.forEach((p, idx) => {
+          p.roleId = pool[idx];
+          p.roleConfirmed = p.isBot;
+          p.points = 10000;
+          p.eliminated = false;
+          p.cooldown = 0;
+          p.revealState = 'hidden';
+          p.lastBubble = null;
+          p.secretPeek = null;
+          p.secretProphet = null;
+          p.secretMagicianDraw = null;
+          p.secretDisrupted = null;
+          p.secretNotice = null;
+        });
+
+        r.status = 'ROLE_DRAW';
+        r.handNumber = 0;
+        r.dealerIndex = Math.floor(Math.random() * r.players.length);
+        r.roleDrawDeadline = Date.now() + ROLE_DRAW_DURATION_MS;
+        pushRoomLog(r, `🎲 Đã bốc thăm xong chức năng Chibi ẩn cho ${r.players.length} người chơi!`, 'sunny');
+        await saveRoomState(r);
+      } finally {
+        hostBusy = false;
+      }
+    }
+
+    async function hostStartNextHand() {
+      if (!isHost() || !roomData) return;
+      SFX.chime();
+      hostBusy = true;
+      try {
+        const r = JSON.parse(JSON.stringify(roomData));
+        setupNextHandOnRoom(r);
+        await saveRoomState(r);
+      } finally {
+        hostBusy = false;
+      }
+    }
+
+    async function hostReturnToLobby() {
+      if (!isHost() || !roomData) return;
+      SFX.pop();
+      hostBusy = true;
+      try {
+        const r = JSON.parse(JSON.stringify(roomData));
+        r.status = 'LOBBY';
+        r.phase = 'IDLE';
+        r.handNumber = 0;
+        r.resolution = null;
+        r.players.forEach(p => {
+          p.ready = p.isBot;
+          p.roleConfirmed = p.isBot;
+          p.roleId = null;
+          p.points = 10000;
+          p.eliminated = false;
+          p.folded = false;
+          p.allIn = false;
+          p.cards = [];
+          p.cooldown = 0;
+          p.revealState = 'hidden';
+          p.lastBubble = null;
+          p.secretPeek = null;
+          p.secretProphet = null;
+          p.secretMagicianDraw = null;
+          p.secretDisrupted = null;
+          p.secretNotice = null;
+        });
+        await saveRoomState(r);
+      } finally {
+        hostBusy = false;
+      }
+    }
+
+    // =========================================================================
+    // 11. POKER HAND ENGINE (RUNS ON HOST)
+    // =========================================================================
+    function setupNextHandOnRoom(r) {
+      r.players.forEach(p => {
+        if (p.points <= 0) p.eliminated = true;
+      });
+      const alive = r.players.filter(p => !p.eliminated);
+      if (alive.length <= 1 || r.handNumber >= r.maxHands) {
+        r.status = 'TOURNAMENT_END';
+        r.phase = 'IDLE';
+        r.resolution = null;
+        return;
+      }
+
+      r.status = 'PLAYING';
+      r.handNumber++;
+      r.phase = 'PREFLOP';
+      r.deck = createShuffledDeck();
+      r.community = [];
+      // Fixed 5 community cards pre-generated so Nhà Tiên Tri's peek always matches 100%
+      r.futureCommunity = [
+        r.deck.pop(), r.deck.pop(), r.deck.pop(), r.deck.pop(), r.deck.pop()
+      ];
+      r.pot = 0;
+      r.skillActions = [];
+      r.trapTargetUid = null;
+      r.trapCasterUid = null;
+      r.resolution = null;
+
+      const n = r.players.length;
+      do {
+        r.dealerIndex = (r.dealerIndex + 1) % n;
+      } while (r.players[r.dealerIndex].eliminated);
+
+      r.players.forEach(p => {
+        p.cards = [];
+        p.handBet = 0;
+        p.roundBet = 0;
+        p.folded = p.eliminated;
+        p.allIn = false;
+        p.actedThisRound = false;
+        p.usedSkillThisHand = false;
+        p.lastBubble = null;
+        p.secretPeek = null;
+        p.secretProphet = null;
+        p.secretMagicianDraw = null;
+        p.secretDisrupted = null;
+        if (!p.eliminated) {
+          p.cards = [r.deck.pop(), r.deck.pop()];
+        }
+      });
+
+      const { sb, bb } = getBlinds(r.handNumber);
+      r.minRaise = bb;
+
+      const sbIdx = alive.length === 2 ? r.dealerIndex : getNextAliveIdx(r, r.dealerIndex);
+      const bbIdx = getNextAliveIdx(r, sbIdx);
+
+      postBetOnRoom(r, r.players[sbIdx], sb);
+      postBetOnRoom(r, r.players[bbIdx], bb);
+      r.currentBet = Math.max(r.players[sbIdx].roundBet, r.players[bbIdx].roundBet);
+
+      pushRoomLog(r, `🌟 <strong>VÁN ${r.handNumber}/${r.maxHands}</strong> (Blind ${sb}/${bb}) bắt đầu!`, 'sunny');
+      pushRoomLog(r, `${escapeHtml(r.players[sbIdx].name)} đóng SB (${sb}), ${escapeHtml(r.players[bbIdx].name)} đóng BB (${bb}).`);
+
+      r.turnIndex = getNextActiveIdx(r, bbIdx);
+      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+    }
+
+    function getNextAliveIdx(r, fromIdx) {
+      const n = r.players.length;
+      let idx = fromIdx;
+      for (let i = 0; i < n; i++) {
+        idx = (idx + 1) % n;
+        if (!r.players[idx].eliminated) return idx;
+      }
+      return fromIdx;
+    }
+
+    function getNextActiveIdx(r, fromIdx) {
+      const n = r.players.length;
+      let idx = fromIdx;
+      for (let i = 0; i < n; i++) {
+        idx = (idx + 1) % n;
+        const p = r.players[idx];
+        if (!p.eliminated && !p.folded && !p.allIn) return idx;
+      }
+      return -1;
+    }
+
+    function postBetOnRoom(r, p, amount) {
+      const actual = Math.min(amount, p.points);
+      p.points -= actual;
+      p.roundBet += actual;
+      p.handBet += actual;
+      r.pot += actual;
+      if (p.points === 0) p.allIn = true;
+      return actual;
+    }
+
+    function executeBetMove(r, p, action, raiseTarget) {
+      const toCall = Math.max(0, r.currentBet - p.roundBet);
+      if (action === 'fold') {
+        p.folded = true;
+        setPlayerBubble(p, 'Úp bài nha~ 💨');
+        pushRoomLog(r, `${escapeHtml(p.name)} đã <strong>Úp bài (Fold)</strong>.`);
+      } else if (action === 'call') {
+        if (toCall <= 0) {
+          setPlayerBubble(p, 'Xem bài nè~ 👀');
+          pushRoomLog(r, `${escapeHtml(p.name)} <strong>Xem bài (Check)</strong>.`);
+        } else {
+          const paid = postBetOnRoom(r, p, toCall);
+          setPlayerBubble(p, 'Theo nè! ✨');
+          pushRoomLog(r, `${escapeHtml(p.name)} <strong>Theo cược</strong> ${paid.toLocaleString()} đ.`);
+        }
+      } else if (action === 'raise') {
+        const diff = Math.max(toCall + r.minRaise, (raiseTarget || 0) - p.roundBet);
+        const paid = postBetOnRoom(r, p, diff);
+        if (p.roundBet > r.currentBet) {
+          r.minRaise = Math.max(r.minRaise, p.roundBet - r.currentBet);
+          r.currentBet = p.roundBet;
+          resetActedExceptOnRoom(r, p.uid);
+        }
+        setPlayerBubble(p, 'Tố luôn! 🔥');
+        pushRoomLog(r, `${escapeHtml(p.name)} <strong>Tố (Raise)</strong> thêm ${paid.toLocaleString()} đ.`);
+      } else if (action === 'allin') {
+        const paid = postBetOnRoom(r, p, p.points);
+        if (p.roundBet > r.currentBet) {
+          r.currentBet = p.roundBet;
+          resetActedExceptOnRoom(r, p.uid);
+        }
+        setPlayerBubble(p, 'ALL-IN!! 💥');
+        pushRoomLog(r, `${escapeHtml(p.name)} <strong>Tất tay (All-in)</strong> ${paid.toLocaleString()} đ!`, 'candy');
+      }
+      p.actedThisRound = true;
+    }
+
+    function resetActedExceptOnRoom(r, uid) {
+      r.players.forEach(p => {
+        if (p.uid !== uid && !p.folded && !p.allIn && !p.eliminated) {
+          p.actedThisRound = false;
+        }
+      });
+    }
+
+    function advanceTurnOrPhase(r) {
+      const notFolded = r.players.filter(p => !p.eliminated && !p.folded);
+      if (notFolded.length <= 1) {
+        runResolutionOnRoom(r);
+        return;
+      }
+
+      const canAct = notFolded.filter(p => !p.allIn);
+      const allMatched = canAct.every(p => p.actedThisRound && p.roundBet === r.currentBet);
+      if (canAct.length === 0 || (canAct.length === 1 && allMatched) || allMatched) {
+        advancePhaseOnRoom(r);
+        return;
+      }
+
+      const nextIdx = getNextActiveIdx(r, r.turnIndex);
+      if (nextIdx === -1) {
+        advancePhaseOnRoom(r);
+        return;
+      }
+      r.turnIndex = nextIdx;
+      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+    }
+
+    function advancePhaseOnRoom(r) {
+      r.players.forEach(p => {
+        p.roundBet = 0;
+        p.actedThisRound = false;
+        p.secretProphet = null;
+      });
+      r.currentBet = 0;
+      const { bb } = getBlinds(r.handNumber);
+      r.minRaise = bb;
+
+      if (r.phase === 'PREFLOP') {
+        r.phase = 'FLOP';
+        r.community.push(r.futureCommunity[0], r.futureCommunity[1], r.futureCommunity[2]);
+        pushRoomLog(r, `🃏 Lật 3 lá Flop: <strong>${r.community.map(cardToText).join(' ')}</strong>`, 'mint');
+      } else if (r.phase === 'FLOP') {
+        r.phase = 'TURN';
+        r.community.push(r.futureCommunity[3]);
+        pushRoomLog(r, `🃏 Lật lá Turn: <strong>${cardToText(r.community[3])}</strong>`, 'mint');
+      } else if (r.phase === 'TURN') {
+        r.phase = 'RIVER';
+        r.community.push(r.futureCommunity[4]);
+        pushRoomLog(r, `🃏 Lật lá River: <strong>${cardToText(r.community[4])}</strong>`, 'mint');
+      } else if (r.phase === 'RIVER') {
+        enterPreShowdownOnRoom(r);
+        return;
+      }
+
+      const canAct = r.players.filter(p => !p.eliminated && !p.folded && !p.allIn);
+      if (canAct.length <= 1) {
+        advancePhaseOnRoom(r);
+        return;
+      }
+
+      r.turnIndex = getNextActiveIdx(r, r.dealerIndex);
+      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+    }
+
+    function enterPreShowdownOnRoom(r) {
+      r.phase = 'PRE_SHOWDOWN';
+      r.preShowdownDeadline = Date.now() + PRESHOWDOWN_DURATION_MS;
+      pushRoomLog(r, `⏳ Mở cửa sổ <strong>Pre-Showdown (10 giây)</strong> trước khi ngửa bài!`, 'sunny');
+
+      // Bot Người Chỉ Điểm secretly considers casting
+      const snitchBot = r.players.find(p => p.isBot && p.roleId === 'nguoi_chi_diem' && canPlayerCastSkillOnRoom(r, p));
+      if (snitchBot && Math.random() < 0.52) {
+        const suspects = r.players.filter(p => !p.eliminated && p.uid !== snitchBot.uid && p.handBet > 0);
+        if (suspects.length > 0) {
+          suspects.sort((a, b) => b.handBet - a.handBet);
+          const pick = Math.random() < 0.6 ? suspects[0] : suspects[Math.floor(Math.random() * suspects.length)];
+          executeSkillOnRoom(r, snitchBot, pick.uid);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 12. SKILL EXECUTION & BOT AI (RUNS ON HOST)
+    // =========================================================================
+    function canPlayerCastSkillOnRoom(r, p) {
+      if (!p || p.eliminated || !p.roleId) return false;
+      if (p.usedSkillThisHand || p.cooldown > 0) return false;
+      const role = ROLES[p.roleId];
+      if (!role) return false;
+      return role.validPhases.includes(r.phase);
+    }
+
+    function executeSkillOnRoom(r, caster, targetUid) {
+      const role = ROLES[caster.roleId];
+      caster.usedSkillThisHand = true;
+      caster.cooldown = role.cooldown;
+
+      r.skillActions.push({
+        casterUid: caster.uid,
+        roleId: caster.roleId,
+        targetUid: targetUid || null,
+        phase: r.phase
+      });
+
+      if (caster.roleId === 'ke_phan_don') {
+        r.trapCasterUid = caster.uid;
+        r.trapTargetUid = targetUid || caster.uid;
+      } else if (caster.roleId === 'thien_nhan') {
+        const target = r.players.find(p => p.uid === targetUid);
+        if (target && target.cards.length > 0) {
+          const idx = Math.floor(Math.random() * target.cards.length);
+          caster.secretPeek = {
+            targetUid: target.uid,
+            targetName: target.name,
+            cardIndex: idx,
+            card: target.cards[idx]
+          };
+        }
+      } else if (caster.roleId === 'ke_pha_roi') {
+        const target = r.players.find(p => p.uid === targetUid);
+        if (target && target.cards.length > 0 && r.deck.length > 0) {
+          const idx = Math.floor(Math.random() * target.cards.length);
+          const oldCard = target.cards[idx];
+          const newCard = r.deck.pop();
+          target.cards[idx] = newCard;
+          target.secretDisrupted = {
+            id: Date.now() + Math.random(),
+            handNumber: r.handNumber,
+            oldCard,
+            newCard
+          };
+        }
+      } else if (caster.roleId === 'nha_tien_tri') {
+        let nextCard = null;
+        let streetLabel = '';
+        if (r.phase === 'PREFLOP') {
+          nextCard = r.futureCommunity[0];
+          streetLabel = '1 lá bài Flop sắp lật';
+        } else if (r.phase === 'FLOP') {
+          nextCard = r.futureCommunity[3];
+          streetLabel = 'Lá bài Turn sắp lật';
+        } else if (r.phase === 'TURN') {
+          nextCard = r.futureCommunity[4];
+          streetLabel = 'Lá bài River sắp lật';
+        }
+        if (nextCard) {
+          caster.secretProphet = {
+            key: `${r.handNumber}_${r.phase}`,
+            streetLabel,
+            card: nextCard
+          };
+        }
+      } else if (caster.roleId === 'ao_thuat_gia') {
+        if (r.deck.length > 0) {
+          const drawn = r.deck.pop();
+          if (caster.isBot) {
+            const minIdx = caster.cards[0].rank <= caster.cards[1].rank ? 0 : 1;
+            if (drawn.rank > caster.cards[minIdx].rank) {
+              caster.cards[minIdx] = drawn;
+            }
+          } else {
+            caster.secretMagicianDraw = drawn;
+          }
+        }
+      }
+    }
+
+    function estimateBotStrength(r, bot) {
+      if (r.community.length >= 3) {
+        const ev = evaluateBestHand([...bot.cards, ...r.community]);
+        return Math.min(0.98, 0.25 + ev.tier * 0.14);
+      }
+      const r1 = bot.cards[0]?.rank || 2;
+      const r2 = bot.cards[1]?.rank || 2;
+      const pair = r1 === r2 ? 0.35 : 0;
+      const high = (r1 + r2) / 36;
+      return Math.min(0.95, pair + high);
+    }
+
+    function runBotTurnOnRoom(r, bot) {
+      if (canPlayerCastSkillOnRoom(r, bot) && Math.random() < 0.38) {
+        const others = r.players.filter(p => !p.eliminated && !p.folded && p.uid !== bot.uid);
+        if (bot.roleId === 'ke_phan_don') {
+          const candidates = r.players.filter(p => !p.eliminated && !p.folded);
+          const target = Math.random() < 0.5 ? bot : candidates[Math.floor(Math.random() * candidates.length)];
+          executeSkillOnRoom(r, bot, target.uid);
+        } else if ((bot.roleId === 'thien_nhan' || bot.roleId === 'ke_pha_roi') && others.length > 0) {
+          const target = others[Math.floor(Math.random() * others.length)];
+          executeSkillOnRoom(r, bot, target.uid);
+        } else if (bot.roleId === 'nha_tien_tri' || bot.roleId === 'ao_thuat_gia') {
+          executeSkillOnRoom(r, bot, null);
+        }
+      }
+
+      const toCall = Math.max(0, r.currentBet - bot.roundBet);
+      const strength = estimateBotStrength(r, bot);
+      const rand = Math.random();
+      const { bb } = getBlinds(r.handNumber);
+
+      if (toCall === 0) {
+        if (strength > 0.68 && rand < 0.5 && bot.points > r.minRaise) {
+          executeBetMove(r, bot, 'raise', bot.roundBet + r.minRaise * (rand < 0.25 ? 2 : 1));
+        } else {
+          executeBetMove(r, bot, 'call', 0);
+        }
+      } else {
+        if (strength < 0.3 && toCall > bb * 2 && rand < 0.7) {
+          executeBetMove(r, bot, 'fold', 0);
+        } else if (strength > 0.78 && rand < 0.32 && bot.points > toCall + r.minRaise) {
+          executeBetMove(r, bot, 'raise', r.currentBet + r.minRaise);
+        } else {
+          executeBetMove(r, bot, 'call', 0);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 13. END-OF-HAND RESOLUTION (EXACT 3-STEP ORDER ON HOST)
+    // =========================================================================
+    function runResolutionOnRoom(r) {
+      r.phase = 'RESOLUTION';
+      const step1Logs = [];
+      const step2Logs = [];
+      const step3Logs = [];
+
+      const stolenFromUids = new Set();
+      let remainingPot = r.pot;
+      let snitchCaughtByTrap = false;
+      let winnerUids = [];
+
+      // ---------- STEP 1: XỬ LÝ BẪY PHẢN ĐÒN ----------
+      if (r.trapCasterUid) {
+        const counterPlayer = r.players.find(p => p.uid === r.trapCasterUid);
+        const trappedUid = r.trapTargetUid;
+
+        const attackers = r.skillActions.filter(a => {
+          const role = ROLES[a.roleId];
+          return role && role.group === 'targeting' && a.targetUid === trappedUid && a.casterUid !== counterPlayer.uid;
+        });
+
+        if (attackers.length > 0) {
+          counterPlayer.revealState = 'revealed';
+          attackers.forEach(att => {
+            const attackerPlayer = r.players.find(p => p.uid === att.casterUid);
+            if (!attackerPlayer) return;
+            if (att.roleId === 'nguoi_chi_diem') {
+              snitchCaughtByTrap = true;
+              attackerPlayer.revealState = 'revealed';
+            } else if (attackerPlayer.revealState === 'hidden') {
+              attackerPlayer.revealState = 'targeting_group';
+            }
+            const tagHtml = att.roleId === 'nguoi_chi_diem'
+              ? '<span class="text-[#ff5c77] font-extrabold">(Người Chỉ Điểm)</span>'
+              : '<span class="text-[#ff5c77] font-extrabold">[Nhóm Chỉ Định]</span>';
+            const stealAmt = attackerPlayer.handBet;
+            if (!stolenFromUids.has(attackerPlayer.uid) && stealAmt > 0) {
+              stolenFromUids.add(attackerPlayer.uid);
+              remainingPot = Math.max(0, remainingPot - stealAmt);
+              counterPlayer.points += stealAmt;
+              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Kẻ Phản Đòn)</strong> bẫy thành công! Cướp <strong>${stealAmt.toLocaleString()} đ</strong> từ <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}.`);
+            } else {
+              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Kẻ Phản Đòn)</strong> bẫy thành công <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}!`);
+            }
+          });
+        } else {
+          // Trap missed -> 50% penalty into Pot, NO reveal, CD reduced to 2
+          const penalty = Math.floor(counterPlayer.handBet * 0.5);
+          const actualPenalty = Math.min(penalty, counterPlayer.points);
+          counterPlayer.points -= actualPenalty;
+          remainingPot += actualPenalty;
+          counterPlayer.cooldown = 2;
+          counterPlayer.secretNotice = {
+            id: Date.now() + Math.random(),
+            text: `🛡️ Bẫy Phản Đòn hụt rồi! Hồi chiêu giảm còn 2 ván nha~`,
+            tone: 'sunny',
+            sound: 'boing'
+          };
+          step2Logs.push(`⚠️ <strong>${escapeHtml(counterPlayer.name)}</strong> bị phạt 50% điểm cược (${actualPenalty.toLocaleString()} đ gộp vào Pot) do kỹ năng kích hoạt thất bại.`);
+        }
+      }
+
+      // ---------- STEP 2: XỬ LÝ NGƯỜI CHỈ ĐIỂM (HƯỚNG 2) ----------
+      const snitchAction = r.skillActions.find(a => a.roleId === 'nguoi_chi_diem');
+      if (snitchAction && !snitchCaughtByTrap) {
+        const snitchPlayer = r.players.find(p => p.uid === snitchAction.casterUid);
+        const targetPlayer = r.players.find(p => p.uid === snitchAction.targetUid);
+
+        if (snitchPlayer && targetPlayer) {
+          if (targetPlayer.usedSkillThisHand) {
+            targetPlayer.revealState = 'revealed';
+            const stealAmt = targetPlayer.handBet;
+            if (!stolenFromUids.has(targetPlayer.uid) && stealAmt > 0) {
+              stolenFromUids.add(targetPlayer.uid);
+              remainingPot = Math.max(0, remainingPot - stealAmt);
+              snitchPlayer.points += stealAmt;
+            }
+            step2Logs.push(`🎯 <strong>${escapeHtml(snitchPlayer.name)}</strong> Chỉ Điểm trúng phóc! Lộ thân phận <strong>${escapeHtml(targetPlayer.name)} (${ROLES[targetPlayer.roleId].name})</strong> và cướp <strong>${stealAmt.toLocaleString()} đ</strong>.`);
+          } else {
+            // Wrong Snitch -> 50% penalty into Pot, NO reveal, CD reduced to 3
+            const penalty = Math.floor(snitchPlayer.handBet * 0.5);
+            const actualPenalty = Math.min(penalty, snitchPlayer.points);
+            snitchPlayer.points -= actualPenalty;
+            remainingPot += actualPenalty;
+            snitchPlayer.cooldown = 3;
+            snitchPlayer.secretNotice = {
+              id: Date.now() + Math.random(),
+              text: `🎯 Chỉ Điểm hụt mất tiêu! Hồi chiêu giảm còn 3 ván nha~`,
+              tone: 'sunny',
+              sound: 'boing'
+            };
+            step2Logs.push(`⚠️ <strong>${escapeHtml(snitchPlayer.name)}</strong> bị phạt 50% điểm cược (${actualPenalty.toLocaleString()} đ gộp vào Pot) do kỹ năng kích hoạt thất bại.`);
+          }
+        }
+      }
+
+      // ---------- STEP 3: SO BÀI POKER & CHIA POT CÒN LẠI ----------
+      const contenders = r.players.filter(p => !p.eliminated && !p.folded);
+      if (contenders.length === 1) {
+        const winner = contenders[0];
+        winner.points += remainingPot;
+        winnerUids = [winner.uid];
+        step3Logs.push(`🏆 <strong>${escapeHtml(winner.name)}</strong> ôm trọn Pot còn lại (<strong>${remainingPot.toLocaleString()} đ</strong>) vì đối thủ đã úp bài!`);
+      } else {
+        const evals = contenders.map(p => ({
+          player: p,
+          eval: evaluateBestHand([...p.cards, ...r.community])
+        })).sort((a, b) => b.eval.score - a.eval.score);
+
+        const topScore = evals[0].eval.score;
+        const winners = evals.filter(e => e.eval.score === topScore);
+        const share = Math.floor(remainingPot / winners.length);
+        winners.forEach(w => { w.player.points += share; });
+        winnerUids = winners.map(w => w.player.uid);
+
+        const winNames = winners.map(w => `<strong>${escapeHtml(w.player.name)}</strong>`).join(', ');
+        step3Logs.push(`🏆 ${winNames} thắng bài Poker với <strong>${evals[0].eval.name}</strong>, nhận <strong>${share.toLocaleString()} đ</strong>!`);
+
+        evals.forEach(e => {
+          step3Logs.push(`
+            <div class="flex items-center justify-between bg-white px-3 py-1.5 rounded-xl border-2 border-[#3a233c]/20 mt-1">
+              <span class="font-extrabold text-[#3a233c]">${escapeHtml(e.player.name)}</span>
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-[#d98236] font-extrabold">${e.eval.name}</span>
+                <span class="font-mono font-black text-[#3a233c]">${e.player.cards.map(cardToText).join(' ')}</span>
+              </div>
+            </div>
+          `);
+        });
+      }
+
+      r.players.forEach(p => {
+        if (!p.usedSkillThisHand && p.cooldown > 0) {
+          p.cooldown--;
+        }
+        p.secretMagicianDraw = null;
+      });
+
+      [...step1Logs, ...step2Logs].forEach(msg => pushRoomLog(r, msg, 'sunny'));
+      if (step3Logs[0]) pushRoomLog(r, step3Logs[0], 'mint');
+
+      r.resolution = {
+        handNumber: r.handNumber,
+        finalPot: remainingPot,
+        winnerUids,
+        step1Logs,
+        step2Logs,
+        step3Logs
+      };
+    }
+
+    // =========================================================================
+    // 14. CLIENT UI RENDERING (CHIBI + STRICT PRIVACY)
+    // =========================================================================
+    function onRoomStateUpdated() {
+      if (!roomData) return;
+
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('screen-lobby').classList.toggle('hidden', roomData.status !== 'LOBBY');
+      document.getElementById('screen-role-draw').classList.toggle('hidden', roomData.status !== 'ROLE_DRAW');
+      document.getElementById('screen-game').classList.toggle('hidden', roomData.status !== 'PLAYING' && roomData.status !== 'TOURNAMENT_END');
+
+      if (roomData.status === 'LOBBY') {
+        hasFlippedRoleCard = false;
+        document.getElementById('modal-resolution').classList.add('hidden');
+        document.getElementById('modal-victory').classList.add('hidden');
+        renderLobby();
+      } else if (roomData.status === 'ROLE_DRAW') {
+        renderRoleDraw();
+      } else if (roomData.status === 'PLAYING') {
+        document.getElementById('modal-victory').classList.add('hidden');
+        renderGameArena();
+        checkPrivateNotifications();
+      } else if (roomData.status === 'TOURNAMENT_END') {
+        document.getElementById('modal-resolution').classList.add('hidden');
+        renderGameArena();
+        renderTournamentVictory();
+      }
+    }
+
+    function renderLobby() {
+      document.getElementById('lobby-room-code').textContent = roomData.roomCode;
+      document.getElementById('lobby-player-count').textContent = roomData.players.length;
+
+      const hostFlag = isHost();
+      const addBotBtn = document.getElementById('btn-add-bot');
+      addBotBtn.classList.toggle('hidden', !hostFlag || roomData.players.length >= 6);
+
+      const grid = document.getElementById('lobby-seats-grid');
+      let html = '';
+      for (let i = 0; i < 6; i++) {
+        const p = roomData.players[i];
+        if (p) {
+          const isRoomHost = p.uid === roomData.hostUid;
+          const isMe = currentUser && p.uid === currentUser.uid;
+          const avatarSvg = getChibiSVG(p.isBot ? 'lobby_bot' : 'lobby_human');
+          html += `
+            <div class="rounded-2xl p-3 bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] flex flex-col justify-between min-h-[124px] ${p.ready ? 'ring-4 ring-[#6ee7b7]/60' : ''}">
+              <div class="flex items-center gap-2.5">
+                <div class="w-12 h-12 shrink-0 chibi-float">${avatarSvg}</div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-extrabold text-sm text-[#3a233c] truncate">
+                    ${escapeHtml(p.name)} ${isMe ? '<span class="text-[#ff5c77]">(Bạn)</span>' : ''}
+                  </div>
+                  <div class="text-[11px] font-bold text-[#6b4c6e]">
+                    ${isRoomHost ? '👑 Chủ phòng' : p.isBot ? '🤖 Bot Chibi' : '🐾 Người chơi'}
+                  </div>
+                </div>
+                ${hostFlag && p.isBot ? `<button onclick="hostRemoveBot('${p.uid}')" class="btn-chibi btn-coral px-2 py-0.5 rounded-lg text-[10px]">Xóa</button>` : ''}
+              </div>
+              <div class="mt-2.5 pt-2 border-t border-dashed border-[#3a233c]/20 flex items-center justify-between">
+                <span class="text-[11px] font-bold text-[#6b4c6e]">Vai: <strong class="text-[#9b5de5]">? Ẩn</strong></span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border-2 border-[#3a233c] ${p.ready ? 'bg-[#6ee7b7] text-[#3a233c]' : 'bg-[#ffe37d] text-[#3a233c]'}">
+                  ${p.ready ? '✓ Sẵn Sàng!' : '⏳ Chưa sẵn sàng'}
+                </span>
+              </div>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="rounded-2xl p-3 bg-[#fef6e4]/70 border-2 border-dashed border-[#3a233c]/30 flex flex-col items-center justify-center min-h-[124px] text-[#6b4c6e]/70 text-xs font-extrabold">
+              <span class="text-xl mb-1">🪑</span>
+              <span>Ghế trống #${i + 1}</span>
+              <span class="text-[10px] font-bold">Đang chờ bạn bè...</span>
+            </div>
+          `;
+        }
+      }
+      grid.innerHTML = html;
+
+      const me = getMe();
+      const readyBtn = document.getElementById('btn-toggle-ready');
+      if (me) {
+        readyBtn.disabled = false;
+        if (me.ready) {
+          readyBtn.textContent = '✕ Hủy Sẵn Sàng';
+          readyBtn.className = 'btn-chibi btn-coral px-6 py-3 rounded-2xl text-sm uppercase tracking-wide w-full sm:w-auto';
+        } else {
+          readyBtn.textContent = '✓ Sẵn Sàng Ngay!';
+          readyBtn.className = 'btn-chibi btn-mint px-6 py-3 rounded-2xl text-sm uppercase tracking-wide w-full sm:w-auto pulse-candy';
+        }
+      }
+
+      const startDrawBtn = document.getElementById('btn-start-draw');
+      const allReady = roomData.players.length >= 2 && roomData.players.every(p => p.ready);
+      startDrawBtn.classList.toggle('hidden', !hostFlag);
+      startDrawBtn.disabled = !allReady;
+
+      const hint = document.getElementById('lobby-status-hint');
+      if (roomData.players.length < 2) {
+        hint.textContent = 'Cần tối thiểu 2 người chơi (hoặc thêm Bot AI) để mở sòng nha!';
+        hint.className = 'text-xs sm:text-sm font-extrabold text-[#d98236] text-center sm:text-left';
+      } else if (!allReady) {
+        const waiting = roomData.players.filter(p => !p.ready).length;
+        hint.textContent = `Còn ${waiting} bạn chưa Sẵn Sàng. Đủ 100% mới bốc thăm chức năng!`;
+        hint.className = 'text-xs sm:text-sm font-extrabold text-[#d98236] text-center sm:text-left';
+      } else {
+        hint.textContent = '🎉 Tất cả đã Sẵn Sàng! Tự động bốc thăm Chibi sau 3 giây...';
+        hint.className = 'text-xs sm:text-sm font-black text-[#269963] text-center sm:text-left';
+      }
+    }
+
+    function renderRoleDraw() {
+      const me = getMe();
+      if (!me || !me.roleId) return;
+      const role = ROLES[me.roleId];
+
+      document.getElementById('draw-mystery-svg').innerHTML = getChibiSVG('mystery');
+      document.getElementById('draw-role-svg').innerHTML = getChibiSVG(role.id);
+      document.getElementById('draw-role-name').textContent = role.name;
+      document.getElementById('draw-role-skill').textContent = `✨ Kỹ năng: ${role.skillName}`;
+      document.getElementById('draw-role-desc').textContent = role.desc;
+      document.getElementById('draw-role-timing').textContent = role.timingText;
+      document.getElementById('draw-role-cd').textContent = `CD: ${role.cooldown} ván${role.missLabel ? ` (${role.missLabel})` : ''}`;
+
+      const grpEl = document.getElementById('draw-role-group');
+      grpEl.textContent = role.groupLabel;
+      grpEl.style.backgroundColor = role.badgeBg;
+
+      const flipEl = document.getElementById('role-flip-inner');
+      if (!hasFlippedRoleCard) {
+        flipEl.classList.remove('flipped');
+        hasFlippedRoleCard = true;
+        setTimeout(() => {
+          flipEl.classList.add('flipped');
+          SFX.magic();
+        }, 650);
+      }
+
+      const others = roomData.players.filter(p => p.uid !== me.uid);
+      document.getElementById('draw-other-players').innerHTML = others.map(p => `
+        <div class="px-3 py-1.5 rounded-2xl bg-[#fffdf7] border-2 border-[#3a233c] text-xs flex items-center gap-2 shadow-[0_2px_0_#3a233c]">
+          <span class="font-extrabold text-[#3a233c]">${escapeHtml(p.name)}</span>
+          <span class="px-1.5 py-0.5 rounded-lg bg-[#e9d8fd] border border-[#3a233c] text-[#3a233c] font-black text-[10px]">?</span>
+          ${p.roleConfirmed ? '<span class="text-[#269963] font-black text-xs">✓</span>' : ''}
+        </div>
+      `).join('');
+
+      const confirmBtn = document.getElementById('btn-confirm-role');
+      confirmBtn.disabled = me.roleConfirmed;
+      if (me.roleConfirmed) {
+        confirmBtn.innerHTML = '✓ Đã sẵn sàng — Chờ các bạn khác...';
+      }
+    }
+
+    function renderGameArena() {
+      const me = getMe();
+      if (!me) return;
+
+      const { sb, bb } = getBlinds(roomData.handNumber);
+      document.getElementById('hud-room-code').textContent = `#${roomData.roomCode}`;
+      document.getElementById('hud-hand').textContent = `Ván ${roomData.handNumber} / ${roomData.maxHands}`;
+      document.getElementById('hud-blind').textContent = `Blind: ${sb} / ${bb}`;
+      document.getElementById('hud-phase').textContent = roomData.phase.replace('_', ' ');
+      document.getElementById('table-pot').textContent = `${roomData.pot.toLocaleString()} đ`;
+
+      // Community cards
+      const commEl = document.getElementById('community-cards');
+      let commHtml = '';
+      for (let i = 0; i < 5; i++) {
+        if (roomData.community[i]) {
+          commHtml += renderCardHTML(roomData.community[i]);
+        } else {
+          commHtml += `<div class="w-[52px] h-[74px] rounded-[10px] border-2 border-dashed border-white/55 bg-white/15"></div>`;
+        }
+      }
+      commEl.innerHTML = commHtml;
+
+      // Prophet pinned preview
+      const prophetBanner = document.getElementById('prophet-preview');
+      if (me.secretProphet && me.secretProphet.card) {
+        prophetBanner.classList.remove('hidden');
+        document.getElementById('prophet-banner-label').textContent = `🔮 Thấu Thị (${me.secretProphet.streetLabel}):`;
+        document.getElementById('prophet-card-text').textContent = cardToText(me.secretProphet.card);
+      } else {
+        prophetBanner.classList.add('hidden');
+      }
+
+      // Pre-Showdown Bar
+      const preBar = document.getElementById('preshowdown-bar');
+      if (roomData.phase === 'PRE_SHOWDOWN') {
+        preBar.classList.remove('hidden');
+        const snitchBtn = document.getElementById('btn-preshowdown-snitch');
+        snitchBtn.classList.toggle('hidden', !(me.roleId === 'nguoi_chi_diem' && canPlayerCastSkillOnRoom(roomData, me)));
+        document.getElementById('btn-skip-preshowdown').classList.toggle('hidden', !isHost());
+      } else {
+        preBar.classList.add('hidden');
+      }
+
+      // Arrange opponents clockwise
+      const myIdx = roomData.players.findIndex(p => p.uid === me.uid);
+      const opponents = [];
+      for (let offset = 1; offset < roomData.players.length; offset++) {
+        opponents.push(roomData.players[(myIdx + offset) % roomData.players.length]);
+      }
+
+      const slotMap = {
+        1: [3],
+        2: [2, 4],
+        3: [1, 3, 5],
+        4: [1, 2, 4, 5],
+        5: [1, 2, 3, 4, 5]
+      };
+      const activeSlots = slotMap[opponents.length] || [];
+      const now = Date.now();
+
+      for (let s = 1; s <= 5; s++) {
+        const seatEl = document.getElementById(`seat-${s}`);
+        const oppPos = activeSlots.indexOf(s);
+        if (oppPos === -1) {
+          seatEl.classList.add('hidden');
+          continue;
+        }
+        seatEl.classList.remove('hidden');
+        const p = opponents[oppPos];
+        const pGlobalIdx = roomData.players.findIndex(x => x.uid === p.uid);
+        const isTurn = roomData.turnIndex === pGlobalIdx && ['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(roomData.phase);
+        const isDealer = roomData.dealerIndex === pGlobalIdx;
+
+        // STRICT PRIVACY: Show Chibi role portrait ONLY if revealed, else mystery hooded Chibi
+        const portraitKey = (p.revealState === 'revealed' && p.roleId) ? p.roleId : 'mystery';
+        let roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#e9d8fd] border border-[#3a233c] text-[#3a233c] text-[10px] font-black">?</span>`;
+        if (p.revealState === 'targeting_group') {
+          roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#ffe5ec] border border-[#ff5c77] text-[#ef233c] text-[9px] font-extrabold">[Nhóm Chỉ Định]</span>`;
+        } else if (p.revealState === 'revealed' && p.roleId) {
+          roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#ffe37d] border border-[#3a233c] text-[#3a233c] text-[9px] font-extrabold">${ROLES[p.roleId].name}</span>`;
+        }
+
+        // Speech bubble if recent (< 4.5s)
+        const showBubble = p.lastBubble && (now - p.lastBubble.ts < 4500);
+        const bubbleHtml = showBubble
+          ? `<div class="speech-bubble absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-0.5 text-[11px] z-30">${escapeHtml(p.lastBubble.text)}</div>`
+          : '';
+
+        // Cards: show at RESOLUTION (if not folded) or if local player is Thiên Nhãn who peeked that card
+        const peekMatch = me.secretPeek && me.secretPeek.targetUid === p.uid ? me.secretPeek : null;
+        const showAll = roomData.phase === 'RESOLUTION' && !p.folded;
+        let cardsHtml = '';
+        if (!p.eliminated && p.cards.length === 2) {
+          cardsHtml = `
+            <div class="flex items-center justify-center gap-1 -mt-6 mb-1">
+              ${renderCardHTML(p.cards[0], 'sm', !showAll && !(peekMatch && peekMatch.cardIndex === 0))}
+              ${renderCardHTML(p.cards[1], 'sm', !showAll && !(peekMatch && peekMatch.cardIndex === 1))}
+            </div>
+          `;
+        }
+
+        seatEl.innerHTML = `
+          <div class="relative rounded-2xl bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] p-2 transition ${isTurn ? 'seat-active' : ''} ${p.folded || p.eliminated ? 'seat-folded' : ''}">
+            ${bubbleHtml}
+            ${cardsHtml}
+            <div class="flex items-center gap-1.5">
+              <div class="w-9 h-9 shrink-0">${getChibiSVG(portraitKey)}</div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center justify-between gap-1">
+                  <span class="font-extrabold text-[11px] text-[#3a233c] truncate">${escapeHtml(p.name)}</span>
+                  ${isDealer ? '<span class="w-4 h-4 rounded-full bg-[#ffe37d] border border-[#3a233c] text-[#3a233c] text-[9px] font-black flex items-center justify-center shrink-0">D</span>' : ''}
+                </div>
+                <div class="text-xs font-black text-[#d98236]">${p.points.toLocaleString()} đ</div>
+              </div>
+            </div>
+            <div class="mt-1 pt-1 border-t border-dashed border-[#3a233c]/20 flex items-center justify-between gap-1">
+              ${roleBadge}
+              <span class="text-[10px] font-bold text-[#6b4c6e]">
+                ${p.eliminated ? '<span class="text-[#ef233c]">Bị loại</span>' : p.folded ? '<span class="text-[#ef233c]">Úp bài</span>' : p.allIn ? '<span class="text-[#9b5de5]">All-in!</span>' : `Cược: ${p.handBet.toLocaleString()}`}
+              </span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Local Player Panel
+      const myRole = ROLES[me.roleId];
+      document.getElementById('human-chibi-avatar').innerHTML = getChibiSVG(me.roleId || 'mystery');
+      document.getElementById('human-name-label').textContent = `${me.name}`;
+      document.getElementById('human-role-badge').textContent = myRole ? `${myRole.icon} ${myRole.name}` : '?';
+      document.getElementById('human-points').textContent = `${me.points.toLocaleString()} đ`;
+      document.getElementById('human-bet-info').textContent = `Cược ván này: ${me.handBet.toLocaleString()} đ`;
+
+      // Local player comic bubble
+      const myBubbleEl = document.getElementById('human-speech-bubble');
+      if (me.lastBubble && (now - me.lastBubble.ts < 4200)) {
+        myBubbleEl.textContent = me.lastBubble.text;
+        myBubbleEl.classList.remove('hidden');
+      } else {
+        myBubbleEl.classList.add('hidden');
+      }
+
+      const isMyTurn = roomData.turnIndex === myIdx && ['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(roomData.phase) && !me.folded && !me.allIn && !me.eliminated;
+      document.getElementById('human-status-tag').textContent =
+        me.eliminated ? 'Đã Bị Loại' :
+        me.folded ? 'Đã Úp Bài' :
+        me.allIn ? 'Tất Tay!' :
+        isMyTurn ? '🌟 Tới lượt bạn!' : '';
+
+      document.getElementById('human-cards').innerHTML = me.cards.map(c => renderCardHTML(c, 'lg')).join('');
+
+      // Skill Button
+      const skillBtn = document.getElementById('btn-skill');
+      const skillNameEl = document.getElementById('skill-btn-name');
+      const skillSubEl = document.getElementById('skill-btn-sub');
+      const canCast = canPlayerCastSkillOnRoom(roomData, me);
+
+      skillBtn.disabled = !canCast;
+      if (myRole) {
+        skillBtn.title = `${myRole.skillName} (CD: ${myRole.cooldown} ván${myRole.missLabel ? ` / ${myRole.missLabel}` : ''}) — ${myRole.desc}`;
+        skillSubEl.textContent = `${myRole.icon} ${myRole.skillName}`;
+        if (me.usedSkillThisHand) {
+          skillNameEl.textContent = 'Đã dùng ván này';
+          skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
+        } else if (me.cooldown > 0) {
+          skillNameEl.textContent = `Hồi chiêu: ${me.cooldown} ván`;
+          skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
+        } else if (!myRole.validPhases.includes(roomData.phase)) {
+          skillNameEl.textContent = myRole.timingText;
+          skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
+        } else {
+          skillNameEl.textContent = '✨ DÙNG CHIÊU!';
+          skillBtn.className = 'btn-chibi btn-candy px-3.5 py-2.5 rounded-2xl text-left min-w-[148px] pulse-candy';
+        }
+      }
+
+      // Betting Controls
+      const toCall = Math.max(0, roomData.currentBet - me.roundBet);
+      document.getElementById('btn-fold').disabled = !isMyTurn;
+      document.getElementById('btn-check-call').disabled = !isMyTurn;
+      document.getElementById('btn-raise').disabled = !isMyTurn || me.points <= toCall;
+      document.getElementById('btn-allin').disabled = !isMyTurn || me.points <= 0;
+      document.getElementById('btn-check-call').textContent = toCall === 0 ? 'Xem (Check)' : `Theo (${Math.min(toCall, me.points).toLocaleString()})`;
+
+      const slider = document.getElementById('raise-slider');
+      const minTarget = Math.min(me.roundBet + me.points, roomData.currentBet + roomData.minRaise);
+      const maxTarget = me.roundBet + me.points;
+      slider.min = minTarget;
+      slider.max = Math.max(minTarget, maxTarget);
+      if (Number(slider.value) < minTarget || Number(slider.value) > maxTarget) {
+        slider.value = minTarget;
+      }
+      slider.disabled = !isMyTurn || me.points <= toCall;
+      updateRaiseLabel();
+
+      // Magician Modal
+      if (me.secretMagicianDraw) {
+        openMagicianModal(me);
+      } else {
+        document.getElementById('modal-magician').classList.add('hidden');
+      }
+
+      // Resolution Modal
+      if (roomData.phase === 'RESOLUTION' && roomData.resolution) {
+        renderResolutionModal(roomData.resolution);
+      } else {
+        document.getElementById('modal-resolution').classList.add('hidden');
+      }
+
+      renderBattleLog(roomData.logs || []);
+    }
+
+    function checkPrivateNotifications() {
+      const me = getMe();
+      if (!me) return;
+
+      if (me.secretDisrupted && me.secretDisrupted.id !== lastShownDisruptId) {
+        lastShownDisruptId = me.secretDisrupted.id;
+        const d = me.secretDisrupted;
+        SFX.boing();
+        showToast(`🃏 Ối dồi ôi! Kẻ Phá Rối đã tráo lá ${cardToText(d.oldCard)} thành ${cardToText(d.newCard)}!`, 'coral');
+      }
+
+      if (me.secretProphet && me.secretProphet.key !== lastShownProphetKey) {
+        lastShownProphetKey = me.secretProphet.key;
+        SFX.magic();
+        document.getElementById('prophet-modal-svg').innerHTML = getChibiSVG('nha_tien_tri');
+        document.getElementById('prophet-modal-street').textContent = me.secretProphet.streetLabel;
+        document.getElementById('prophet-modal-card').innerHTML = renderCardHTML(me.secretProphet.card, 'lg');
+        document.getElementById('modal-prophet').classList.remove('hidden');
+      }
+
+      if (me.secretNotice && me.secretNotice.id !== lastShownNoticeId) {
+        lastShownNoticeId = me.secretNotice.id;
+        if (me.secretNotice.sound === 'boing') SFX.boing();
+        showToast(me.secretNotice.text, me.secretNotice.tone || 'sunny');
+      }
+    }
+
+    function updateCountdownDisplays() {
+      if (!roomData) return;
+      const now = Date.now();
+
+      if (roomData.status === 'ROLE_DRAW') {
+        const sec = Math.max(0, Math.ceil((roomData.roleDrawDeadline - now) / 1000));
+        const el = document.getElementById('draw-countdown');
+        if (el) el.textContent = sec;
+      }
+
+      if (roomData.status === 'PLAYING') {
+        const turnEl = document.getElementById('hud-turn-timer');
+        if (['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(roomData.phase) && roomData.turnDeadline > 0) {
+          const sec = Math.max(0, Math.ceil((roomData.turnDeadline - now) / 1000));
+          turnEl.classList.remove('hidden');
+          turnEl.textContent = `⏱️ ${sec}s`;
+        } else {
+          turnEl.classList.add('hidden');
+        }
+
+        if (roomData.phase === 'PRE_SHOWDOWN') {
+          const sec = Math.max(0, Math.ceil((roomData.preShowdownDeadline - now) / 1000));
+          document.getElementById('preshowdown-timer').textContent = `${sec}s`;
+        }
+      }
+    }
+
+    function renderResolutionModal(res) {
+      document.getElementById('res-title').textContent = `Kết Quả Ván ${res.handNumber} / ${roomData.maxHands}`;
+      document.getElementById('res-pot-badge').textContent = `🪙 Pot Poker: ${res.finalPot.toLocaleString()} đ`;
+
+      if (lastCelebratedResHand !== res.handNumber) {
+        lastCelebratedResHand = res.handNumber;
+        if (currentUser && res.winnerUids && res.winnerUids.includes(currentUser.uid)) {
+          SFX.fanfare();
+          if (res.finalPot >= 800) launchConfetti(55);
+        } else {
+          SFX.chime();
+        }
+      }
+
+      document.getElementById('res-steps').innerHTML = `
+        <div class="p-3.5 rounded-2xl bg-[#fef3c7] border-2 border-[#3a233c]">
+          <div class="text-xs font-extrabold uppercase text-[#d98236] mb-1.5">Bước 1: Xử lý Bẫy Phản Đòn 🛡️</div>
+          <div class="text-xs sm:text-sm space-y-1 text-[#3a233c] font-bold">
+            ${res.step1Logs.length ? res.step1Logs.map(l => `<div>${l}</div>`).join('') : '<div class="text-[#6b4c6e] italic">Không có bẫy Phản Đòn nào được kích hoạt.</div>'}
+          </div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-[#ffe5ec] border-2 border-[#3a233c]">
+          <div class="text-xs font-extrabold uppercase text-[#ef233c] mb-1.5">Bước 2: Xử lý Người Chỉ Điểm & Án Phạt 50% 🎯</div>
+          <div class="text-xs sm:text-sm space-y-1 text-[#3a233c] font-bold">
+            ${res.step2Logs.length ? res.step2Logs.map(l => `<div>${l}</div>`).join('') : '<div class="text-[#6b4c6e] italic">Không có Chỉ Điểm hoặc án phạt nào xảy ra.</div>'}
+          </div>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-[#d8f3dc] border-2 border-[#3a233c]">
+          <div class="text-xs font-extrabold uppercase text-[#1b7a4e] mb-1.5">Bước 3: So Bài Poker & Chia Pot 🏆</div>
+          <div class="text-xs sm:text-sm space-y-1 text-[#3a233c] font-bold">
+            ${res.step3Logs.map(l => `<div>${l}</div>`).join('')}
+          </div>
+        </div>
+      `;
+
+      const hostFlag = isHost();
+      document.getElementById('btn-next-hand').classList.toggle('hidden', !hostFlag);
+      document.getElementById('guest-waiting-next').classList.toggle('hidden', hostFlag);
+      document.getElementById('modal-resolution').classList.remove('hidden');
+    }
+
+    function renderTournamentVictory() {
+      const sorted = [...roomData.players].sort((a, b) => b.points - a.points);
+      const champ = sorted[0];
+      const isMeChamp = currentUser && champ.uid === currentUser.uid;
+
+      if (!lastCelebratedVictory) {
+        lastCelebratedVictory = true;
+        SFX.fanfare();
+        launchConfetti(110);
+      }
+
+      document.getElementById('victory-subtitle').innerHTML = isMeChamp
+        ? `🎉 Chúc mừng! Bạn đã đăng quang <strong>Thần Bài Chibi</strong> với ${champ.points.toLocaleString()} điểm!`
+        : `🎉 <strong>${escapeHtml(champ.name)}</strong> (${ROLES[champ.roleId]?.name || '?'}) đã vô địch giải đấu với ${champ.points.toLocaleString()} điểm!`;
+
+      document.getElementById('victory-leaderboard').innerHTML = sorted.map((p, idx) => `
+        <div class="flex items-center justify-between px-3 py-2 rounded-2xl border-2 border-[#3a233c] ${idx === 0 ? 'bg-[#ffe37d] shadow-[0_3px_0_#3a233c]' : 'bg-[#fef6e4]'}">
+          <div class="flex items-center gap-2.5">
+            <span class="font-black text-base ${idx === 0 ? 'text-[#ff5c77]' : 'text-[#6b4c6e]'}">#${idx + 1}</span>
+            <div class="w-10 h-10 shrink-0">${getChibiSVG(p.roleId || 'mystery')}</div>
+            <div>
+              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)}</div>
+              <div class="text-[11px] font-bold text-[#6b4c6e]">${p.roleId ? `${ROLES[p.roleId].icon} ${ROLES[p.roleId].name}` : ''}</div>
+            </div>
+          </div>
+          <span class="font-black text-sm text-[#d98236]">${p.points.toLocaleString()} đ</span>
+        </div>
+      `).join('');
+
+      document.getElementById('btn-rematch-lobby').classList.toggle('hidden', !isHost());
+      document.getElementById('modal-victory').classList.remove('hidden');
+    }
+
+    function renderBattleLog(logs) {
+      const el = document.getElementById('battle-log');
+      const colorMap = {
+        sunny: 'bg-[#fef3c7] border-[#d98236]/50 text-[#3a233c]',
+        mint: 'bg-[#d8f3dc] border-[#269963]/50 text-[#1b4332]',
+        candy: 'bg-[#ffe5ec] border-[#f15bb5]/50 text-[#3a233c]',
+        default: 'bg-[#fef6e4] border-[#3a233c]/15 text-[#3a233c]'
+      };
+      el.innerHTML = logs.map(l => `
+        <div class="px-2.5 py-1.5 rounded-xl border-2 font-bold ${colorMap[l.tone] || colorMap.default} leading-relaxed">${l.html}</div>
+      `).join('');
+    }
+
+    function renderChatLists(msgs) {
+      const html = msgs.length === 0
+        ? '<div class="text-[#6b4c6e]/70 italic font-bold text-center py-4">Chưa có tin nhắn nào nè~</div>'
+        : msgs.map(m => {
+            const isMine = currentUser && m.uid === currentUser.uid;
+            return `
+              <div class="px-3 py-1.5 rounded-2xl border-2 border-[#3a233c] ${isMine ? 'bg-[#ffe37d]/70' : 'bg-[#fef6e4]'}">
+                <div class="text-[10px] font-extrabold ${isMine ? 'text-[#ff5c77]' : 'text-[#269963]'}">${escapeHtml(m.name)}</div>
+                <div class="text-[#3a233c] font-bold break-words">${escapeHtml(m.text)}</div>
+              </div>
+            `;
+          }).join('');
+
+      const lobbyList = document.getElementById('lobby-chat-list');
+      const gameList = document.getElementById('game-chat-list');
+      lobbyList.innerHTML = html;
+      gameList.innerHTML = html;
+      lobbyList.scrollTop = lobbyList.scrollHeight;
+      gameList.scrollTop = gameList.scrollHeight;
+    }
+
+    // =========================================================================
+    // 15. CLIENT INTERACTION HANDLERS
+    // =========================================================================
+    function toggleReady() {
+      SFX.pop();
+      sendAction('TOGGLE_READY');
+    }
+
+    function confirmRoleDraw() {
+      SFX.chime();
+      sendAction('CONFIRM_ROLE');
+    }
+
+    function sendBetAction(action) {
+      if (action === 'fold') SFX.boing();
+      else if (action === 'allin') SFX.fanfare();
+      else SFX.pop();
+      const raiseTarget = Number(document.getElementById('raise-slider').value);
+      sendAction('BET_ACTION', { action, raiseTarget });
+    }
+
+    function sendSkipPreShowdown() {
+      SFX.pop();
+      sendAction('SKIP_PRESHOWDOWN');
+    }
+
+    function openSkillAction() {
+      const me = getMe();
+      if (!me || !roomData || !canPlayerCastSkillOnRoom(roomData, me)) return;
+      const role = ROLES[me.roleId];
+      SFX.pop();
+
+      if (me.roleId === 'nha_tien_tri' || me.roleId === 'ao_thuat_gia') {
+        SFX.magic();
+        sendAction('CAST_SKILL', { targetUid: null });
+        showToast(`✨ Đã kích hoạt ẩn chiêu ${role.skillName}!`, 'candy');
+        return;
+      }
+
+      document.getElementById('target-modal-title').textContent = `${role.icon} ${role.skillName} — Chọn Mục Tiêu`;
+      document.getElementById('target-modal-desc').textContent = role.desc;
+
+      const list = document.getElementById('target-list');
+      const candidates = roomData.players.filter(p => {
+        if (p.eliminated) return false;
+        if (me.roleId === 'ke_phan_don') return true;
+        return p.uid !== me.uid;
+      });
+
+      list.innerHTML = candidates.map(p => `
+        <button onclick="confirmSkillTarget('${p.uid}')"
+          class="btn-chibi btn-cream w-full px-3.5 py-2.5 rounded-2xl flex items-center justify-between text-left">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 shrink-0">${getChibiSVG(p.revealState === 'revealed' && p.roleId ? p.roleId : 'mystery')}</div>
+            <div>
+              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)} ${p.uid === me.uid ? '(Bản thân)' : ''}</div>
+              <div class="text-[11px] font-bold text-[#6b4c6e]">Đã cược ván này: ${p.handBet.toLocaleString()} đ</div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl bg-[#ffe37d] border-2 border-[#3a233c] text-xs font-extrabold text-[#3a233c]">Chọn →</span>
+        </button>
+      `).join('');
+
+      document.getElementById('modal-target').classList.remove('hidden');
+    }
+
+    function confirmSkillTarget(targetUid) {
+      closeTargetModal();
+      SFX.magic();
+      const me = getMe();
+      const role = me ? ROLES[me.roleId] : null;
+      sendAction('CAST_SKILL', { targetUid });
+      if (role) {
+        showToast(`✨ Đã kích hoạt ẩn ${role.skillName}!`, 'candy');
+      }
+    }
+
+    function openMagicianModal(me) {
+      document.getElementById('magician-modal-svg').innerHTML = getChibiSVG('ao_thuat_gia');
+      document.getElementById('magician-drawn-card').innerHTML = renderCardHTML(me.secretMagicianDraw, 'lg');
+      document.getElementById('magician-hand-choices').innerHTML = me.cards.map((c, idx) => `
+        <button onclick="sendMagicianChoice(${idx})" class="btn-chibi btn-cream flex flex-col items-center gap-1.5 p-2.5 rounded-2xl">
+          ${renderCardHTML(c, 'lg')}
+          <span class="text-[11px] font-extrabold text-[#9b5de5]">Đổi lá này</span>
+        </button>
+      `).join('');
+      document.getElementById('modal-magician').classList.remove('hidden');
+    }
+
+    function sendMagicianChoice(swapIndex) {
+      document.getElementById('modal-magician').classList.add('hidden');
+      SFX.chime();
+      sendAction('MAGICIAN_CHOICE', { swapIndex });
+      showToast(swapIndex === -1 ? 'Đã giữ nguyên bài cũ nha~' : '🎩 Úm ba la! Hoán đổi bài thành công!', 'mint');
+    }
+
+    async function sendChatMessage(event, inputId) {
+      event.preventDefault();
+      if (!currentUser || !activeRoomCode) return;
+      const input = document.getElementById(inputId);
+      const text = input.value.trim();
+      if (!text) return;
+      const me = getMe();
+      input.value = '';
+      SFX.pop();
+      try {
+        await addDoc(getChatColRef(activeRoomCode), {
+          uid: currentUser.uid,
+          name: me ? me.name : 'Người chơi',
+          text,
+          createdAt: Date.now()
+        });
+      } catch (err) {
+        console.error('Chat send error:', err);
+      }
+    }
+
+    async function sendQuickEmoji(emoji) {
+      if (!currentUser || !activeRoomCode) return;
+      const me = getMe();
+      SFX.pop();
+      try {
+        await addDoc(getChatColRef(activeRoomCode), {
+          uid: currentUser.uid,
+          name: me ? me.name : 'Người chơi',
+          text: emoji,
+          createdAt: Date.now()
+        });
+      } catch (err) {
+        console.error('Emoji send error:', err);
+      }
+    }
+
+    function copyRoomCode() {
+      if (!activeRoomCode) return;
+      SFX.pop();
+      const temp = document.createElement('textarea');
+      temp.value = activeRoomCode;
+      document.body.appendChild(temp);
+      temp.select();
+      document.execCommand('copy');
+      document.body.removeChild(temp);
+      showToast(`📋 Đã copy mã phòng: ${activeRoomCode}`, 'mint');
+    }
+
+    function switchSidebarTab(tab) {
+      SFX.pop();
+      const logBtn = document.getElementById('tab-btn-log');
+      const chatBtn = document.getElementById('tab-btn-chat');
+      const logPanel = document.getElementById('sidebar-log-panel');
+      const chatPanel = document.getElementById('sidebar-chat-panel');
+
+      if (tab === 'log') {
+        logBtn.className = 'btn-chibi btn-sunny flex-1 py-1.5 rounded-xl text-xs';
+        chatBtn.className = 'btn-chibi btn-cream flex-1 py-1.5 rounded-xl text-xs';
+        logPanel.classList.remove('hidden');
+        chatPanel.classList.add('hidden');
+      } else {
+        chatBtn.className = 'btn-chibi btn-sunny flex-1 py-1.5 rounded-xl text-xs';
+        logBtn.className = 'btn-chibi btn-cream flex-1 py-1.5 rounded-xl text-xs';
+        chatPanel.classList.remove('hidden');
+        logPanel.classList.add('hidden');
+      }
+    }
+
+    function updateRaiseLabel() {
+      const val = Number(document.getElementById('raise-slider').value);
+      document.getElementById('raise-amount-label').textContent = val.toLocaleString();
+    }
+
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
+    }
+
+    function showToast(msg, tone = 'sunny') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const styles = {
+        sunny: 'bg-[#ffe37d] text-[#3a233c]',
+        mint: 'bg-[#6ee7b7] text-[#3a233c]',
+        coral: 'bg-[#ff5c77] text-white',
+        candy: 'bg-[#c77dff] text-white'
+      };
+      el.className = `toast-anim px-4 py-2.5 rounded-2xl border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] text-xs sm:text-sm font-extrabold text-center ${styles[tone] || styles.sunny}`;
+      el.textContent = msg;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 4200);
+    }
+
+    function populateStaticChibiUI() {
+      // Home Chibi Parade
+      const parade = document.getElementById('home-chibi-parade');
+      parade.innerHTML = Object.keys(ROLES).map((id, i) => `
+        <div class="w-11 h-11 sm:w-14 sm:h-14 chibi-float" style="animation-delay: ${i * 0.22}s" title="${ROLES[id].name}">
+          ${getChibiSVG(id)}
+        </div>
+      `).join('');
+
+      // Rules Modal 6 Chibi Grid
+      const rulesGrid = document.getElementById('rules-chibi-grid');
+      rulesGrid.innerHTML = Object.values(ROLES).map(r => `
+        <div class="p-3 rounded-2xl bg-[#fffdf7] border-2 border-[#3a233c] shadow-[0_3px_0_#3a233c] flex gap-2.5 items-start">
+          <div class="w-14 h-14 shrink-0">${getChibiSVG(r.id)}</div>
+          <div class="min-w-0">
+            <div class="font-extrabold text-sm text-[#3a233c]">${r.name}</div>
+            <div class="text-[11px] font-extrabold text-[#f15bb5]">${r.skillName} • CD: ${r.cooldown} ván${r.missLabel ? ` (${r.missLabel})` : ''}</div>
+            <p class="text-[11px] font-bold text-[#6b4c6e] mt-1 leading-snug">${r.desc}</p>
+            <div class="text-[10px] font-extrabold text-[#269963] mt-1">⏱️ ${r.timingText}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openRulesModal() { SFX.pop(); document.getElementById('modal-rules').classList.remove('hidden'); }
+    function closeRulesModal() { SFX.pop(); document.getElementById('modal-rules').classList.add('hidden'); }
+    function closeTargetModal() { SFX.pop(); document.getElementById('modal-target').classList.add('hidden'); }
+    function closeProphetModal() { SFX.pop(); document.getElementById('modal-prophet').classList.add('hidden'); }
+
+    // Expose handlers to window
+    window.createOnlineRoom = createOnlineRoom;
+    window.joinOnlineRoom = joinOnlineRoom;
+    window.leaveRoom = leaveRoom;
+    window.copyRoomCode = copyRoomCode;
+    window.hostAddBot = hostAddBot;
+    window.hostRemoveBot = hostRemoveBot;
+    window.toggleReady = toggleReady;
+    window.hostTriggerRoleDraw = hostTriggerRoleDraw;
+    window.confirmRoleDraw = confirmRoleDraw;
+    window.sendBetAction = sendBetAction;
+    window.sendSkipPreShowdown = sendSkipPreShowdown;
+    window.openSkillAction = openSkillAction;
+    window.confirmSkillTarget = confirmSkillTarget;
+    window.sendMagicianChoice = sendMagicianChoice;
+    window.hostStartNextHand = hostStartNextHand;
+    window.hostReturnToLobby = hostReturnToLobby;
+    window.sendChatMessage = sendChatMessage;
+    window.sendQuickEmoji = sendQuickEmoji;
+    window.switchSidebarTab = switchSidebarTab;
+    window.updateRaiseLabel = updateRaiseLabel;
+    window.openRulesModal = openRulesModal;
+    window.closeRulesModal = closeRulesModal;
+    window.closeTargetModal = closeTargetModal;
+    window.closeProphetModal = closeProphetModal;
+    window.toggleMute = toggleMute;
+
+    // Boot
+    window.onload = () => {
+      populateStaticChibiUI();
+      initFirebase();
+    };
+  </script>
+</body>
+</html>
