@@ -1468,6 +1468,10 @@
     let unsubActions = null;
     let unsubChat = null;
     let processedActionIds = new Set();
+    let hostActionQueue = [];      // hàng đợi thao tác chờ host xử lý (không bao giờ bỏ rơi khi host đang bận)
+    let hostDrainTimer = null;
+    let latestActionDocs = [];     // bản chụp mới nhất của collection actions (để host mới tiếp quản)
+    let prevIsHost = false;
     let hostTickInterval = null;
     let uiTickInterval = null;
     let botActingLock = false;
@@ -1722,6 +1726,7 @@
         community: [],
         futureCommunity: [],
         pot: 0,
+        carryOver: 0,
         currentBet: 0,
         minRaise: 100,
         turnIndex: 0,
@@ -1766,7 +1771,13 @@
           return;
         }
         const data = snap.data();
-        const alreadyIn = data.players.some(p => p.uid === currentUser.uid);
+        const mine = data.players.find(p => p.uid === currentUser.uid);
+        if (mine && mine.left) {
+          SFX.boing();
+          showToast('Bạn đã rời bàn này giữa chừng nên không thể vào lại.', 'coral');
+          return;
+        }
+        const alreadyIn = Boolean(mine);
 
         if (!alreadyIn) {
           if (data.status !== 'LOBBY') {
@@ -1800,6 +1811,9 @@
       cleanupSubscriptions();
       activeRoomCode = code;
       processedActionIds = new Set();
+      hostActionQueue = [];
+      latestActionDocs = [];
+      prevIsHost = false;
       hasFlippedRoleCard = false;
       lobbyAutoDrawAt = null;
       lastCelebratedResHand = -1;
@@ -1809,6 +1823,7 @@
       unsubRoom = onSnapshot(getRoomDocRef(code), (snap) => {
         if (!snap.exists()) {
           showToast('Phòng chơi đã bị đóng.', 'coral');
+          roomData = null; // tránh gửi thông báo rời phòng tới phòng đã không còn tồn tại
           leaveRoom();
           return;
         }
@@ -1831,16 +1846,11 @@
 
       // 3. Subscribe to Action Queue (Host processes all incoming actions)
       unsubActions = onSnapshot(getActionsColRef(code), (snap) => {
+        const all = [];
+        snap.forEach(d => all.push({ id: d.id, ref: d.ref, ...d.data() }));
+        latestActionDocs = all;
         if (!roomData || !currentUser || roomData.hostUid !== currentUser.uid) return;
-        const pending = [];
-        snap.forEach(d => {
-          if (!processedActionIds.has(d.id)) {
-            pending.push({ id: d.id, ref: d.ref, ...d.data() });
-          }
-        });
-        if (pending.length === 0) return;
-        pending.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-        hostProcessActionBatch(pending);
+        enqueueHostActions(all);
       }, (err) => {
         console.error('Actions snapshot error:', err);
       });
@@ -1855,6 +1865,10 @@
       if (unsubChat) { unsubChat(); unsubChat = null; }
       if (hostTickInterval) { clearInterval(hostTickInterval); hostTickInterval = null; }
       if (uiTickInterval) { clearInterval(uiTickInterval); uiTickInterval = null; }
+      if (hostDrainTimer) { clearTimeout(hostDrainTimer); hostDrainTimer = null; }
+      hostActionQueue = [];
+      latestActionDocs = [];
+      prevIsHost = false;
     }
 
     async function leaveRoom() {
@@ -1865,17 +1879,23 @@
         currentUser = practice.savedUser;
         practice.savedUser = null;
       }
-      if (!wasPractice && activeRoomCode && currentUser && roomData && roomData.status === 'LOBBY') {
+      if (!wasPractice && activeRoomCode && currentUser && roomData) {
+        const code = activeRoomCode;
+        const myUid = currentUser.uid;
         try {
-          if (roomData.hostUid !== currentUser.uid) {
-            await addDoc(getActionsColRef(activeRoomCode), {
-              uid: currentUser.uid,
-              type: 'LEAVE_LOBBY',
+          if (roomData.hostUid === myUid) {
+            // Chủ phòng rời: nhường quyền chủ phòng cho người thật kế tiếp, hoặc đóng phòng nếu không còn ai
+            await hostLeaveRoom(code, myUid);
+          } else if (roomData.players.some(p => p.uid === myUid && !p.left)) {
+            // Khách rời (phòng chờ, bốc thăm hay giữa ván): host sẽ gỡ ghế / úp bài giúp
+            await addDoc(getActionsColRef(code), {
+              uid: myUid,
+              type: 'LEAVE_ROOM',
               payload: {},
               createdAt: Date.now()
             });
           }
-        } catch (e) { /* ignore */ }
+        } catch (e) { console.error('Leave room error:', e); }
       }
       cleanupSubscriptions();
       activeRoomCode = null;
@@ -1939,8 +1959,41 @@
     // =========================================================================
     let hostBusy = false;
 
+    function enqueueHostActions(list) {
+      for (const a of list) {
+        if (processedActionIds.has(a.id)) continue;
+        if (hostActionQueue.some(q => q.id === a.id)) continue;
+        hostActionQueue.push(a);
+      }
+      hostActionQueue.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+      drainHostActionQueue();
+    }
+
+    function scheduleHostDrain(ms = 60) {
+      if (hostDrainTimer || !activeRoomCode) return;
+      hostDrainTimer = setTimeout(() => {
+        hostDrainTimer = null;
+        drainHostActionQueue();
+      }, ms);
+    }
+
+    async function drainHostActionQueue() {
+      if (hostActionQueue.length === 0) return;
+      if (!roomData || !isHost()) { hostActionQueue = []; return; }
+      if (hostBusy) { scheduleHostDrain(); return; } // host đang bận: thử lại sau, KHÔNG bỏ thao tác
+      const batch = hostActionQueue.splice(0);
+      await hostProcessActionBatch(batch);
+      if (hostActionQueue.length > 0) scheduleHostDrain(0);
+    }
+
     async function hostProcessActionBatch(actions) {
-      if (hostBusy || !roomData) return;
+      if (hostBusy || !roomData) {
+        // Không bao giờ nuốt thao tác: trả lại hàng đợi rồi thử lại
+        const back = actions.filter(a => !processedActionIds.has(a.id));
+        hostActionQueue.unshift(...back);
+        scheduleHostDrain();
+        return;
+      }
       hostBusy = true;
       try {
         const r = JSON.parse(JSON.stringify(roomData));
@@ -1972,6 +2025,62 @@
       p.lastBubble = { id: Date.now() + Math.random(), text, ts: Date.now() };
     }
 
+    // Gỡ người chơi khỏi phòng ở bất kỳ trạng thái nào (dùng cho cả khách lẫn chủ phòng rời đi)
+    function removePlayerFromRoom(r, uid) {
+      const idx = r.players.findIndex(p => p.uid === uid);
+      if (idx === -1) return false;
+      const p = r.players[idx];
+
+      // Phòng chờ: bỏ hẳn ghế
+      if (r.status === 'LOBBY') {
+        r.players.splice(idx, 1);
+        pushRoomLog(r, `👋 <strong>${escapeHtml(p.name)}</strong> đã rời phòng chờ.`);
+        lobbyAutoDrawAt = null;
+        return true;
+      }
+
+      if (p.left) return false;
+      const betting = ['PREFLOP', 'FLOP', 'TURN', 'RIVER'].includes(r.phase);
+      const wasTurn = r.status === 'PLAYING' && betting && idx === r.turnIndex;
+
+      // Giữ ghế trong mảng (chỉ số lượt phải ổn định) nhưng đánh dấu đã rời, úp bài, loại khỏi các ván sau.
+      // Điểm đã cược trong ván này vẫn nằm lại Pot như tiền chết.
+      p.left = true;
+      p.folded = true;
+      p.eliminated = true;
+      p.roleConfirmed = true;
+      pushRoomLog(r, `🚪 <strong>${escapeHtml(p.name)}</strong> đã rời bàn${r.status === 'PLAYING' ? ' — tự động úp bài' : ''}.`, 'coral');
+
+      if (r.status === 'ROLE_DRAW') {
+        if (r.players.every(pl => pl.roleConfirmed)) setupNextHandOnRoom(r);
+      } else if (r.status === 'PLAYING' && betting) {
+        const stillIn = r.players.filter(x => !x.eliminated && !x.folded);
+        // Đang tới lượt người rời -> coi như Fold và chuyển lượt; chỉ còn ≤1 người -> kết ván
+        if (wasTurn || stillIn.length <= 1) advanceTurnOrPhase(r);
+      }
+      return true;
+    }
+
+    // Chủ phòng rời đi: chuyển quyền cho người thật kế tiếp, hoặc xóa phòng nếu không còn ai
+    async function hostLeaveRoom(code, myUid) {
+      for (let i = 0; i < 30 && hostBusy; i++) await new Promise(res => setTimeout(res, 100));
+      hostBusy = true;
+      try {
+        const r = JSON.parse(JSON.stringify(roomData));
+        const heirs = r.players.filter(pl => !pl.isBot && !pl.left && pl.uid !== myUid);
+        if (heirs.length === 0) {
+          await deleteDoc(getRoomDocRef(code));
+          return;
+        }
+        r.hostUid = heirs[0].uid;
+        pushRoomLog(r, `👑 Chủ phòng đã rời. <strong>${escapeHtml(heirs[0].name)}</strong> là chủ phòng mới!`, 'sunny');
+        removePlayerFromRoom(r, myUid);
+        await saveRoomState(r);
+      } finally {
+        hostBusy = false;
+      }
+    }
+
     function applyActionToRoom(r, act) {
       const { uid, type, payload } = act;
 
@@ -1984,14 +2093,8 @@
         return true;
       }
 
-      if (type === 'LEAVE_LOBBY') {
-        if (r.status !== 'LOBBY') return false;
-        const idx = r.players.findIndex(p => p.uid === uid);
-        if (idx === -1) return false;
-        const [removed] = r.players.splice(idx, 1);
-        pushRoomLog(r, `👋 <strong>${escapeHtml(removed.name)}</strong> đã rời phòng chờ.`);
-        lobbyAutoDrawAt = null;
-        return true;
+      if (type === 'LEAVE_LOBBY' || type === 'LEAVE_ROOM') {
+        return removePlayerFromRoom(r, uid);
       }
 
       if (type === 'TOGGLE_READY') {
@@ -2031,7 +2134,9 @@
         if (r.status !== 'PLAYING') return false;
         const p = r.players.find(pl => pl.uid === uid);
         if (!p || !canPlayerCastSkillOnRoom(r, p)) return false;
-        executeSkillOnRoom(r, p, payload.targetUid || null);
+        const v = validateSkillTarget(r, p, payload && payload.targetUid);
+        if (!v.ok) return false; // mục tiêu sai: từ chối, KHÔNG tính là đã dùng chiêu, KHÔNG tốn hồi chiêu
+        executeSkillOnRoom(r, p, v.targetUid);
         return true;
       }
 
@@ -2063,6 +2168,7 @@
     // 9. HOST TICK LOOP (AUTO-DRAW, ROLE CONFIRM, BOT AI, TURN TIMEOUT)
     // =========================================================================
     async function hostTickLoop() {
+      if (isHost() && roomData && !hostBusy && hostActionQueue.length > 0) drainHostActionQueue();
       if (!isHost() || !roomData || hostBusy) return;
       const now = Date.now();
 
@@ -2222,6 +2328,7 @@
 
         r.status = 'ROLE_DRAW';
         r.handNumber = 0;
+        r.carryOver = 0;
         r.dealerIndex = Math.floor(Math.random() * r.players.length);
         r.roleDrawDeadline = Date.now() + (practice.active ? 3600000 : ROLE_DRAW_DURATION_MS);
         pushRoomLog(r, `🎲 Đã bốc thăm xong chức năng Chibi ẩn cho ${r.players.length} người chơi!`, 'sunny');
@@ -2259,7 +2366,10 @@
         r.status = 'LOBBY';
         r.phase = 'IDLE';
         r.handNumber = 0;
+        r.carryOver = 0;
+        r.pot = 0;
         r.resolution = null;
+        r.players = r.players.filter(p => !p.left); // người đã rời giữa giải không quay lại phòng chờ
         r.players.forEach(p => {
           p.ready = p.isBot;
           p.roleConfirmed = p.isBot;
@@ -2367,6 +2477,9 @@
       lastShownProphetKey = null;
       botActingLock = false;
       hostBusy = false;
+      hostActionQueue = [];
+      latestActionDocs = [];
+      prevIsHost = false;
 
       ['modal-resolution', 'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target', 'modal-tutorial']
         .forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -2396,6 +2509,7 @@
         community: [],
         futureCommunity: [],
         pot: 0,
+        carryOver: 0,
         currentBet: 0,
         minRaise: 100,
         turnIndex: 0,
@@ -2614,7 +2728,10 @@
       r.futureCommunity = [
         r.deck.pop(), r.deck.pop(), r.deck.pop(), r.deck.pop(), r.deck.pop()
       ];
-      r.pot = 0;
+      // Điểm lẻ chưa chia hết từ ván trước được cộng sẵn vào Pot ván này
+      const carryIn = r.carryOver || 0;
+      r.carryOver = 0;
+      r.pot = carryIn;
       r.skillActions = [];
       r.trapTargetUid = null;
       r.trapCasterUid = null;
@@ -2656,8 +2773,22 @@
       pushRoomLog(r, `🌟 <strong>VÁN ${r.handNumber}/${r.maxHands}</strong> (Blind ${sb}/${bb}) bắt đầu!`, 'sunny');
       pushRoomLog(r, `${escapeHtml(r.players[sbIdx].name)} đóng SB (${sb}), ${escapeHtml(r.players[bbIdx].name)} đóng BB (${bb}).`);
 
+      if (carryIn > 0) {
+        pushRoomLog(r, `🪙 Pot đã có sẵn <strong>${carryIn.toLocaleString()} đ</strong> dư lẻ mang từ ván trước.`, 'sunny');
+      }
+
       r.turnIndex = getNextActiveIdx(r, bbIdx);
       r.turnDeadline = turnDeadlineFromNow();
+
+      // Nếu đóng blind xong mà không còn ai có thể hành động (tất cả all-in, hoặc người duy nhất
+      // còn tiền đã đủ cược) thì không được chờ lượt: lật bài chạy thẳng tới Pre-Showdown.
+      const canActNow = r.players.filter(p => !p.eliminated && !p.folded && !p.allIn);
+      const mustAct = canActNow.length >= 2 ||
+        (canActNow.length === 1 && canActNow[0].roundBet < r.currentBet);
+      if (!mustAct || r.turnIndex === -1) {
+        pushRoomLog(r, '💥 Không còn ai cần hành động sau khi đóng blind (All-in) — tự động lật bài chung!', 'candy');
+        advancePhaseOnRoom(r);
+      }
     }
 
     function getNextAliveIdx(r, fromIdx) {
@@ -2825,6 +2956,27 @@
       return role.validPhases.includes(r.phase);
     }
 
+    // Kiểm tra mục tiêu chiêu phía host (client có thể bị sửa nên không được tin)
+    function validateSkillTarget(r, caster, targetUid) {
+      // Vai Tự Thân (Tiên Tri, Ảo Thuật Gia) không có mục tiêu: bỏ qua mọi targetUid client gửi lên
+      if (caster.roleId === 'nha_tien_tri' || caster.roleId === 'ao_thuat_gia') {
+        return { ok: true, targetUid: null };
+      }
+      if (typeof targetUid !== 'string' || !targetUid) return { ok: false };
+      const target = r.players.find(p => p.uid === targetUid);
+      if (!target || target.eliminated || target.left) return { ok: false };
+
+      // Kẻ Phản Đòn được đặt bẫy lên chính mình; các vai Chỉ Định phải nhắm người khác
+      if (caster.roleId !== 'ke_phan_don' && target.uid === caster.uid) return { ok: false };
+
+      // Thiên Nhãn / Kẻ Phá Rối cần mục tiêu đang có bài; Kẻ Phá Rối cần bộ bài còn lá để đổi
+      if (caster.roleId === 'thien_nhan' || caster.roleId === 'ke_pha_roi') {
+        if (!target.cards || target.cards.length === 0) return { ok: false };
+      }
+      if (caster.roleId === 'ke_pha_roi' && (!r.deck || r.deck.length === 0)) return { ok: false };
+      return { ok: true, targetUid: target.uid };
+    }
+
     function executeSkillOnRoom(r, caster, targetUid) {
       const role = ROLES[caster.roleId];
       caster.usedSkillThisHand = true;
@@ -2952,6 +3104,34 @@
     // =========================================================================
     // 13. END-OF-HAND RESOLUTION (EXACT 3-STEP ORDER ON HOST)
     // =========================================================================
+    // Chia Pot thành các tầng (main pot / side pot) theo mức cược của từng người còn trong ván.
+    // - Điều kiện nhận tầng dựa trên mức cược gốc (handBet) của người chưa úp bài.
+    // - Số tiền mỗi tầng tính theo tiền thực tế còn góp (effContrib), nên bài của người all-in
+    //   ngắn chỉ ăn được phần tương ứng; phần cược thừa không ai theo sẽ rơi về đúng người cược.
+    // - extraDead (điểm lẻ ván trước + án phạt) cộng vào Pot chính.
+    function buildPotLayers(players, contenders, effContrib, extraDead) {
+      const levels = [...new Set(contenders.map(p => p.handBet).filter(v => v > 0))].sort((a, b) => a - b);
+      if (levels.length === 0) {
+        const total = players.reduce((acc, p) => acc + effContrib(p), 0) + extraDead;
+        return [{ amount: total, eligible: contenders }];
+      }
+      const layers = [];
+      let prev = 0;
+      levels.forEach((lvl, i) => {
+        const upper = i === levels.length - 1 ? Infinity : lvl;
+        let amount = 0;
+        players.forEach(p => {
+          const c = effContrib(p);
+          amount += Math.min(c, upper) - Math.min(c, prev);
+        });
+        if (i === 0) amount += extraDead;
+        const eligible = contenders.filter(p => p.handBet >= lvl);
+        if (amount > 0 && eligible.length > 0) layers.push({ amount, eligible });
+        prev = lvl;
+      });
+      return layers;
+    }
+
     function runResolutionOnRoom(r) {
       r.phase = 'RESOLUTION';
       const step1Logs = [];
@@ -3048,8 +3228,9 @@
         }
       }
 
-      // ---------- STEP 3: SO BÀI POKER & CHIA POT CÒN LẠI ----------
+      // ---------- STEP 3: SO BÀI POKER & CHIA POT (CÓ SIDE POT) ----------
       const contenders = r.players.filter(p => !p.eliminated && !p.folded);
+      let carryOver = 0; // điểm lẻ không chia hết -> cộng sang ván tiếp theo
       if (contenders.length === 1) {
         const winner = contenders[0];
         winner.points += remainingPot;
@@ -3060,15 +3241,44 @@
           player: p,
           eval: evaluateBestHand([...p.cards, ...r.community])
         })).sort((a, b) => b.eval.score - a.eval.score);
+        const evalOf = new Map(evals.map(e => [e.player.uid, e.eval]));
 
-        const topScore = evals[0].eval.score;
-        const winners = evals.filter(e => e.eval.score === topScore);
-        const share = Math.floor(remainingPot / winners.length);
-        winners.forEach(w => { w.player.points += share; });
-        winnerUids = winners.map(w => w.player.uid);
+        // Tiền thực tế mỗi người còn góp vào Pot (người bị cướp cược thì đã mất phần này)
+        const effContrib = (p) => (stolenFromUids.has(p.uid) ? 0 : p.handBet);
+        const sumEff = r.players.reduce((acc, p) => acc + effContrib(p), 0);
+        // Phần "tiền chết" ngoài cược: điểm lẻ ván trước + án phạt 50%
+        const extraDead = Math.max(0, remainingPot - sumEff);
 
-        const winNames = winners.map(w => `<strong>${escapeHtml(w.player.name)}</strong>`).join(', ');
-        step3Logs.push(`🏆 ${winNames} thắng bài Poker với <strong>${evals[0].eval.name}</strong>, nhận <strong>${share.toLocaleString()} đ</strong>!`);
+        const layers = buildPotLayers(r.players, contenders, effContrib, extraDead);
+        const winnerSet = new Set();
+        const layerLogs = [];
+
+        layers.forEach((layer, li) => {
+          const eligible = layer.eligible;
+          const top = Math.max(...eligible.map(p => evalOf.get(p.uid).score));
+          const lw = eligible.filter(p => evalOf.get(p.uid).score === top);
+          const share = Math.floor(layer.amount / lw.length);
+          const rem = layer.amount - share * lw.length;
+          lw.forEach(p => { p.points += share; winnerSet.add(p.uid); });
+          carryOver += rem;
+
+          const names = lw.map(p => `<strong>${escapeHtml(p.name)}</strong>`).join(', ');
+          const handName = evalOf.get(lw[0].uid).name;
+          const isRefund = layers.length > 1 && li === layers.length - 1 && eligible.length === 1;
+          if (isRefund) {
+            layerLogs.push(`↩️ Trả lại phần cược thừa không ai theo (<strong>${layer.amount.toLocaleString()} đ</strong>) cho ${names}.`);
+          } else {
+            const label = layers.length === 1 ? '' : (li === 0 ? 'Pot chính' : `Pot phụ #${li}`);
+            const potTxt = label ? `[${label}: ${layer.amount.toLocaleString()} đ] ` : '';
+            const restTxt = rem > 0 ? ` (dư ${rem.toLocaleString()} đ)` : '';
+            layerLogs.push(`🏆 ${potTxt}${names} thắng bài Poker với <strong>${handName}</strong>, nhận <strong>${share.toLocaleString()} đ</strong>${lw.length > 1 ? '/người' : ''}${restTxt}!`);
+          }
+        });
+        winnerUids = [...winnerSet];
+        // Chốt an toàn: không để điểm bốc hơi nếu có lệch tính toán
+        const distributed = layers.reduce((acc, l) => acc + l.amount, 0);
+        if (distributed < remainingPot) carryOver += remainingPot - distributed;
+        layerLogs.forEach(l => step3Logs.push(l));
 
         evals.forEach(e => {
           step3Logs.push(`
@@ -3083,6 +3293,15 @@
         });
       }
 
+      r.carryOver = carryOver;
+      if (carryOver > 0) {
+        const carryMsg = `🪙 Dư lẻ <strong>${carryOver.toLocaleString()} đ</strong> không chia hết, được cộng vào Pot ván tiếp theo.`;
+        // chèn ngay sau các dòng thắng/thua, trước bảng bài từng người
+        const firstDetail = step3Logs.findIndex(l => l.includes('<div'));
+        if (firstDetail === -1) step3Logs.push(carryMsg);
+        else step3Logs.splice(firstDetail, 0, carryMsg);
+      }
+
       r.players.forEach(p => {
         if (!p.usedSkillThisHand && p.cooldown > 0) {
           p.cooldown--;
@@ -3091,11 +3310,12 @@
       });
 
       [...step1Logs, ...step2Logs].forEach(msg => pushRoomLog(r, msg, 'sunny'));
-      if (step3Logs[0]) pushRoomLog(r, step3Logs[0], 'mint');
+      step3Logs.filter(l => !l.includes('<div')).forEach(msg => pushRoomLog(r, msg, 'mint'));
 
       r.resolution = {
         handNumber: r.handNumber,
         finalPot: remainingPot,
+        carryOver,
         winnerUids,
         step1Logs,
         step2Logs,
@@ -3108,6 +3328,13 @@
     // =========================================================================
     function onRoomStateUpdated() {
       if (!roomData) return;
+
+      // Vừa được nhường quyền chủ phòng: xử lý nốt các thao tác khách đã gửi mà host cũ chưa kịp xử lý
+      const nowHost = isHost();
+      if (nowHost && !prevIsHost && !practice.active && latestActionDocs.length > 0) {
+        enqueueHostActions(latestActionDocs);
+      }
+      prevIsHost = nowHost;
 
       document.getElementById('screen-home').classList.add('hidden');
       document.getElementById('screen-lobby').classList.toggle('hidden', roomData.status !== 'LOBBY');
@@ -3394,7 +3621,7 @@
             <div class="mt-1 pt-1 border-t border-dashed border-[#3a233c]/20 flex items-center justify-between gap-1">
               ${roleBadge}
               <span class="text-[10px] font-bold text-[#6b4c6e]">
-                ${p.eliminated ? '<span class="text-[#ef233c]">Bị loại</span>' : p.folded ? '<span class="text-[#ef233c]">Úp bài</span>' : p.allIn ? '<span class="text-[#9b5de5]">All-in!</span>' : `Cược: ${p.handBet.toLocaleString()}`}
+                ${p.left ? '<span class="text-[#ef233c]">Đã rời</span>' : p.eliminated ? '<span class="text-[#ef233c]">Bị loại</span>' : p.folded ? '<span class="text-[#ef233c]">Úp bài</span>' : p.allIn ? '<span class="text-[#9b5de5]">All-in!</span>' : `Cược: ${p.handBet.toLocaleString()}`}
               </span>
             </div>
           </div>
@@ -3586,7 +3813,7 @@
     }
 
     function renderTournamentVictory() {
-      const sorted = [...roomData.players].sort((a, b) => b.points - a.points);
+      const sorted = [...roomData.players].sort((a, b) => (a.left ? 1 : 0) - (b.left ? 1 : 0) || b.points - a.points);
       const champ = sorted[0];
       const isMeChamp = currentUser && champ.uid === currentUser.uid;
 
@@ -3606,7 +3833,7 @@
             <span class="font-black text-base ${idx === 0 ? 'text-[#ff5c77]' : 'text-[#6b4c6e]'}">#${idx + 1}</span>
             <div class="w-10 h-10 shrink-0">${getChibiSVG(p.roleId || 'mystery')}</div>
             <div>
-              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)}</div>
+              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)}${p.left ? ' <span class="text-[#ef233c] text-[11px]">(đã rời)</span>' : ''}</div>
               <div class="text-[11px] font-bold text-[#6b4c6e]">${p.roleId ? `${ROLES[p.roleId].icon} ${ROLES[p.roleId].name}` : ''}</div>
             </div>
           </div>
