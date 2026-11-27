@@ -374,6 +374,14 @@
         </div>
       </div>
 
+      <!-- Practice mode entry -->
+      <div class="mt-4 p-3 rounded-2xl bg-[#f3e8ff] border-2 border-[#3a233c] shadow-[0_3px_0_#3a233c]">
+        <button onclick="openPracticeSetup()" class="btn-chibi btn-candy w-full py-3 rounded-2xl text-sm uppercase tracking-wide flex items-center justify-center gap-2">
+          <span>🎮 Chơi Thử Với 5 Bot AI</span>
+        </button>
+        <p class="text-[11px] font-bold text-[#6b4c6e] text-center mt-1.5">Không cần mạng • Chọn vai muốn luyện • Xem vai & bài của bot • Có hướng dẫn từng vai</p>
+      </div>
+
       <div class="mt-5 pt-4 border-t-2 border-dashed border-[#3a233c]/20 flex items-center justify-between gap-2">
         <button onclick="openRulesModal()" class="btn-chibi btn-cream px-3.5 py-1.5 rounded-xl text-xs">
           📖 Luật Chơi & 6 Chibi
@@ -568,6 +576,16 @@
         </button>
       </div>
     </header>
+
+    <!-- Practice mode control bar (only visible in practice mode) -->
+    <div id="practice-bar" class="hidden bg-[#f3e8ff] border-b-[3px] border-[#3a233c] px-3 sm:px-5 py-2 flex flex-wrap items-center gap-2 text-[11px] font-extrabold text-[#3a233c]">
+      <span class="px-2.5 py-0.5 rounded-full bg-[#c77dff] text-white border-2 border-[#3a233c]">🧪 CHƠI THỬ</span>
+      <button id="btn-prac-roles" onclick="togglePracticeRoles()" class="btn-chibi btn-mint px-3 py-1 rounded-xl text-[11px]">👁️ Vai bot: HIỆN</button>
+      <button id="btn-prac-cards" onclick="togglePracticeCards()" class="btn-chibi btn-mint px-3 py-1 rounded-xl text-[11px]">🃏 Bài bot: HIỆN</button>
+      <button onclick="openPracticeTutorial()" class="btn-chibi btn-sunny px-3 py-1 rounded-xl text-[11px]">📘 Hướng dẫn</button>
+      <button onclick="openPracticeSetup()" class="btn-chibi btn-sky px-3 py-1 rounded-xl text-[11px]">🔄 Chơi lại / Đổi vai</button>
+      <span id="practice-coach" class="w-full lg:w-auto lg:flex-1 text-[#6b4c6e]"></span>
+    </div>
 
     <!-- Main Arena -->
     <main class="flex-1 flex flex-col lg:flex-row gap-3 p-2 sm:p-4 max-w-[1440px] w-full mx-auto">
@@ -814,6 +832,69 @@
           <strong class="text-[#ff5c77]">🎪 Thể thức Giải đấu:</strong> 2–6 người chơi (10.000 điểm khởi điểm), đấu tối đa 20 ván Texas Hold'em Poker. Blind tăng gấp đôi mỗi 4 ván (50/100 → 100/200 → 200/400 → 400/800 → 800/1600). Không có cược mù Pre-Deal. Chỉ khi <strong>tất cả sẵn sàng</strong> mới tiến hành bốc thăm bí mật 1 trong 6 nhân vật Chibi. Mỗi lượt đánh có <strong>25 giây</strong>.
         </div>
         <div id="rules-chibi-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== PRACTICE SETUP MODAL ==================== -->
+  <div id="modal-practice-setup" class="hidden fixed inset-0 z-50 bg-[#3a233c]/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="chibi-card max-w-2xl w-full p-5 my-auto">
+      <div class="flex items-center justify-between border-b-2 border-dashed border-[#3a233c]/25 pb-3 mb-4">
+        <h3 class="text-xl font-extrabold text-[#3a233c]">🎮 Chơi Thử • Bạn + 5 Bot AI</h3>
+        <button onclick="closePracticeSetup()" class="btn-chibi btn-coral w-9 h-9 rounded-xl text-sm flex items-center justify-center">✕</button>
+      </div>
+      <div class="space-y-4 max-h-[72vh] overflow-y-auto pr-1">
+        <div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2">1️⃣ Chọn luật (vai) muốn luyện</div>
+          <div id="practice-role-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
+          <p class="text-[11px] font-bold text-[#6b4c6e] mt-1.5">Chọn <strong>Ngẫu nhiên</strong> để bốc thăm như ván thật. 5 bot sẽ nhận 5 vai còn lại. Bấm <strong>📘 Hướng dẫn</strong> dưới mỗi vai để xem trước.</p>
+        </div>
+        <div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2">2️⃣ Tùy chọn quan sát <span class="normal-case text-[#6b4c6e]">(đổi được cả lúc đang chơi)</span></div>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] mb-2 cursor-pointer">
+            <span class="text-sm font-extrabold text-[#3a233c]">👁️ Hiện vai của bot
+              <span class="block text-[11px] font-bold text-[#6b4c6e]">Tắt = vai bot hiện dấu "?" như ván thật</span></span>
+            <input id="prac-opt-roles" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] mb-2 cursor-pointer">
+            <span class="text-sm font-extrabold text-[#3a233c]">🃏 Hiện bài tẩy của bot
+              <span class="block text-[11px] font-bold text-[#6b4c6e]">Tắt = bài bot úp cho tới lúc ngửa bài</span></span>
+            <input id="prac-opt-cards" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
+          </label>
+          <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] cursor-pointer">
+            <span class="text-sm font-extrabold text-[#3a233c]">📘 Hiện hướng dẫn cho vai của tôi
+              <span class="block text-[11px] font-bold text-[#6b4c6e]">Có nút "Bỏ qua hướng dẫn" bất cứ lúc nào</span></span>
+            <input id="prac-opt-tutorial" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
+          </label>
+        </div>
+        <p class="text-[11px] font-bold text-[#6b4c6e] bg-[#e0fbfc] border-2 border-[#3a233c]/30 rounded-2xl px-3 py-2">💡 Chế độ chơi thử chạy hoàn toàn trên máy bạn: không giới hạn thời gian lượt đánh, cửa sổ Pre-Showdown kéo dài 30 giây, không ảnh hưởng phòng online.</p>
+      </div>
+      <div class="flex gap-2.5 mt-4">
+        <button onclick="startPractice()" class="btn-chibi btn-mint flex-1 py-3 rounded-2xl text-sm uppercase tracking-wide">▶ Bắt Đầu Chơi Thử</button>
+        <button onclick="closePracticeSetup()" class="btn-chibi btn-cream px-5 py-3 rounded-2xl text-sm uppercase tracking-wide">Hủy</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ROLE TUTORIAL MODAL ==================== -->
+  <div id="modal-tutorial" class="hidden fixed inset-0 z-[70] bg-[#3a233c]/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div class="chibi-card max-w-md w-full p-5 my-auto">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <span class="px-2.5 py-0.5 rounded-full bg-[#e9d8fd] border-2 border-[#3a233c] text-[11px] font-extrabold text-[#3a233c]">📘 Hướng dẫn <span id="tut-counter"></span></span>
+        <button onclick="skipTutorial()" class="btn-chibi btn-cream px-3 py-1 rounded-xl text-[11px]">⏭️ Bỏ qua hướng dẫn</button>
+      </div>
+      <div class="flex items-center gap-3 mb-3">
+        <div id="tut-svg" class="w-16 h-16 shrink-0 chibi-float"></div>
+        <div class="min-w-0">
+          <div id="tut-role-name" class="text-[11px] font-extrabold text-[#f15bb5] uppercase tracking-wider"></div>
+          <h3 id="tut-title" class="text-lg font-extrabold text-[#3a233c] leading-tight"></h3>
+        </div>
+      </div>
+      <div id="tut-body" class="text-xs sm:text-sm font-bold text-[#3a233c] leading-relaxed bg-[#fef6e4] border-2 border-[#3a233c]/25 rounded-2xl p-3.5 min-h-[140px]"></div>
+      <div id="tut-dots" class="flex items-center justify-center gap-1.5 my-3"></div>
+      <div class="flex gap-2">
+        <button id="tut-prev" onclick="tutorialNav(-1)" class="btn-chibi btn-cream px-4 py-2.5 rounded-2xl text-sm">← Trước</button>
+        <button id="tut-next" onclick="tutorialNav(1)" class="btn-chibi btn-sunny flex-1 py-2.5 rounded-2xl text-sm">Tiếp →</button>
       </div>
     </div>
   </div>
@@ -1336,6 +1417,42 @@
     const ROLE_DRAW_DURATION_MS = 7000;
 
     // =========================================================================
+    // 4b. ROLE PICKING ALGORITHM (THEO SỐ NGƯỜI CHƠI)
+    // =========================================================================
+    const TARGETING_ROLES = ['thien_nhan', 'ke_pha_roi', 'nguoi_chi_diem'];
+    const SELF_ROLES = ['ke_phan_don', 'nha_tien_tri', 'ao_thuat_gia'];
+    const DUEL_ROLES = ['thien_nhan', 'ke_pha_roi', 'nha_tien_tri', 'ao_thuat_gia'];
+
+    // Fisher-Yates: trả về mảng mới đã xáo trộn, không sửa mảng gốc
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function pickRoles(playerCount) {
+      if (playerCount === 6) return shuffle([...TARGETING_ROLES, ...SELF_ROLES]);
+      if (playerCount === 5) return shuffle([...TARGETING_ROLES, ...SELF_ROLES]).slice(0, 5);
+      if (playerCount === 4) {
+        return shuffle([
+          ...shuffle(TARGETING_ROLES).slice(0, 2),
+          ...shuffle(SELF_ROLES).slice(0, 2)
+        ]);
+      }
+      if (playerCount === 3) {
+        return shuffle([
+          ...shuffle(TARGETING_ROLES).slice(0, 2),
+          ...shuffle(SELF_ROLES).slice(0, 1)
+        ]);
+      }
+      // 2 người chơi (Solo 1v1)
+      return shuffle(DUEL_ROLES).slice(0, 2);
+    }
+
+    // =========================================================================
     // 5. FIREBASE INITIALIZATION (STRICT RULES 1, 2, 3)
     // =========================================================================
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'than-bai-dai-chien-chibi';
@@ -1363,6 +1480,17 @@
     let lastCelebratedResHand = -1;
     let lastCelebratedVictory = false;
     let hasFlippedRoleCard = false;
+
+    // Practice mode (offline: bạn + 5 bot, engine host chạy ngay trên máy)
+    const practice = {
+      active: false,
+      role: null,            // null = ngẫu nhiên
+      showRoles: true,
+      showCards: true,
+      tutorial: true,
+      tutorialPrompted: false,
+      savedUser: null
+    };
 
     async function initFirebase() {
       const badge = document.getElementById('auth-status-badge');
@@ -1731,7 +1859,13 @@
 
     async function leaveRoom() {
       SFX.pop();
-      if (activeRoomCode && currentUser && roomData && roomData.status === 'LOBBY') {
+      const wasPractice = practice.active;
+      if (wasPractice) {
+        practice.active = false;
+        currentUser = practice.savedUser;
+        practice.savedUser = null;
+      }
+      if (!wasPractice && activeRoomCode && currentUser && roomData && roomData.status === 'LOBBY') {
         try {
           if (roomData.hostUid !== currentUser.uid) {
             await addDoc(getActionsColRef(activeRoomCode), {
@@ -1747,7 +1881,8 @@
       activeRoomCode = null;
       roomData = null;
       ['screen-lobby', 'screen-role-draw', 'screen-game', 'modal-resolution',
-       'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target'].forEach(id => {
+       'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target',
+       'modal-tutorial', 'modal-practice-setup'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
       document.getElementById('screen-home').classList.remove('hidden');
@@ -1764,6 +1899,17 @@
 
     async function sendAction(type, payload = {}) {
       if (!currentUser || !activeRoomCode) return;
+      if (practice.active) {
+        // Practice: xử lý thẳng trên máy, không đi qua Firestore
+        const act = { id: `p_${Date.now()}_${Math.random()}`, ref: null, uid: currentUser.uid, type, payload, createdAt: Date.now() };
+        const run = () => {
+          if (!practice.active) return;
+          if (hostBusy) { setTimeout(run, 40); return; }
+          hostProcessActionBatch([act]);
+        };
+        run();
+        return;
+      }
       try {
         await addDoc(getActionsColRef(activeRoomCode), {
           uid: currentUser.uid,
@@ -1780,6 +1926,11 @@
     async function saveRoomState(newRoom) {
       if (!currentUser || !activeRoomCode) return;
       newRoom.updatedAt = Date.now();
+      if (practice.active) {
+        roomData = JSON.parse(JSON.stringify(newRoom));
+        onRoomStateUpdated();
+        return;
+      }
       await setDoc(getRoomDocRef(activeRoomCode), newRoom);
     }
 
@@ -1797,7 +1948,7 @@
 
         for (const act of actions) {
           processedActionIds.add(act.id);
-          deleteDoc(act.ref).catch(() => {});
+          if (act.ref) deleteDoc(act.ref).catch(() => {});
           if (applyActionToRoom(r, act)) mutated = true;
         }
 
@@ -2050,11 +2201,9 @@
       hostBusy = true;
       try {
         const r = JSON.parse(JSON.stringify(roomData));
-        const pool = Object.keys(ROLES);
-        for (let i = pool.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [pool[i], pool[j]] = [pool[j], pool[i]];
-        }
+        const pool = pickRoles(r.players.length);
+        // Chơi thử: người chơi (ghế 0) được chọn sẵn vai muốn luyện
+        if (practice.active && practice.role) forceRoleInPool(pool, 0, practice.role);
 
         r.players.forEach((p, idx) => {
           p.roleId = pool[idx];
@@ -2074,7 +2223,7 @@
         r.status = 'ROLE_DRAW';
         r.handNumber = 0;
         r.dealerIndex = Math.floor(Math.random() * r.players.length);
-        r.roleDrawDeadline = Date.now() + ROLE_DRAW_DURATION_MS;
+        r.roleDrawDeadline = Date.now() + (practice.active ? 3600000 : ROLE_DRAW_DURATION_MS);
         pushRoomLog(r, `🎲 Đã bốc thăm xong chức năng Chibi ẩn cho ${r.players.length} người chơi!`, 'sunny');
         await saveRoomState(r);
       } finally {
@@ -2097,6 +2246,12 @@
 
     async function hostReturnToLobby() {
       if (!isHost() || !roomData) return;
+      if (practice.active) {
+        // Chơi thử: "chơi lại" mở bảng chọn vai thay vì về phòng chờ
+        document.getElementById('modal-victory').classList.add('hidden');
+        openPracticeSetup();
+        return;
+      }
       SFX.pop();
       hostBusy = true;
       try {
@@ -2126,6 +2281,312 @@
         await saveRoomState(r);
       } finally {
         hostBusy = false;
+      }
+    }
+
+    // =========================================================================
+    // 10b. PRACTICE MODE (OFFLINE • BẠN + 5 BOT • ENGINE HOST CHẠY TRÊN MÁY)
+    // =========================================================================
+    function forceRoleInPool(pool, idx, roleId) {
+      const j = pool.indexOf(roleId);
+      if (j === -1) pool[idx] = roleId;
+      else [pool[idx], pool[j]] = [pool[j], pool[idx]];
+    }
+
+    // Chơi thử: không giới hạn thời gian lượt đánh (0 = không hết giờ)
+    function turnDeadlineFromNow() {
+      return practice.active ? 0 : Date.now() + TURN_DURATION_MS;
+    }
+
+    function openPracticeSetup() {
+      SFX.pop();
+      document.getElementById('prac-opt-roles').checked = practice.showRoles;
+      document.getElementById('prac-opt-cards').checked = practice.showCards;
+      document.getElementById('prac-opt-tutorial').checked = practice.tutorial;
+      renderPracticeRoleGrid();
+      document.getElementById('modal-practice-setup').classList.remove('hidden');
+    }
+
+    function closePracticeSetup() {
+      SFX.pop();
+      document.getElementById('modal-practice-setup').classList.add('hidden');
+    }
+
+    function selectPracticeRole(roleId) {
+      SFX.pop();
+      practice.role = roleId === 'random' ? null : roleId;
+      renderPracticeRoleGrid();
+    }
+
+    function renderPracticeRoleGrid() {
+      const sel = practice.role || 'random';
+      const ring = (id) => sel === id ? 'ring-4 ring-[#f15bb5]/70 bg-[#ffe5ec]' : 'bg-[#fffdf7]';
+      const tiles = [`
+        <div class="rounded-2xl border-[2.5px] border-[#3a233c] shadow-[0_3px_0_#3a233c] p-2 text-center flex flex-col justify-between ${ring('random')}">
+          <button onclick="selectPracticeRole('random')" class="w-full">
+            <div class="text-3xl h-12 flex items-center justify-center">🎲</div>
+            <div class="font-extrabold text-xs text-[#3a233c]">Ngẫu nhiên</div>
+            <div class="text-[10px] font-bold text-[#6b4c6e]">Bốc thăm như thật</div>
+          </button>
+          <div class="mt-1 text-[10px] font-bold text-[#6b4c6e]">Hướng dẫn hiện sau khi bốc</div>
+        </div>`];
+      Object.values(ROLES).forEach(r => {
+        tiles.push(`
+        <div class="rounded-2xl border-[2.5px] border-[#3a233c] shadow-[0_3px_0_#3a233c] p-2 text-center flex flex-col justify-between ${ring(r.id)}">
+          <button onclick="selectPracticeRole('${r.id}')" class="w-full">
+            <div class="w-12 h-12 mx-auto">${getChibiSVG(r.id)}</div>
+            <div class="font-extrabold text-xs text-[#3a233c] leading-tight">${r.name}</div>
+            <div class="text-[10px] font-bold text-[#6b4c6e]">${r.groupLabel}</div>
+          </button>
+          <button onclick="previewRoleTutorial('${r.id}')" class="mt-1 text-[10px] font-extrabold text-[#9b5de5] underline">📘 Hướng dẫn</button>
+        </div>`);
+      });
+      document.getElementById('practice-role-grid').innerHTML = tiles.join('');
+    }
+
+    async function startPractice() {
+      practice.showRoles = document.getElementById('prac-opt-roles').checked;
+      practice.showCards = document.getElementById('prac-opt-cards').checked;
+      practice.tutorial = document.getElementById('prac-opt-tutorial').checked;
+      document.getElementById('modal-practice-setup').classList.add('hidden');
+      SFX.chime();
+
+      if (!practice.active) practice.savedUser = currentUser;
+      cleanupSubscriptions();
+      practice.active = true;
+      practice.tutorialPrompted = false;
+      currentUser = { uid: 'practice_me' };
+      activeRoomCode = 'PRACTICE';
+      processedActionIds = new Set();
+      hasFlippedRoleCard = false;
+      lobbyAutoDrawAt = null;
+      lastCelebratedResHand = -1;
+      lastCelebratedVictory = false;
+      lastShownDisruptId = null;
+      lastShownNoticeId = null;
+      lastShownProphetKey = null;
+      botActingLock = false;
+      hostBusy = false;
+
+      ['modal-resolution', 'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target', 'modal-tutorial']
+        .forEach(id => document.getElementById(id).classList.add('hidden'));
+
+      // Practice không có chat: luôn ở tab Nhật Ký
+      document.getElementById('sidebar-log-panel').classList.remove('hidden');
+      document.getElementById('sidebar-chat-panel').classList.add('hidden');
+      document.getElementById('tab-btn-log').className = 'btn-chibi btn-sunny flex-1 py-1.5 rounded-xl text-xs';
+      document.getElementById('tab-btn-chat').className = 'btn-chibi btn-cream flex-1 py-1.5 rounded-xl text-xs';
+
+      const myName = document.getElementById('input-player-name').value.trim() || 'Bạn';
+      const players = [createPlayerObject('practice_me', myName, false)];
+      BOT_NAMES.slice(0, 5).forEach((n, i) => players.push(createPlayerObject(`bot_practice_${i}`, n, true)));
+      players.forEach(p => { p.ready = true; });
+
+      roomData = {
+        roomCode: 'CHƠI THỬ',
+        hostUid: 'practice_me',
+        status: 'LOBBY',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        handNumber: 0,
+        maxHands: 20,
+        dealerIndex: 0,
+        phase: 'IDLE',
+        deck: [],
+        community: [],
+        futureCommunity: [],
+        pot: 0,
+        currentBet: 0,
+        minRaise: 100,
+        turnIndex: 0,
+        turnDeadline: 0,
+        preShowdownDeadline: 0,
+        roleDrawDeadline: 0,
+        players,
+        skillActions: [],
+        trapTargetUid: null,
+        trapCasterUid: null,
+        resolution: null,
+        logs: [{ id: Date.now(), html: '🧪 <strong>Chế độ chơi thử</strong>: bạn + 5 bot AI. Không giới hạn thời gian lượt đánh!', tone: 'sunny' }]
+      };
+
+      uiTickInterval = setInterval(updateCountdownDisplays, 350);
+      hostTickInterval = setInterval(hostTickLoop, 900);
+      await hostTriggerRoleDraw();
+    }
+
+    function togglePracticeRoles() {
+      practice.showRoles = !practice.showRoles;
+      SFX.pop();
+      if (roomData) onRoomStateUpdated();
+    }
+
+    function togglePracticeCards() {
+      practice.showCards = !practice.showCards;
+      SFX.pop();
+      if (roomData) onRoomStateUpdated();
+    }
+
+    function setPracticeToggleBtn(id, on, label) {
+      const el = document.getElementById(id);
+      el.textContent = `${label}: ${on ? 'HIỆN' : 'ẨN'}`;
+      el.className = `btn-chibi ${on ? 'btn-mint' : 'btn-cream'} px-3 py-1 rounded-xl text-[11px]`;
+    }
+
+    function updatePracticeBar(me, role) {
+      const bar = document.getElementById('practice-bar');
+      bar.classList.toggle('hidden', !practice.active);
+      document.getElementById('tab-btn-chat').classList.toggle('hidden', practice.active);
+      if (!practice.active) return;
+
+      setPracticeToggleBtn('btn-prac-roles', practice.showRoles, '👁️ Vai bot');
+      setPracticeToggleBtn('btn-prac-cards', practice.showCards, '🃏 Bài bot');
+
+      let tip = '';
+      if (me.eliminated) {
+        tip = 'Bạn đã bị loại. Bấm "🔄 Chơi lại / Đổi vai" để thử lại nhé!';
+      } else if (role) {
+        if (roomData.phase === 'RESOLUTION') {
+          tip = '🏁 Xem bảng Kết Quả để hiểu từng bước xử lý bẫy / chỉ điểm / chia Pot.';
+        } else if (canPlayerCastSkillOnRoom(roomData, me)) {
+          tip = `✨ ${role.skillName} đang sẵn sàng! Bấm nút chiêu ở khung bên dưới để thử.`;
+        } else if (me.usedSkillThisHand) {
+          tip = '✅ Bạn đã dùng chiêu ván này. Chơi tiếp tới Kết Quả để xem hiệu ứng.';
+        } else if (me.cooldown > 0) {
+          tip = `⏳ ${role.skillName} còn hồi ${me.cooldown} ván. Bấm "Hướng dẫn" để xem mẹo.`;
+        } else {
+          tip = `⏱️ Chưa tới lúc dùng chiêu — thời điểm: ${practiceTimingText(role)}.`;
+        }
+      }
+      document.getElementById('practice-coach').textContent = tip;
+    }
+
+    // ---------------- TUTORIAL (TỪNG VAI / TỪNG LUẬT) ----------------
+    const PHASE_CHIPS = [
+      ['PREFLOP', 'Pre-Flop'], ['FLOP', 'Flop'], ['TURN', 'Turn'],
+      ['RIVER', 'River'], ['PRE_SHOWDOWN', 'Pre-Showdown']
+    ];
+
+    const TUTORIAL_STEPS = {
+      thien_nhan: [
+        { t: 'Nhìn lén bài đối thủ', b: 'Khi nút chiêu sáng lên, bấm <strong>✨ DÙNG CHIÊU</strong> rồi chọn 1 đối thủ. Hệ thống lật <strong>1 lá tẩy NGẪU NHIÊN</strong> của họ — chỉ mình bạn thấy, lá đó sẽ ngửa trên ghế của họ. Bạn không chọn được lá nào. Hồi chiêu <strong>3 ván</strong>.' },
+        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong> (cùng Kẻ Phá Rối và Người Chỉ Điểm). Nếu mục tiêu bạn chọn đang mang <strong>bẫy của Kẻ Phản Đòn</strong>, bạn bị cướp <strong>100% điểm đã cược ván đó</strong> và lộ là [Nhóm Chỉ Định]. Nếu Người Chỉ Điểm đoán trúng bạn đã dùng chiêu, bạn cũng mất cược và lộ vai.' },
+        { t: 'Thử ngay!', b: '1) Đợi tới vòng <strong>Flop</strong> hoặc <strong>Turn</strong>.<br>2) Dùng chiêu lên 1 bot.<br>3) Bật <strong>🃏 Bài bot: HIỆN</strong> trên thanh tím để đối chiếu lá bạn vừa thấy.<br>4) Thử dùng khi đang cân nhắc Tố lớn để thấy thông tin đổi quyết định thế nào.' }
+      ],
+      ke_pha_roi: [
+        { t: 'Đánh tráo bài', b: 'Ở <strong>Flop hoặc Turn</strong>, chọn 1 đối thủ: <strong>1 lá tẩy ngẫu nhiên</strong> của họ bị tráo bằng 1 lá lấy từ bộ bài chưa chia. Nạn nhân <strong>biết ngay</strong> lá nào đã đổi thành lá nào nhưng <strong>không biết ai làm</strong>. Bạn không biết lá mới tốt hay xấu — đây là canh bạc! Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong>: nếu nạn nhân đang mang <strong>bẫy của Kẻ Phản Đòn</strong>, bạn bị cướp <strong>100% điểm cược</strong> ván đó và lộ [Nhóm Chỉ Định]. Mẹo: nhắm người đang cược lớn (nhiều khả năng có bài mạnh) để phá bài của họ.' },
+        { t: 'Thử ngay!', b: '1) Bật <strong>🃏 Bài bot: HIỆN</strong>.<br>2) Dùng chiêu lên 1 bot ở Flop/Turn rồi xem 1 lá của họ đổi.<br>3) Quan sát cả khi bot khác dùng chiêu lên bạn — bạn sẽ nhận thông báo "Kẻ Phá Rối đã tráo lá…".' }
+      ],
+      nguoi_chi_diem: [
+        { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Pre-Showdown</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược và lộ vai trước.' },
+        { t: 'Thử ngay!', b: 'Chơi tới <strong>Pre-Showdown</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
+      ],
+      ke_phan_don: [
+        { t: 'Đặt bẫy ở Pre-Flop', b: 'Chỉ dùng được ở <strong>Pre-Flop</strong> (đầu ván). Chọn <strong>bản thân</strong> hoặc <strong>1 người bất kỳ</strong> làm người "mang bẫy". Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>3 ván</strong>.' },
+        { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) đã nhắm đúng người mang bẫy → bạn cướp <strong>100% điểm cược</strong> của họ; bạn lộ vai, họ lộ [Nhóm Chỉ Định] (Chỉ Điểm thì lộ vai).<br><strong>Hụt</strong>: không ai nhắm → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, hồi chiêu còn <strong>2 ván</strong>.' },
+        { t: 'Thử ngay!', b: '1) Ở Pre-Flop, thử đặt bẫy lên <strong>chính mình</strong> (ai sẽ soi bạn?), ván sau thử lên 1 bot cược nhiều.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
+      ],
+      nha_tien_tri: [
+        { t: 'Thấu thị lá bài chung', b: 'Bấm chiêu là dùng ngay, <strong>không cần chọn mục tiêu</strong>. Dùng ở Pre-Flop → thấy <strong>1 lá Flop</strong> sắp lật; ở Flop → thấy lá <strong>Turn</strong>; ở Turn → thấy lá <strong>River</strong>. Lá được ghim trên bàn để bạn nhìn lại. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'An toàn & chính xác', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>. Lá bài chung đã được chia sẵn từ đầu ván nên kết quả bạn thấy <strong>luôn đúng 100%</strong>. Rủi ro duy nhất: Người Chỉ Điểm đoán trúng bạn đã dùng chiêu thì bạn mất cược ván đó.' },
+        { t: 'Thử ngay!', b: '1) Dùng ở <strong>Turn</strong> để biết lá River trước khi quyết định Theo / Tố / Tất tay.<br>2) Khi bàn lật, đối chiếu với lá bạn đã thấy.<br>3) Ván sau thử dùng ở Pre-Flop để thấy mức thông tin khác nhau.' }
+      ],
+      ao_thuat_gia: [
+        { t: 'Rút bài bí mật', b: 'Bấm chiêu (<strong>Pre-Flop, Flop hoặc Turn</strong>): bạn rút bí mật <strong>1 lá từ bộ bài chưa chia</strong>. Một cửa sổ hiện lá mới cùng 2 lá tẩy của bạn: chọn <strong>đổi</strong> 1 lá tẩy lấy lá mới, hoặc <strong>giữ nguyên bài cũ</strong>. Hồi chiêu <strong>3 ván</strong>.' },
+        { t: 'Cân nhắc đổi hay giữ', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>; chỉ bị mất cược nếu Người Chỉ Điểm đoán trúng bạn đã dùng chiêu. Mẹo: lá mới cao hơn lá thấp nhất trên tay thì nên đổi; nếu bài tẩy đã đẹp (đôi, cùng chất, liền kề) thì cứ giữ.' },
+        { t: 'Thử ngay!', b: '1) Dùng chiêu ở <strong>Pre-Flop</strong> khi bài tẩy yếu (2 lá lẻ khác chất).<br>2) Thử cả hai lựa chọn qua các ván: <strong>Đổi</strong> và <strong>Giữ nguyên</strong>.<br>3) Xem bài ngửa ở Kết Quả để biết quyết định có đáng không.' }
+      ]
+    };
+
+    const tut = { roleId: null, steps: [], idx: 0, auto: false };
+
+    // Trong chơi thử cửa sổ Pre-Showdown dài 30 giây (thay vì 10 giây)
+    function practiceTimingText(role) {
+      return role.timingText.replace('10s cuối', '30s cuối');
+    }
+
+    function buildTutorialSteps(roleId) {
+      const role = ROLES[roleId];
+      const chips = PHASE_CHIPS.map(([k, label]) => {
+        const on = role.validPhases.includes(k);
+        return `<span class="px-2.5 py-1 rounded-xl border-2 border-[#3a233c] text-[11px] font-extrabold ${on ? 'bg-[#6ee7b7] shadow-[0_2px_0_#3a233c]' : 'bg-white opacity-50'}">${on ? '✨ ' : ''}${label}</span>`;
+      }).join('<span class="text-[#6b4c6e] font-black">→</span>');
+
+      const intro = {
+        t: `Bạn là ${role.name}!`,
+        b: `<div class="flex flex-wrap gap-1.5 mb-2">
+              <span class="px-2 py-0.5 rounded-full border-2 border-[#3a233c] text-[11px] font-extrabold" style="background:${role.badgeBg}">${role.groupLabel}</span>
+              <span class="px-2 py-0.5 rounded-full border-2 border-[#3a233c] bg-[#ffe37d] text-[11px] font-extrabold">✨ ${role.skillName}</span>
+              <span class="px-2 py-0.5 rounded-full border-2 border-[#3a233c] bg-white text-[11px] font-extrabold">CD: ${role.cooldown} ván${role.missLabel ? ` (${role.missLabel})` : ''}</span>
+            </div>${role.desc}`
+      };
+      const when = {
+        t: 'Khi nào dùng chiêu?',
+        b: `<div class="flex flex-wrap items-center gap-1.5 mb-2.5">${chips}</div>
+            Chiêu dùng được ở các vòng <strong>sáng xanh</strong>: <strong>${practiceTimingText(role)}</strong>. Mỗi ván chỉ dùng <strong>1 lần</strong>, sau đó vào hồi chiêu ${role.cooldown} ván. Nút chiêu ở khung bên dưới đổi thành <strong>✨ DÙNG CHIÊU!</strong> khi đến đúng lúc.`
+      };
+      return [intro, when, ...(TUTORIAL_STEPS[roleId] || [])];
+    }
+
+    function openTutorial(roleId, auto = false) {
+      if (!ROLES[roleId]) return;
+      tut.roleId = roleId;
+      tut.steps = buildTutorialSteps(roleId);
+      tut.idx = 0;
+      tut.auto = auto;
+      renderTutorial();
+      document.getElementById('modal-tutorial').classList.remove('hidden');
+    }
+
+    function previewRoleTutorial(roleId) {
+      SFX.pop();
+      openTutorial(roleId, false);
+    }
+
+    function openPracticeTutorial() {
+      const me = getMe();
+      if (!me || !me.roleId) return;
+      SFX.pop();
+      openTutorial(me.roleId, false);
+    }
+
+    function renderTutorial() {
+      const role = ROLES[tut.roleId];
+      const step = tut.steps[tut.idx];
+      const last = tut.idx === tut.steps.length - 1;
+      document.getElementById('tut-svg').innerHTML = getChibiSVG(role.id);
+      document.getElementById('tut-role-name').textContent = `${role.icon} ${role.name}`;
+      document.getElementById('tut-title').textContent = step.t;
+      document.getElementById('tut-body').innerHTML = step.b;
+      document.getElementById('tut-counter').textContent = `${tut.idx + 1}/${tut.steps.length}`;
+      document.getElementById('tut-dots').innerHTML = tut.steps.map((_, i) =>
+        `<span class="w-2.5 h-2.5 rounded-full border-2 border-[#3a233c] ${i === tut.idx ? 'bg-[#f15bb5]' : 'bg-white'}"></span>`
+      ).join('');
+      document.getElementById('tut-prev').disabled = tut.idx === 0;
+      document.getElementById('tut-next').textContent = last ? 'Xong, chơi thôi! ✓' : 'Tiếp →';
+    }
+
+    function tutorialNav(dir) {
+      SFX.pop();
+      const next = tut.idx + dir;
+      if (next >= tut.steps.length) { closeTutorial(); return; }
+      if (next < 0) return;
+      tut.idx = next;
+      renderTutorial();
+    }
+
+    function closeTutorial() {
+      document.getElementById('modal-tutorial').classList.add('hidden');
+    }
+
+    function skipTutorial() {
+      SFX.pop();
+      closeTutorial();
+      if (tut.auto) {
+        practice.tutorial = false;
+        showToast('Đã bỏ qua hướng dẫn. Bấm "📘 Hướng dẫn" trên thanh tím để xem lại bất cứ lúc nào nha!', 'mint');
       }
     }
 
@@ -2196,7 +2657,7 @@
       pushRoomLog(r, `${escapeHtml(r.players[sbIdx].name)} đóng SB (${sb}), ${escapeHtml(r.players[bbIdx].name)} đóng BB (${bb}).`);
 
       r.turnIndex = getNextActiveIdx(r, bbIdx);
-      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+      r.turnDeadline = turnDeadlineFromNow();
     }
 
     function getNextAliveIdx(r, fromIdx) {
@@ -2295,7 +2756,7 @@
         return;
       }
       r.turnIndex = nextIdx;
-      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+      r.turnDeadline = turnDeadlineFromNow();
     }
 
     function advancePhaseOnRoom(r) {
@@ -2332,13 +2793,14 @@
       }
 
       r.turnIndex = getNextActiveIdx(r, r.dealerIndex);
-      r.turnDeadline = Date.now() + TURN_DURATION_MS;
+      r.turnDeadline = turnDeadlineFromNow();
     }
 
     function enterPreShowdownOnRoom(r) {
       r.phase = 'PRE_SHOWDOWN';
-      r.preShowdownDeadline = Date.now() + PRESHOWDOWN_DURATION_MS;
-      pushRoomLog(r, `⏳ Mở cửa sổ <strong>Pre-Showdown (10 giây)</strong> trước khi ngửa bài!`, 'sunny');
+      const preMs = practice.active ? 30000 : PRESHOWDOWN_DURATION_MS;
+      r.preShowdownDeadline = Date.now() + preMs;
+      pushRoomLog(r, `⏳ Mở cửa sổ <strong>Pre-Showdown (${Math.round(preMs / 1000)} giây)</strong> trước khi ngửa bài!`, 'sunny');
 
       // Bot Người Chỉ Điểm secretly considers casting
       const snitchBot = r.players.find(p => p.isBot && p.roleId === 'nguoi_chi_diem' && canPlayerCastSkillOnRoom(r, p));
@@ -2654,6 +3116,7 @@
 
       if (roomData.status === 'LOBBY') {
         hasFlippedRoleCard = false;
+        lastShownProphetKey = null; lastShownDisruptId = null; lastShownNoticeId = null;
         document.getElementById('modal-resolution').classList.add('hidden');
         document.getElementById('modal-victory').classList.add('hidden');
         renderLobby();
@@ -2783,7 +3246,7 @@
       document.getElementById('draw-other-players').innerHTML = others.map(p => `
         <div class="px-3 py-1.5 rounded-2xl bg-[#fffdf7] border-2 border-[#3a233c] text-xs flex items-center gap-2 shadow-[0_2px_0_#3a233c]">
           <span class="font-extrabold text-[#3a233c]">${escapeHtml(p.name)}</span>
-          <span class="px-1.5 py-0.5 rounded-lg bg-[#e9d8fd] border border-[#3a233c] text-[#3a233c] font-black text-[10px]">?</span>
+          <span class="px-1.5 py-0.5 rounded-lg bg-[#e9d8fd] border border-[#3a233c] text-[#3a233c] font-black text-[10px]">${practice.active && practice.showRoles && p.roleId ? `${ROLES[p.roleId].icon} ${ROLES[p.roleId].name}` : '?'}</span>
           ${p.roleConfirmed ? '<span class="text-[#269963] font-black text-xs">✓</span>' : ''}
         </div>
       `).join('');
@@ -2792,6 +3255,19 @@
       confirmBtn.disabled = me.roleConfirmed;
       if (me.roleConfirmed) {
         confirmBtn.innerHTML = '✓ Đã sẵn sàng — Chờ các bạn khác...';
+      } else {
+        confirmBtn.innerHTML = practice.active
+          ? 'Vào Bàn Thôi! 🎮'
+          : 'Vào Bàn Thôi! (<span id="draw-countdown">5</span>s)';
+      }
+
+      // Chơi thử: tự mở hướng dẫn cho vai vừa bốc được (sau khi lật thẻ)
+      if (practice.active && practice.tutorial && !practice.tutorialPrompted) {
+        practice.tutorialPrompted = true;
+        const roleIdNow = me.roleId;
+        setTimeout(() => {
+          if (practice.active && roomData && roomData.status === 'ROLE_DRAW') openTutorial(roleIdNow, true);
+        }, 1600);
       }
     }
 
@@ -2870,9 +3346,13 @@
         const isDealer = roomData.dealerIndex === pGlobalIdx;
 
         // STRICT PRIVACY: Show Chibi role portrait ONLY if revealed, else mystery hooded Chibi
-        const portraitKey = (p.revealState === 'revealed' && p.roleId) ? p.roleId : 'mystery';
+        const peekRole = Boolean(practice.active && practice.showRoles && p.roleId);
+        const portraitKey = ((p.revealState === 'revealed' || peekRole) && p.roleId) ? p.roleId : 'mystery';
         let roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#e9d8fd] border border-[#3a233c] text-[#3a233c] text-[10px] font-black">?</span>`;
-        if (p.revealState === 'targeting_group') {
+        if (peekRole) {
+          const rr = ROLES[p.roleId];
+          roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#e9d8fd] border border-dashed border-[#9b5de5] text-[#3a233c] text-[9px] font-extrabold" title="Chế độ chơi thử: chỉ bạn thấy vai này. ✨ = đã dùng chiêu ván này, ⏳ = số ván hồi chiêu">${rr.icon} ${rr.name}${p.usedSkillThisHand ? ' ✨' : ''}${p.cooldown > 0 ? ` ⏳${p.cooldown}` : ''}</span>`;
+        } else if (p.revealState === 'targeting_group') {
           roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#ffe5ec] border border-[#ff5c77] text-[#ef233c] text-[9px] font-extrabold">[Nhóm Chỉ Định]</span>`;
         } else if (p.revealState === 'revealed' && p.roleId) {
           roleBadge = `<span class="px-1.5 py-0.5 rounded-full bg-[#ffe37d] border border-[#3a233c] text-[#3a233c] text-[9px] font-extrabold">${ROLES[p.roleId].name}</span>`;
@@ -2886,7 +3366,7 @@
 
         // Cards: show at RESOLUTION (if not folded) or if local player is Thiên Nhãn who peeked that card
         const peekMatch = me.secretPeek && me.secretPeek.targetUid === p.uid ? me.secretPeek : null;
-        const showAll = roomData.phase === 'RESOLUTION' && !p.folded;
+        const showAll = (roomData.phase === 'RESOLUTION' && !p.folded) || (practice.active && practice.showCards);
         let cardsHtml = '';
         if (!p.eliminated && p.cards.length === 2) {
           cardsHtml = `
@@ -2971,6 +3451,8 @@
           skillBtn.className = 'btn-chibi btn-candy px-3.5 py-2.5 rounded-2xl text-left min-w-[148px] pulse-candy';
         }
       }
+
+      updatePracticeBar(me, myRole);
 
       // Betting Controls
       const toCall = Math.max(0, roomData.currentBet - me.roundBet);
@@ -3132,7 +3614,9 @@
         </div>
       `).join('');
 
-      document.getElementById('btn-rematch-lobby').classList.toggle('hidden', !isHost());
+      const rematchBtn = document.getElementById('btn-rematch-lobby');
+      rematchBtn.classList.toggle('hidden', !isHost());
+      rematchBtn.textContent = practice.active ? '🔄 Chơi Thử Lại' : 'Về Phòng Chờ';
       document.getElementById('modal-victory').classList.remove('hidden');
     }
 
@@ -3223,9 +3707,9 @@
         <button onclick="confirmSkillTarget('${p.uid}')"
           class="btn-chibi btn-cream w-full px-3.5 py-2.5 rounded-2xl flex items-center justify-between text-left">
           <div class="flex items-center gap-2.5">
-            <div class="w-10 h-10 shrink-0">${getChibiSVG(p.revealState === 'revealed' && p.roleId ? p.roleId : 'mystery')}</div>
+            <div class="w-10 h-10 shrink-0">${getChibiSVG((p.revealState === 'revealed' || (practice.active && practice.showRoles)) && p.roleId ? p.roleId : 'mystery')}</div>
             <div>
-              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)} ${p.uid === me.uid ? '(Bản thân)' : ''}</div>
+              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)} ${p.uid === me.uid ? '(Bản thân)' : ''}${practice.active && practice.showRoles && p.roleId && p.uid !== me.uid ? ` <span class="text-[10px] text-[#9b5de5]">(${ROLES[p.roleId].name}${p.usedSkillThisHand ? ' ✨ đã dùng chiêu' : ''})</span>` : ''}</div>
               <div class="text-[11px] font-bold text-[#6b4c6e]">Đã cược ván này: ${p.handBet.toLocaleString()} đ</div>
             </div>
           </div>
@@ -3268,7 +3752,7 @@
 
     async function sendChatMessage(event, inputId) {
       event.preventDefault();
-      if (!currentUser || !activeRoomCode) return;
+      if (!currentUser || !activeRoomCode || practice.active) return;
       const input = document.getElementById(inputId);
       const text = input.value.trim();
       if (!text) return;
@@ -3288,7 +3772,7 @@
     }
 
     async function sendQuickEmoji(emoji) {
-      if (!currentUser || !activeRoomCode) return;
+      if (!currentUser || !activeRoomCode || practice.active) return;
       const me = getMe();
       SFX.pop();
       try {
@@ -3416,6 +3900,16 @@
     window.closeTargetModal = closeTargetModal;
     window.closeProphetModal = closeProphetModal;
     window.toggleMute = toggleMute;
+    window.openPracticeSetup = openPracticeSetup;
+    window.closePracticeSetup = closePracticeSetup;
+    window.selectPracticeRole = selectPracticeRole;
+    window.startPractice = startPractice;
+    window.togglePracticeRoles = togglePracticeRoles;
+    window.togglePracticeCards = togglePracticeCards;
+    window.previewRoleTutorial = previewRoleTutorial;
+    window.openPracticeTutorial = openPracticeTutorial;
+    window.tutorialNav = tutorialNav;
+    window.skipTutorial = skipTutorial;
 
     // Boot
     window.onload = () => {
