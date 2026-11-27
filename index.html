@@ -563,7 +563,7 @@
           ⏱️ 25s
         </div>
         <div id="hud-phase" class="px-3 py-1 rounded-full bg-[#6ee7b7] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold uppercase tracking-wide shadow-[0_2px_0_#3a233c]">
-          PREFLOP
+          Chia Bài (Pre-Flop)
         </div>
         <button onclick="toggleMute()" class="btn-chibi btn-cream px-2.5 py-1.5 rounded-xl text-xs" title="Âm thanh">
           <span class="sound-icon">🔊</span>
@@ -615,7 +615,7 @@
             <!-- Pre-Showdown Countdown Bar -->
             <div id="preshowdown-bar" class="hidden mt-3 px-4 py-2 rounded-2xl bg-[#fffdf7] border-[3px] border-[#3a233c] shadow-[0_5px_0_#3a233c] flex flex-col sm:flex-row items-center gap-2 z-20">
               <div class="text-xs sm:text-sm font-extrabold text-[#3a233c] flex items-center gap-2">
-                <span>⏳ Cửa sổ Chốt Chiêu:</span>
+                <span>⏳ Chốt Cược (Pre-Showdown):</span>
                 <span id="preshowdown-timer" class="text-white bg-[#ff5c77] border-2 border-[#3a233c] px-2.5 py-0.5 rounded-xl font-black">10s</span>
               </div>
               <div class="flex items-center gap-2">
@@ -829,7 +829,7 @@
       </div>
       <div class="space-y-3 text-xs sm:text-sm text-[#3a233c] font-bold max-h-[72vh] overflow-y-auto pr-1">
         <div class="p-3.5 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c]">
-          <strong class="text-[#ff5c77]">🎪 Thể thức Giải đấu:</strong> 2–6 người chơi (10.000 điểm khởi điểm), đấu tối đa 20 ván Texas Hold'em Poker. Blind tăng gấp đôi mỗi 4 ván (50/100 → 100/200 → 200/400 → 400/800 → 800/1600). Không có cược mù Pre-Deal. Chỉ khi <strong>tất cả sẵn sàng</strong> mới tiến hành bốc thăm bí mật 1 trong 6 nhân vật Chibi. Mỗi lượt đánh có <strong>25 giây</strong>.
+          <strong class="text-[#ff5c77]">🎪 Thể thức Giải đấu:</strong> 2–6 người chơi (10.000 điểm khởi điểm), đấu tối đa 20 ván Texas Hold'em Poker. Blind tăng gấp đôi mỗi 4 ván (50/100 → 100/200 → 200/400 → 400/800 → 800/1600). Không có cược mù Pre-Deal. Chỉ khi <strong>tất cả sẵn sàng</strong> mới tiến hành bốc thăm bí mật 1 trong 6 nhân vật Chibi. Mỗi lượt đánh có <strong>25 giây</strong>.<br>🃏 <strong>Các giai đoạn:</strong> Chia Bài (Pre-Flop) &gt; Mở Bài (Flop) &gt; Mở Tiếp (Turn) &gt; Mở Lá Cuối (River) &gt; Chốt Cược (Pre-Showdown).
         </div>
         <div id="rules-chibi-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       </div>
@@ -867,7 +867,7 @@
             <input id="prac-opt-tutorial" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
           </label>
         </div>
-        <p class="text-[11px] font-bold text-[#6b4c6e] bg-[#e0fbfc] border-2 border-[#3a233c]/30 rounded-2xl px-3 py-2">💡 Chế độ chơi thử chạy hoàn toàn trên máy bạn: không giới hạn thời gian lượt đánh, cửa sổ Pre-Showdown kéo dài 30 giây, không ảnh hưởng phòng online.</p>
+        <p class="text-[11px] font-bold text-[#6b4c6e] bg-[#e0fbfc] border-2 border-[#3a233c]/30 rounded-2xl px-3 py-2">💡 Chế độ chơi thử chạy hoàn toàn trên máy bạn: không giới hạn thời gian lượt đánh, cửa sổ Chốt Cược (Pre-Showdown) kéo dài 30 giây, không ảnh hưởng phòng online.</p>
       </div>
       <div class="flex gap-2.5 mt-4">
         <button onclick="startPractice()" class="btn-chibi btn-mint flex-1 py-3 rounded-2xl text-sm uppercase tracking-wide">▶ Bắt Đầu Chơi Thử</button>
@@ -1134,7 +1134,7 @@
           </svg>
         `,
 
-        // 3. Người Chỉ Điểm: Energetic chibi detective with tiny deerstalker hat & megaphone
+        // 3. Kẻ Chỉ Điểm: Energetic chibi detective with tiny deerstalker hat & megaphone
         nguoi_chi_diem: `
           <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
             <circle cx="50" cy="50" r="46" fill="#ffedd5" stroke="#3a233c" stroke-width="3.5"/>
@@ -1163,7 +1163,7 @@
           </svg>
         `,
 
-        // 4. Kẻ Phản Đòn: Cool-cute chibi guardian/ninja holding a sparkling star mirror shield
+        // 4. Người Phản Đòn: Cool-cute chibi guardian/ninja holding a sparkling star mirror shield
         ke_phan_don: `
           <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
             <circle cx="50" cy="50" r="46" fill="#d8f3dc" stroke="#3a233c" stroke-width="3.5"/>
@@ -1312,6 +1312,20 @@
     // =========================================================================
     // 4. CONSTANTS & ROLE DEFINITIONS (100% EXACT RULES)
     // =========================================================================
+    // Tên giai đoạn hiển thị song ngữ: Việt (thuật ngữ Poker)
+    const PHASE_NAMES = {
+      PREFLOP:      { vi: 'Chia Bài',    en: 'Pre-Flop' },
+      FLOP:         { vi: 'Mở Bài',      en: 'Flop' },
+      TURN:         { vi: 'Mở Tiếp',     en: 'Turn' },
+      RIVER:        { vi: 'Mở Lá Cuối',  en: 'River' },
+      PRE_SHOWDOWN: { vi: 'Chốt Cược',   en: 'Pre-Showdown' },
+      RESOLUTION:   { vi: 'Kết Quả',     en: 'Showdown' }
+    };
+    function phaseLabel(key) {
+      const n = PHASE_NAMES[key];
+      return n ? `${n.vi} (${n.en})` : String(key || '').replace('_', ' ');
+    }
+
     const ROLES = {
       thien_nhan: {
         id: 'thien_nhan',
@@ -1323,7 +1337,7 @@
         cooldown: 3,
         validPhases: ['FLOP', 'TURN'],
         desc: 'Chọn 1 đối thủ và xem bí mật 1 lá bài tẩy ngẫu nhiên của họ.',
-        timingText: 'Vòng Flop hoặc Turn',
+        timingText: `${phaseLabel('FLOP')} hoặc ${phaseLabel('TURN')}`,
         badgeBg: '#ffe5ec'
       },
       ke_pha_roi: {
@@ -1336,12 +1350,12 @@
         cooldown: 4,
         validPhases: ['FLOP', 'TURN'],
         desc: 'Chọn 1 đối thủ, ép đổi ngẫu nhiên 1 lá bài tẩy của họ lấy 1 lá từ bộ bài chưa chia (nạn nhân biết bị phá ngay lập tức nhưng không biết ai làm).',
-        timingText: 'Vòng Flop hoặc Turn',
+        timingText: `${phaseLabel('FLOP')} hoặc ${phaseLabel('TURN')}`,
         badgeBg: '#ffe5ec'
       },
       nguoi_chi_diem: {
         id: 'nguoi_chi_diem',
-        name: 'Người Chỉ Điểm',
+        name: 'Kẻ Chỉ Điểm',
         icon: '🎯',
         group: 'targeting',
         groupLabel: 'Nhóm Chỉ Định',
@@ -1351,12 +1365,12 @@
         missLabel: '3 nếu sai',
         validPhases: ['PRE_SHOWDOWN'],
         desc: 'Chọn 1 đối thủ nghi ngờ đã dùng chiêu trong ván này. Đúng: cướp 100% điểm cược & lộ vai nạn nhân. Sai: phạt 50% điểm cược vào Pot, không lộ vai (CD giảm còn 3 ván).',
-        timingText: 'Pre-Showdown (10s cuối)',
+        timingText: `${phaseLabel('PRE_SHOWDOWN')}, 10s cuối`,
         badgeBg: '#ffe5ec'
       },
       ke_phan_don: {
         id: 'ke_phan_don',
-        name: 'Kẻ Phản Đòn',
+        name: 'Người Phản Đòn',
         icon: '🛡️',
         group: 'trap',
         groupLabel: 'Đặt Bẫy',
@@ -1366,7 +1380,7 @@
         missLabel: '2 nếu hụt',
         validPhases: ['PREFLOP'],
         desc: 'Đặt bẫy ẩn lên bản thân hoặc 1 người chơi bất kỳ. Cướp 100% điểm cược của kẻ thuộc Nhóm Chỉ Định nhắm vào người mang bẫy. Bẫy hụt: phạt 50% vào Pot, không lộ vai (CD còn 2 ván).',
-        timingText: 'Vòng Pre-Flop',
+        timingText: `${phaseLabel('PREFLOP')}`,
         badgeBg: '#fef3c7'
       },
       nha_tien_tri: {
@@ -1378,8 +1392,8 @@
         skillName: 'Thấu Thị',
         cooldown: 4,
         validPhases: ['PREFLOP', 'FLOP', 'TURN'],
-        desc: 'Xem trước bí mật 1 lá bài chung tiếp theo (1 lá Flop nếu dùng ở Pre-Flop, lá Turn ở Flop, hoặc lá River ở Turn) trước khi bàn lật.',
-        timingText: 'Pre-Flop, Flop hoặc Turn',
+        desc: `Xem trước bí mật 1 lá bài chung kế tiếp trước khi bàn lật: dùng ở ${phaseLabel('PREFLOP')} → lá đầu của ${phaseLabel('FLOP')}; dùng ở ${phaseLabel('FLOP')} → lá ${phaseLabel('TURN')}; dùng ở ${phaseLabel('TURN')} → lá ${phaseLabel('RIVER')}.`,
+        timingText: `${phaseLabel('PREFLOP')}, ${phaseLabel('FLOP')} hoặc ${phaseLabel('TURN')}`,
         badgeBg: '#e0fbfc'
       },
       ao_thuat_gia: {
@@ -1392,7 +1406,7 @@
         cooldown: 3,
         validPhases: ['PREFLOP', 'FLOP', 'TURN'],
         desc: 'Rút bí mật 1 lá từ bộ bài chưa chia, xem trước rồi chọn GIỮ (đổi lấy 1 lá tẩy trên tay) hoặc BỎ.',
-        timingText: 'Trước vòng River',
+        timingText: `Trước ${phaseLabel('RIVER')}`,
         badgeBg: '#e0fbfc'
       }
     };
@@ -2577,40 +2591,40 @@
 
     // ---------------- TUTORIAL (TỪNG VAI / TỪNG LUẬT) ----------------
     const PHASE_CHIPS = [
-      ['PREFLOP', 'Pre-Flop'], ['FLOP', 'Flop'], ['TURN', 'Turn'],
-      ['RIVER', 'River'], ['PRE_SHOWDOWN', 'Pre-Showdown']
+      ['PREFLOP', phaseLabel('PREFLOP')], ['FLOP', phaseLabel('FLOP')], ['TURN', phaseLabel('TURN')],
+      ['RIVER', phaseLabel('RIVER')], ['PRE_SHOWDOWN', phaseLabel('PRE_SHOWDOWN')]
     ];
 
     const TUTORIAL_STEPS = {
       thien_nhan: [
         { t: 'Nhìn lén bài đối thủ', b: 'Khi nút chiêu sáng lên, bấm <strong>✨ DÙNG CHIÊU</strong> rồi chọn 1 đối thủ. Hệ thống lật <strong>1 lá tẩy NGẪU NHIÊN</strong> của họ — chỉ mình bạn thấy, lá đó sẽ ngửa trên ghế của họ. Bạn không chọn được lá nào. Hồi chiêu <strong>3 ván</strong>.' },
-        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong> (cùng Kẻ Phá Rối và Người Chỉ Điểm). Nếu mục tiêu bạn chọn đang mang <strong>bẫy của Kẻ Phản Đòn</strong>, bạn bị cướp <strong>100% điểm đã cược ván đó</strong> và lộ là [Nhóm Chỉ Định]. Nếu Người Chỉ Điểm đoán trúng bạn đã dùng chiêu, bạn cũng mất cược và lộ vai.' },
-        { t: 'Thử ngay!', b: '1) Đợi tới vòng <strong>Flop</strong> hoặc <strong>Turn</strong>.<br>2) Dùng chiêu lên 1 bot.<br>3) Bật <strong>🃏 Bài bot: HIỆN</strong> trên thanh tím để đối chiếu lá bạn vừa thấy.<br>4) Thử dùng khi đang cân nhắc Tố lớn để thấy thông tin đổi quyết định thế nào.' }
+        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong> (cùng Kẻ Phá Rối và Kẻ Chỉ Điểm). Nếu mục tiêu bạn chọn đang mang <strong>bẫy của Người Phản Đòn</strong>, bạn bị cướp <strong>100% điểm đã cược ván đó</strong> và lộ là [Nhóm Chỉ Định]. Nếu Kẻ Chỉ Điểm đoán trúng bạn đã dùng chiêu, bạn cũng mất cược và lộ vai.' },
+        { t: 'Thử ngay!', b: '1) Đợi tới vòng <strong>Mở Bài (Flop)</strong> hoặc <strong>Mở Tiếp (Turn)</strong>.<br>2) Dùng chiêu lên 1 bot.<br>3) Bật <strong>🃏 Bài bot: HIỆN</strong> trên thanh tím để đối chiếu lá bạn vừa thấy.<br>4) Thử dùng khi đang cân nhắc Tố lớn để thấy thông tin đổi quyết định thế nào.' }
       ],
       ke_pha_roi: [
-        { t: 'Đánh tráo bài', b: 'Ở <strong>Flop hoặc Turn</strong>, chọn 1 đối thủ: <strong>1 lá tẩy ngẫu nhiên</strong> của họ bị tráo bằng 1 lá lấy từ bộ bài chưa chia. Nạn nhân <strong>biết ngay</strong> lá nào đã đổi thành lá nào nhưng <strong>không biết ai làm</strong>. Bạn không biết lá mới tốt hay xấu — đây là canh bạc! Hồi chiêu <strong>4 ván</strong>.' },
-        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong>: nếu nạn nhân đang mang <strong>bẫy của Kẻ Phản Đòn</strong>, bạn bị cướp <strong>100% điểm cược</strong> ván đó và lộ [Nhóm Chỉ Định]. Mẹo: nhắm người đang cược lớn (nhiều khả năng có bài mạnh) để phá bài của họ.' },
-        { t: 'Thử ngay!', b: '1) Bật <strong>🃏 Bài bot: HIỆN</strong>.<br>2) Dùng chiêu lên 1 bot ở Flop/Turn rồi xem 1 lá của họ đổi.<br>3) Quan sát cả khi bot khác dùng chiêu lên bạn — bạn sẽ nhận thông báo "Kẻ Phá Rối đã tráo lá…".' }
+        { t: 'Đánh tráo bài', b: 'Ở <strong>Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>, chọn 1 đối thủ: <strong>1 lá tẩy ngẫu nhiên</strong> của họ bị tráo bằng 1 lá lấy từ bộ bài chưa chia. Nạn nhân <strong>biết ngay</strong> lá nào đã đổi thành lá nào nhưng <strong>không biết ai làm</strong>. Bạn không biết lá mới tốt hay xấu — đây là canh bạc! Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong>: nếu nạn nhân đang mang <strong>bẫy của Người Phản Đòn</strong>, bạn bị cướp <strong>100% điểm cược</strong> ván đó và lộ [Nhóm Chỉ Định]. Mẹo: nhắm người đang cược lớn (nhiều khả năng có bài mạnh) để phá bài của họ.' },
+        { t: 'Thử ngay!', b: '1) Bật <strong>🃏 Bài bot: HIỆN</strong>.<br>2) Dùng chiêu lên 1 bot ở Mở Bài (Flop) hoặc Mở Tiếp (Turn) rồi xem 1 lá của họ đổi.<br>3) Quan sát cả khi bot khác dùng chiêu lên bạn — bạn sẽ nhận thông báo "Kẻ Phá Rối đã tráo lá…".' }
       ],
       nguoi_chi_diem: [
-        { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Pre-Showdown</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Chốt Cược (Pre-Showdown)</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
         { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược và lộ vai trước.' },
-        { t: 'Thử ngay!', b: 'Chơi tới <strong>Pre-Showdown</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
+        { t: 'Thử ngay!', b: 'Chơi tới <strong>Chốt Cược (Pre-Showdown)</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
       ],
       ke_phan_don: [
-        { t: 'Đặt bẫy ở Pre-Flop', b: 'Chỉ dùng được ở <strong>Pre-Flop</strong> (đầu ván). Chọn <strong>bản thân</strong> hoặc <strong>1 người bất kỳ</strong> làm người "mang bẫy". Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>3 ván</strong>.' },
+        { t: 'Đặt bẫy ở Chia Bài (Pre-Flop)', b: 'Chỉ dùng được ở <strong>Chia Bài (Pre-Flop)</strong> (đầu ván). Chọn <strong>bản thân</strong> hoặc <strong>1 người bất kỳ</strong> làm người "mang bẫy". Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>3 ván</strong>.' },
         { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) đã nhắm đúng người mang bẫy → bạn cướp <strong>100% điểm cược</strong> của họ; bạn lộ vai, họ lộ [Nhóm Chỉ Định] (Chỉ Điểm thì lộ vai).<br><strong>Hụt</strong>: không ai nhắm → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, hồi chiêu còn <strong>2 ván</strong>.' },
-        { t: 'Thử ngay!', b: '1) Ở Pre-Flop, thử đặt bẫy lên <strong>chính mình</strong> (ai sẽ soi bạn?), ván sau thử lên 1 bot cược nhiều.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
+        { t: 'Thử ngay!', b: '1) Ở Chia Bài (Pre-Flop), thử đặt bẫy lên <strong>chính mình</strong> (ai sẽ soi bạn?), ván sau thử lên 1 bot cược nhiều.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
       ],
       nha_tien_tri: [
-        { t: 'Thấu thị lá bài chung', b: 'Bấm chiêu là dùng ngay, <strong>không cần chọn mục tiêu</strong>. Dùng ở Pre-Flop → thấy <strong>1 lá Flop</strong> sắp lật; ở Flop → thấy lá <strong>Turn</strong>; ở Turn → thấy lá <strong>River</strong>. Lá được ghim trên bàn để bạn nhìn lại. Hồi chiêu <strong>4 ván</strong>.' },
-        { t: 'An toàn & chính xác', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>. Lá bài chung đã được chia sẵn từ đầu ván nên kết quả bạn thấy <strong>luôn đúng 100%</strong>. Rủi ro duy nhất: Người Chỉ Điểm đoán trúng bạn đã dùng chiêu thì bạn mất cược ván đó.' },
-        { t: 'Thử ngay!', b: '1) Dùng ở <strong>Turn</strong> để biết lá River trước khi quyết định Theo / Tố / Tất tay.<br>2) Khi bàn lật, đối chiếu với lá bạn đã thấy.<br>3) Ván sau thử dùng ở Pre-Flop để thấy mức thông tin khác nhau.' }
+        { t: 'Thấu thị lá bài chung', b: 'Bấm chiêu là dùng ngay, <strong>không cần chọn mục tiêu</strong>. Dùng ở Chia Bài (Pre-Flop) → thấy <strong>lá đầu của Mở Bài (Flop)</strong> sắp lật; ở Mở Bài (Flop) → thấy lá <strong>Mở Tiếp (Turn)</strong>; ở Mở Tiếp (Turn) → thấy lá <strong>Mở Lá Cuối (River)</strong>. Lá được ghim trên bàn để bạn nhìn lại. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'An toàn & chính xác', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>. Lá bài chung đã được chia sẵn từ đầu ván nên kết quả bạn thấy <strong>luôn đúng 100%</strong>. Rủi ro duy nhất: Kẻ Chỉ Điểm đoán trúng bạn đã dùng chiêu thì bạn mất cược ván đó.' },
+        { t: 'Thử ngay!', b: '1) Dùng ở <strong>Mở Tiếp (Turn)</strong> để biết lá Mở Lá Cuối (River) trước khi quyết định Theo / Tố / Tất tay.<br>2) Khi bàn lật, đối chiếu với lá bạn đã thấy.<br>3) Ván sau thử dùng ở Chia Bài (Pre-Flop) để thấy mức thông tin khác nhau.' }
       ],
       ao_thuat_gia: [
-        { t: 'Rút bài bí mật', b: 'Bấm chiêu (<strong>Pre-Flop, Flop hoặc Turn</strong>): bạn rút bí mật <strong>1 lá từ bộ bài chưa chia</strong>. Một cửa sổ hiện lá mới cùng 2 lá tẩy của bạn: chọn <strong>đổi</strong> 1 lá tẩy lấy lá mới, hoặc <strong>giữ nguyên bài cũ</strong>. Hồi chiêu <strong>3 ván</strong>.' },
-        { t: 'Cân nhắc đổi hay giữ', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>; chỉ bị mất cược nếu Người Chỉ Điểm đoán trúng bạn đã dùng chiêu. Mẹo: lá mới cao hơn lá thấp nhất trên tay thì nên đổi; nếu bài tẩy đã đẹp (đôi, cùng chất, liền kề) thì cứ giữ.' },
-        { t: 'Thử ngay!', b: '1) Dùng chiêu ở <strong>Pre-Flop</strong> khi bài tẩy yếu (2 lá lẻ khác chất).<br>2) Thử cả hai lựa chọn qua các ván: <strong>Đổi</strong> và <strong>Giữ nguyên</strong>.<br>3) Xem bài ngửa ở Kết Quả để biết quyết định có đáng không.' }
+        { t: 'Rút bài bí mật', b: 'Bấm chiêu (<strong>Chia Bài (Pre-Flop), Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>): bạn rút bí mật <strong>1 lá từ bộ bài chưa chia</strong>. Một cửa sổ hiện lá mới cùng 2 lá tẩy của bạn: chọn <strong>đổi</strong> 1 lá tẩy lấy lá mới, hoặc <strong>giữ nguyên bài cũ</strong>. Hồi chiêu <strong>3 ván</strong>.' },
+        { t: 'Cân nhắc đổi hay giữ', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>; chỉ bị mất cược nếu Kẻ Chỉ Điểm đoán trúng bạn đã dùng chiêu. Mẹo: lá mới cao hơn lá thấp nhất trên tay thì nên đổi; nếu bài tẩy đã đẹp (đôi, cùng chất, liền kề) thì cứ giữ.' },
+        { t: 'Thử ngay!', b: '1) Dùng chiêu ở <strong>Chia Bài (Pre-Flop)</strong> khi bài tẩy yếu (2 lá lẻ khác chất).<br>2) Thử cả hai lựa chọn qua các ván: <strong>Đổi</strong> và <strong>Giữ nguyên</strong>.<br>3) Xem bài ngửa ở Kết Quả để biết quyết định có đáng không.' }
       ]
     };
 
@@ -2903,15 +2917,15 @@
       if (r.phase === 'PREFLOP') {
         r.phase = 'FLOP';
         r.community.push(r.futureCommunity[0], r.futureCommunity[1], r.futureCommunity[2]);
-        pushRoomLog(r, `🃏 Lật 3 lá Flop: <strong>${r.community.map(cardToText).join(' ')}</strong>`, 'mint');
+        pushRoomLog(r, `🃏 <strong>Mở Bài (Flop)</strong> — lật 3 lá: <strong>${r.community.map(cardToText).join(' ')}</strong>`, 'mint');
       } else if (r.phase === 'FLOP') {
         r.phase = 'TURN';
         r.community.push(r.futureCommunity[3]);
-        pushRoomLog(r, `🃏 Lật lá Turn: <strong>${cardToText(r.community[3])}</strong>`, 'mint');
+        pushRoomLog(r, `🃏 <strong>Mở Tiếp (Turn)</strong> — lật lá thứ 4: <strong>${cardToText(r.community[3])}</strong>`, 'mint');
       } else if (r.phase === 'TURN') {
         r.phase = 'RIVER';
         r.community.push(r.futureCommunity[4]);
-        pushRoomLog(r, `🃏 Lật lá River: <strong>${cardToText(r.community[4])}</strong>`, 'mint');
+        pushRoomLog(r, `🃏 <strong>Mở Lá Cuối (River)</strong> — lật lá thứ 5: <strong>${cardToText(r.community[4])}</strong>`, 'mint');
       } else if (r.phase === 'RIVER') {
         enterPreShowdownOnRoom(r);
         return;
@@ -2931,9 +2945,9 @@
       r.phase = 'PRE_SHOWDOWN';
       const preMs = practice.active ? 30000 : PRESHOWDOWN_DURATION_MS;
       r.preShowdownDeadline = Date.now() + preMs;
-      pushRoomLog(r, `⏳ Mở cửa sổ <strong>Pre-Showdown (${Math.round(preMs / 1000)} giây)</strong> trước khi ngửa bài!`, 'sunny');
+      pushRoomLog(r, `⏳ <strong>Chốt Cược (Pre-Showdown)</strong> — cửa sổ ${Math.round(preMs / 1000)} giây trước khi ngửa bài!`, 'sunny');
 
-      // Bot Người Chỉ Điểm secretly considers casting
+      // Bot Kẻ Chỉ Điểm secretly considers casting
       const snitchBot = r.players.find(p => p.isBot && p.roleId === 'nguoi_chi_diem' && canPlayerCastSkillOnRoom(r, p));
       if (snitchBot && Math.random() < 0.52) {
         const suspects = r.players.filter(p => !p.eliminated && p.uid !== snitchBot.uid && p.handBet > 0);
@@ -2966,7 +2980,7 @@
       const target = r.players.find(p => p.uid === targetUid);
       if (!target || target.eliminated || target.left) return { ok: false };
 
-      // Kẻ Phản Đòn được đặt bẫy lên chính mình; các vai Chỉ Định phải nhắm người khác
+      // Người Phản Đòn được đặt bẫy lên chính mình; các vai Chỉ Định phải nhắm người khác
       if (caster.roleId !== 'ke_phan_don' && target.uid === caster.uid) return { ok: false };
 
       // Thiên Nhãn / Kẻ Phá Rối cần mục tiêu đang có bài; Kẻ Phá Rối cần bộ bài còn lá để đổi
@@ -3022,13 +3036,13 @@
         let streetLabel = '';
         if (r.phase === 'PREFLOP') {
           nextCard = r.futureCommunity[0];
-          streetLabel = '1 lá bài Flop sắp lật';
+          streetLabel = `Lá đầu của ${phaseLabel('FLOP')} sắp lật`;
         } else if (r.phase === 'FLOP') {
           nextCard = r.futureCommunity[3];
-          streetLabel = 'Lá bài Turn sắp lật';
+          streetLabel = `Lá bài ${phaseLabel('TURN')} sắp lật`;
         } else if (r.phase === 'TURN') {
           nextCard = r.futureCommunity[4];
-          streetLabel = 'Lá bài River sắp lật';
+          streetLabel = `Lá bài ${phaseLabel('RIVER')} sắp lật`;
         }
         if (nextCard) {
           caster.secretProphet = {
@@ -3165,16 +3179,16 @@
               attackerPlayer.revealState = 'targeting_group';
             }
             const tagHtml = att.roleId === 'nguoi_chi_diem'
-              ? '<span class="text-[#ff5c77] font-extrabold">(Người Chỉ Điểm)</span>'
+              ? '<span class="text-[#ff5c77] font-extrabold">(Kẻ Chỉ Điểm)</span>'
               : '<span class="text-[#ff5c77] font-extrabold">[Nhóm Chỉ Định]</span>';
             const stealAmt = attackerPlayer.handBet;
             if (!stolenFromUids.has(attackerPlayer.uid) && stealAmt > 0) {
               stolenFromUids.add(attackerPlayer.uid);
               remainingPot = Math.max(0, remainingPot - stealAmt);
               counterPlayer.points += stealAmt;
-              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Kẻ Phản Đòn)</strong> bẫy thành công! Cướp <strong>${stealAmt.toLocaleString()} đ</strong> từ <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}.`);
+              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Người Phản Đòn)</strong> bẫy thành công! Cướp <strong>${stealAmt.toLocaleString()} đ</strong> từ <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}.`);
             } else {
-              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Kẻ Phản Đòn)</strong> bẫy thành công <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}!`);
+              step1Logs.push(`🛡️ <strong>${escapeHtml(counterPlayer.name)} (Người Phản Đòn)</strong> bẫy thành công <strong>${escapeHtml(attackerPlayer.name)}</strong> ${tagHtml}!`);
             }
           });
         } else {
@@ -3506,7 +3520,7 @@
       document.getElementById('hud-room-code').textContent = `#${roomData.roomCode}`;
       document.getElementById('hud-hand').textContent = `Ván ${roomData.handNumber} / ${roomData.maxHands}`;
       document.getElementById('hud-blind').textContent = `Blind: ${sb} / ${bb}`;
-      document.getElementById('hud-phase').textContent = roomData.phase.replace('_', ' ');
+      document.getElementById('hud-phase').textContent = phaseLabel(roomData.phase);
       document.getElementById('table-pot').textContent = `${roomData.pot.toLocaleString()} đ`;
 
       // Community cards
@@ -3793,7 +3807,7 @@
           </div>
         </div>
         <div class="p-3.5 rounded-2xl bg-[#ffe5ec] border-2 border-[#3a233c]">
-          <div class="text-xs font-extrabold uppercase text-[#ef233c] mb-1.5">Bước 2: Xử lý Người Chỉ Điểm & Án Phạt 50% 🎯</div>
+          <div class="text-xs font-extrabold uppercase text-[#ef233c] mb-1.5">Bước 2: Xử lý Kẻ Chỉ Điểm & Án Phạt 50% 🎯</div>
           <div class="text-xs sm:text-sm space-y-1 text-[#3a233c] font-bold">
             ${res.step2Logs.length ? res.step2Logs.map(l => `<div>${l}</div>`).join('') : '<div class="text-[#6b4c6e] italic">Không có Chỉ Điểm hoặc án phạt nào xảy ra.</div>'}
           </div>
