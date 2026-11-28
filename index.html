@@ -571,6 +571,9 @@
         <button onclick="openRulesModal()" class="btn-chibi btn-sunny px-3 py-1.5 rounded-xl text-xs">
           📖 Luật
         </button>
+        <button onclick="openRankingModal()" class="btn-chibi btn-sky px-3 py-1.5 rounded-xl text-xs">
+          🏆 Hạng bài
+        </button>
         <button onclick="leaveRoom()" class="btn-chibi btn-coral px-3 py-1.5 rounded-xl text-xs">
           🚪 Thoát
         </button>
@@ -580,8 +583,8 @@
     <!-- Practice mode control bar (only visible in practice mode) -->
     <div id="practice-bar" class="hidden bg-[#f3e8ff] border-b-[3px] border-[#3a233c] px-3 sm:px-5 py-2 flex flex-wrap items-center gap-2 text-[11px] font-extrabold text-[#3a233c]">
       <span class="px-2.5 py-0.5 rounded-full bg-[#c77dff] text-white border-2 border-[#3a233c]">🧪 CHƠI THỬ</span>
-      <button id="btn-prac-roles" onclick="togglePracticeRoles()" class="btn-chibi btn-mint px-3 py-1 rounded-xl text-[11px]">👁️ Vai bot: HIỆN</button>
-      <button id="btn-prac-cards" onclick="togglePracticeCards()" class="btn-chibi btn-mint px-3 py-1 rounded-xl text-[11px]">🃏 Bài bot: HIỆN</button>
+      <button id="btn-prac-roles" onclick="togglePracticeRoles()" class="btn-chibi btn-cream px-3 py-1 rounded-xl text-[11px]">👁️ Vai bot: ẨN</button>
+      <button id="btn-prac-cards" onclick="togglePracticeCards()" class="btn-chibi btn-cream px-3 py-1 rounded-xl text-[11px]">🃏 Bài bot: ẨN</button>
       <button onclick="openPracticeTutorial()" class="btn-chibi btn-sunny px-3 py-1 rounded-xl text-[11px]">📘 Hướng dẫn</button>
       <button onclick="openPracticeSetup()" class="btn-chibi btn-sky px-3 py-1 rounded-xl text-[11px]">🔄 Chơi lại / Đổi vai</button>
       <span id="practice-coach" class="w-full lg:w-auto lg:flex-1 text-[#6b4c6e]"></span>
@@ -593,9 +596,15 @@
       <div class="flex-1 flex flex-col justify-between gap-3">
 
         <!-- Table Area -->
-        <div class="relative flex-1 min-h-[455px] sm:min-h-[500px] flex items-center justify-center py-8 px-2">
+        <div class="relative flex-1 sm:min-h-[500px] flex flex-col sm:flex-row sm:items-center sm:justify-center gap-1 py-1 sm:py-8 px-0 sm:px-2">
+          <!-- Mobile: ghế đối thủ xếp hàng ngang phía trên/dưới bàn (không đè bài chung). Desktop: sm:contents -> ghế đặt tuyệt đối quanh bàn -->
+          <div class="order-1 flex sm:contents justify-center items-start gap-1.5 pt-9 px-1">
+            <div id="seat-2" class="hidden sm:absolute sm:left-5 sm:top-2 z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
+            <div id="seat-3" class="hidden sm:absolute sm:left-1/2 sm:-translate-x-1/2 sm:top-0 z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[184px]"></div>
+            <div id="seat-4" class="hidden sm:absolute sm:right-5 sm:top-2 z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
+          </div>
           <!-- Oval Mint-Emerald Table -->
-          <div class="poker-table w-full max-w-[820px] h-[340px] sm:h-[385px] rounded-[170px] flex flex-col items-center justify-center p-4">
+          <div class="order-2 poker-table w-full max-w-[820px] min-h-[240px] sm:min-h-0 sm:h-[385px] rounded-[120px] sm:rounded-[170px] flex flex-col items-center justify-center p-3 sm:p-4">
 
             <!-- Pot Display -->
             <div class="mb-3 px-4 py-1.5 rounded-full bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] flex items-center gap-2 z-10">
@@ -629,12 +638,10 @@
             </div>
           </div>
 
-          <!-- 5 Opponent Seats Positioned Clockwise Around Table -->
-          <div id="seat-1" class="hidden absolute left-1 sm:left-3 bottom-[20%] sm:bottom-[15%] z-10 w-[148px] sm:w-[178px]"></div>
-          <div id="seat-2" class="hidden absolute left-1 sm:left-5 top-1 sm:top-2 z-10 w-[148px] sm:w-[178px]"></div>
-          <div id="seat-3" class="hidden absolute left-1/2 -translate-x-1/2 -top-1 sm:top-0 z-10 w-[154px] sm:w-[184px]"></div>
-          <div id="seat-4" class="hidden absolute right-1 sm:right-5 top-1 sm:top-2 z-10 w-[148px] sm:w-[178px]"></div>
-          <div id="seat-5" class="hidden absolute right-1 sm:right-3 bottom-[20%] sm:bottom-[15%] z-10 w-[148px] sm:w-[178px]"></div>
+          <div class="order-3 flex sm:contents justify-center items-start gap-1.5 pt-9 px-1">
+            <div id="seat-1" class="hidden sm:absolute sm:left-3 sm:bottom-[15%] z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
+            <div id="seat-5" class="hidden sm:absolute sm:right-3 sm:bottom-[15%] z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
+          </div>
         </div>
 
         <!-- Local Player Panel & Action Controls -->
@@ -837,6 +844,23 @@
     </div>
   </div>
 
+  <!-- ==================== POKER HAND RANKING MODAL ==================== -->
+  <div id="modal-ranking" class="hidden fixed inset-0 z-[60] bg-[#3a233c]/75 backdrop-blur-xs flex items-center justify-center p-3 overflow-y-auto" onclick="if(event.target===this)closeRankingModal()">
+    <div class="chibi-card max-w-xl w-full p-4 sm:p-5 my-auto">
+      <div class="flex items-center justify-between border-b-2 border-dashed border-[#3a233c]/25 pb-3 mb-3">
+        <div>
+          <h3 class="text-lg sm:text-xl font-extrabold text-[#3a233c]">🏆 Xếp Hạng Bài Poker</h3>
+          <p class="text-[11px] font-bold text-[#6b4c6e]">Từ mạnh nhất (#1) đến yếu nhất (#10)</p>
+        </div>
+        <button onclick="closeRankingModal()" class="btn-chibi btn-coral w-9 h-9 rounded-xl text-sm flex items-center justify-center shrink-0">✕</button>
+      </div>
+      <div id="ranking-list" class="space-y-2 max-h-[68vh] overflow-y-auto pr-1"></div>
+      <p class="text-[11px] font-bold text-[#6b4c6e] bg-[#e0fbfc] border-2 border-[#3a233c]/25 rounded-2xl px-3 py-2 mt-3">
+        💡 Chọn 5 lá mạnh nhất trong 7 lá (2 bài tẩy + 5 bài chung). <strong>Lá sáng</strong> tạo nên bộ bài, <strong>lá mờ</strong> chỉ dùng để so khi hòa. Cùng hạng thì so lá cao hơn.
+      </p>
+    </div>
+  </div>
+
   <!-- ==================== PRACTICE SETUP MODAL ==================== -->
   <div id="modal-practice-setup" class="hidden fixed inset-0 z-50 bg-[#3a233c]/75 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
     <div class="chibi-card max-w-2xl w-full p-5 my-auto">
@@ -846,21 +870,21 @@
       </div>
       <div class="space-y-4 max-h-[72vh] overflow-y-auto pr-1">
         <div>
-          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2">1️⃣ Chọn luật (vai) muốn luyện</div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2"><span class="inline-flex items-center justify-center w-5 h-5 mr-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[11px] font-black align-middle">1</span>Chọn luật (vai) muốn luyện</div>
           <div id="practice-role-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2"></div>
           <p class="text-[11px] font-bold text-[#6b4c6e] mt-1.5">Chọn <strong>Ngẫu nhiên</strong> để bốc thăm như ván thật. 5 bot sẽ nhận 5 vai còn lại. Bấm <strong>📘 Hướng dẫn</strong> dưới mỗi vai để xem trước.</p>
         </div>
         <div>
-          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2">2️⃣ Tùy chọn quan sát <span class="normal-case text-[#6b4c6e]">(đổi được cả lúc đang chơi)</span></div>
+          <div class="text-xs font-extrabold uppercase tracking-wider text-[#3a233c] mb-2"><span class="inline-flex items-center justify-center w-5 h-5 mr-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[11px] font-black align-middle">2</span>Tùy chọn quan sát <span class="normal-case text-[#6b4c6e]">(đổi được cả lúc đang chơi)</span></div>
           <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] mb-2 cursor-pointer">
             <span class="text-sm font-extrabold text-[#3a233c]">👁️ Hiện vai của bot
               <span class="block text-[11px] font-bold text-[#6b4c6e]">Tắt = vai bot hiện dấu "?" như ván thật</span></span>
-            <input id="prac-opt-roles" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
+            <input id="prac-opt-roles" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" />
           </label>
           <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] mb-2 cursor-pointer">
             <span class="text-sm font-extrabold text-[#3a233c]">🃏 Hiện bài tẩy của bot
               <span class="block text-[11px] font-bold text-[#6b4c6e]">Tắt = bài bot úp cho tới lúc ngửa bài</span></span>
-            <input id="prac-opt-cards" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" checked />
+            <input id="prac-opt-cards" type="checkbox" class="w-5 h-5 shrink-0 accent-[#f15bb5]" />
           </label>
           <label class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-[#fef6e4] border-2 border-[#3a233c] cursor-pointer">
             <span class="text-sm font-extrabold text-[#3a233c]">📘 Hiện hướng dẫn cho vai của tôi
@@ -1504,8 +1528,8 @@
     const practice = {
       active: false,
       role: null,            // null = ngẫu nhiên
-      showRoles: true,
-      showCards: true,
+      showRoles: false,
+      showCards: false,
       tutorial: true,
       tutorialPrompted: false,
       savedUser: null
@@ -1585,7 +1609,7 @@
         <div class="playing-card ${size} ${card.color}">
           <div class="leading-none text-left">${card.label}</div>
           <div class="text-center leading-none ${size === 'sm' ? 'text-base' : size === 'lg' ? 'text-2xl' : 'text-xl'}">${card.suit}</div>
-          <div class="leading-none text-right rotate-180">${card.label}</div>
+          <div class="leading-none text-right">${card.label}</div>
         </div>
       `;
     }
@@ -1917,7 +1941,7 @@
       activeRoomCode = null;
       roomData = null;
       ['screen-lobby', 'screen-role-draw', 'screen-game', 'modal-resolution',
-       'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target',
+       'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target', 'modal-ranking',
        'modal-tutorial', 'modal-practice-setup'].forEach(id => {
         document.getElementById(id).classList.add('hidden');
       });
@@ -2504,7 +2528,7 @@
       latestActionDocs = [];
       prevIsHost = false;
 
-      ['modal-resolution', 'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target', 'modal-tutorial']
+      ['modal-resolution', 'modal-victory', 'modal-magician', 'modal-prophet', 'modal-target', 'modal-ranking', 'modal-tutorial']
         .forEach(id => document.getElementById(id).classList.add('hidden'));
 
       // Practice không có chat: luôn ở tab Nhật Ký
@@ -3706,7 +3730,7 @@
         // Speech bubble if recent (< 4.5s)
         const showBubble = p.lastBubble && (now - p.lastBubble.ts < 4500);
         const bubbleHtml = showBubble
-          ? `<div class="speech-bubble absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap px-2.5 py-0.5 text-[11px] z-30">${escapeHtml(p.lastBubble.text)}</div>`
+          ? `<div class="speech-bubble !absolute -top-9 inset-x-0 mx-auto w-max max-w-full whitespace-nowrap px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-[11px] z-30">${escapeHtml(p.lastBubble.text)}</div>`
           : '';
 
         // Cards: show at RESOLUTION (if not folded) or if local player is Thiên Nhãn who peeked that card
@@ -3723,11 +3747,11 @@
         }
 
         seatEl.innerHTML = `
-          <div class="relative rounded-2xl bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] p-2 transition ${isTurn ? 'seat-active' : ''} ${p.folded || p.eliminated ? 'seat-folded' : ''}">
+          <div class="relative rounded-2xl bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] p-1.5 sm:p-2 transition ${isTurn ? 'seat-active' : ''} ${p.folded || p.eliminated ? 'seat-folded' : ''}">
             ${bubbleHtml}
             ${cardsHtml}
             <div class="flex items-center gap-1.5">
-              <div class="w-9 h-9 shrink-0">${getChibiSVG(portraitKey)}</div>
+              <div class="w-8 h-8 sm:w-9 sm:h-9 shrink-0">${getChibiSVG(portraitKey)}</div>
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between gap-1">
                   <span class="font-extrabold text-[11px] text-[#3a233c] truncate">${escapeHtml(p.name)}</span>
@@ -3736,7 +3760,7 @@
                 <div class="text-xs font-black text-[#d98236]">${p.points.toLocaleString()} đ</div>
               </div>
             </div>
-            <div class="mt-1 pt-1 border-t border-dashed border-[#3a233c]/20 flex items-center justify-between gap-1">
+            <div class="mt-1 pt-1 border-t border-dashed border-[#3a233c]/20 flex flex-wrap items-center justify-between gap-1">
               ${roleBadge}
               <span class="text-[10px] font-bold text-[#6b4c6e]">
                 ${p.left ? '<span class="text-[#ef233c]">Đã rời</span>' : p.eliminated ? '<span class="text-[#ef233c]">Bị loại</span>' : p.folded ? '<span class="text-[#ef233c]">Úp bài</span>' : p.allIn ? '<span class="text-[#9b5de5]">All-in!</span>' : `Cược: ${p.handBet.toLocaleString()}`}
@@ -4286,6 +4310,51 @@
       `).join('');
     }
 
+    // Bảng xếp hạng bài poker (ví dụ minh họa + đánh dấu bộ bài hiện tại của bạn)
+    const HAND_RANKING = [
+      { tier: 9, name: 'Sảnh Chúa', en: 'Royal Flush', desc: '10-J-Q-K-A cùng chất', color: '#ffd166', cards: [['10','♥',1],['J','♥',1],['Q','♥',1],['K','♥',1],['A','♥',1]] },
+      { tier: 8, name: 'Thùng Phá Sảnh', en: 'Straight Flush', desc: '5 lá liên tiếp cùng chất', color: '#ff8fab', cards: [['4','♠',1],['5','♠',1],['6','♠',1],['7','♠',1],['8','♠',1]] },
+      { tier: 7, name: 'Tứ Quý', en: 'Four of a Kind', desc: '4 lá cùng số', color: '#f15bb5', cards: [['A','♠',1],['A','♥',1],['A','♣',1],['A','♦',1],['8','♠',0]] },
+      { tier: 6, name: 'Cù Lũ', en: 'Full House', desc: '1 sám cô + 1 đôi', color: '#c77dff', cards: [['Q','♠',1],['Q','♥',1],['Q','♣',1],['6','♣',1],['6','♥',1]] },
+      { tier: 5, name: 'Thùng', en: 'Flush', desc: '5 lá cùng chất', color: '#9b5de5', cards: [['K','♦',1],['9','♦',1],['7','♦',1],['4','♦',1],['2','♦',1]] },
+      { tier: 4, name: 'Sảnh', en: 'Straight', desc: '5 lá liên tiếp khác chất', color: '#4cc9f0', cards: [['3','♠',1],['4','♥',1],['5','♦',1],['6','♣',1],['7','♥',1]] },
+      { tier: 3, name: 'Sám Cô', en: 'Three of a Kind', desc: '3 lá cùng số', color: '#6ee7b7', cards: [['K','♠',1],['K','♥',1],['K','♣',1],['5','♣',0],['8','♥',0]] },
+      { tier: 2, name: 'Thú (2 Đôi)', en: 'Two Pair', desc: '2 đôi khác số', color: '#a7e36b', cards: [['9','♠',1],['9','♥',1],['5','♥',1],['5','♦',1],['3','♠',0]] },
+      { tier: 1, name: 'Một Đôi', en: 'One Pair', desc: '2 lá cùng số', color: '#ffe37d', cards: [['6','♣',1],['6','♠',1],['9','♠',0],['10','♥',0],['2','♥',0]] },
+      { tier: 0, name: 'Mậu Thầu', en: 'High Card', desc: 'Không có bộ nào, so lá cao nhất', color: '#d9d9e3', cards: [['K','♣',1],['8','♥',0],['6','♠',0],['4','♦',0],['3','♠',0]] }
+    ];
+
+    function openRankingModal() {
+      SFX.pop();
+      let myTier = null;
+      const me = typeof getMe === 'function' ? getMe() : null;
+      if (me && roomData && me.cards && me.cards.length === 2 && roomData.community && me.cards.length + roomData.community.length >= 5) {
+        myTier = evaluateBestHand([...me.cards, ...roomData.community]).tier;
+      }
+      document.getElementById('ranking-list').innerHTML = HAND_RANKING.map((h, i) => {
+        const cardsHtml = h.cards.map(([label, suit, used]) => {
+          const red = suit === '♥' || suit === '♦';
+          const c = { label, suit, color: red ? 'card-red' : 'card-black' };
+          return `<div class="${used ? '' : 'opacity-40 saturate-50'}">${renderCardHTML(c, 'sm')}</div>`;
+        }).join('');
+        const mine = myTier === h.tier;
+        return `
+          <div class="rounded-2xl border-[2.5px] border-[#3a233c] p-2.5 shadow-[0_3px_0_#3a233c] ${mine ? 'bg-[#e0fbfc] ring-4 ring-[#ffd166]' : 'bg-[#fffdf7]'}">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-9 h-9 shrink-0 rounded-full border-[2.5px] border-[#3a233c] flex items-center justify-center font-black text-sm text-[#3a233c] shadow-[0_2px_0_#3a233c]" style="background:${h.color}">#${i + 1}</div>
+              <div class="min-w-0 flex-1">
+                <div class="font-extrabold text-sm text-[#3a233c] leading-tight">${h.name} <span class="text-[10px] text-[#6b4c6e] font-bold">${h.en}</span></div>
+                <div class="text-[11px] font-bold text-[#6b4c6e] leading-tight">${h.desc}</div>
+              </div>
+              ${mine ? '<span class="px-2 py-0.5 rounded-full bg-[#ffd166] border-2 border-[#3a233c] text-[10px] font-extrabold text-[#3a233c] shrink-0">⭐ Bài bạn</span>' : ''}
+            </div>
+            <div class="flex items-center justify-center gap-1.5 sm:gap-2">${cardsHtml}</div>
+          </div>`;
+      }).join('');
+      document.getElementById('modal-ranking').classList.remove('hidden');
+    }
+    function closeRankingModal() { SFX.pop(); document.getElementById('modal-ranking').classList.add('hidden'); }
+
     function openRulesModal() { SFX.pop(); document.getElementById('modal-rules').classList.remove('hidden'); }
     function closeRulesModal() { SFX.pop(); document.getElementById('modal-rules').classList.add('hidden'); }
     function closeTargetModal() { SFX.pop(); document.getElementById('modal-target').classList.add('hidden'); }
@@ -4305,6 +4374,8 @@
     window.sendSkipPreShowdown = sendSkipPreShowdown;
     window.openSkillAction = openSkillAction;
     window.confirmSkillTarget = confirmSkillTarget;
+    window.toggleTrapTarget = toggleTrapTarget;
+    window.confirmTrapTargets = confirmTrapTargets;
     window.sendMagicianChoice = sendMagicianChoice;
     window.hostStartNextHand = hostStartNextHand;
     window.hostReturnToLobby = hostReturnToLobby;
@@ -4313,6 +4384,8 @@
     window.switchSidebarTab = switchSidebarTab;
     window.updateRaiseLabel = updateRaiseLabel;
     window.openRulesModal = openRulesModal;
+    window.openRankingModal = openRankingModal;
+    window.closeRankingModal = closeRankingModal;
     window.closeRulesModal = closeRulesModal;
     window.closeTargetModal = closeTargetModal;
     window.closeProphetModal = closeProphetModal;
