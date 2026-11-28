@@ -739,6 +739,10 @@
       <h3 id="target-modal-title" class="text-xl font-extrabold text-[#3a233c] mb-1">Chọn Mục Tiêu</h3>
       <p id="target-modal-desc" class="text-xs font-bold text-[#6b4c6e] mb-4"></p>
       <div id="target-list" class="grid grid-cols-1 gap-2.5 mb-4"></div>
+      <div id="target-select-count" class="hidden text-center text-xs font-extrabold text-[#9b5de5] mb-2"></div>
+      <button id="target-confirm-btn" onclick="confirmTrapTargets()" class="hidden btn-chibi btn-mint w-full py-2.5 rounded-2xl text-xs mb-2">
+        Xác nhận đặt bẫy
+      </button>
       <button onclick="closeTargetModal()" class="btn-chibi btn-cream w-full py-2.5 rounded-2xl text-xs">
         Hủy bỏ
       </button>
@@ -750,16 +754,13 @@
     <div class="chibi-card max-w-md w-full p-5 text-center">
       <div id="magician-modal-svg" class="w-20 h-20 mx-auto mb-1 chibi-float"></div>
       <h3 class="text-xl font-extrabold text-[#9b5de5] mb-1">Ảo Thuật Gia: Hoán Đổi!</h3>
-      <p class="text-xs font-bold text-[#6b4c6e] mb-4">Úm ba la! Bạn vừa rút bí mật lá bài mới bên dưới. Chọn 1 lá trên tay để đổi hoặc giữ nguyên bài cũ nha~</p>
+      <p class="text-xs font-bold text-[#6b4c6e] mb-4">Úm ba la! Bạn vừa rút bí mật lá bài mới bên dưới. Bạn BẮT BUỘC phải chọn 1 trong 2 lá tẩy trên tay để thay bằng lá mới nha~</p>
       <div class="flex flex-col items-center mb-4">
         <span class="text-[11px] uppercase tracking-wider text-[#269963] font-extrabold mb-1.5">✨ Lá bài mới rút ✨</span>
         <div id="magician-drawn-card"></div>
       </div>
       <div class="text-[11px] uppercase tracking-wider text-[#3a233c] font-extrabold mb-2">Chọn lá bài trên tay để thay thế:</div>
       <div id="magician-hand-choices" class="flex items-center justify-center gap-4 mb-4"></div>
-      <button onclick="sendMagicianChoice(-1)" class="btn-chibi btn-cream w-full py-2.5 rounded-2xl text-xs">
-        Giữ nguyên bài cũ (Bỏ lá mới)
-      </button>
     </div>
   </div>
 
@@ -1375,11 +1376,11 @@
         group: 'trap',
         groupLabel: 'Đặt Bẫy',
         skillName: 'Gậy Ông Đập Lưng Ông',
-        cooldown: 3,
+        cooldown: 4,
         missCooldown: 2,
         missLabel: '2 nếu hụt',
         validPhases: ['PREFLOP'],
-        desc: 'Đặt bẫy ẩn lên bản thân hoặc 1 người chơi bất kỳ. Cướp 100% điểm cược của kẻ thuộc Nhóm Chỉ Định nhắm vào người mang bẫy. Bẫy hụt: phạt 50% vào Pot, không lộ vai (CD còn 2 ván).',
+        desc: 'Đặt bẫy ẩn lên tối đa 2 người chơi khác nhau (có thể gồm bản thân). Cướp 100% điểm cược của kẻ thuộc Nhóm Chỉ Định nhắm vào bất kỳ người mang bẫy. Bẫy hụt (không ai nhắm): phạt 50% vào Pot, không lộ vai (CD còn 2 ván).',
         timingText: `${phaseLabel('PREFLOP')}`,
         badgeBg: '#fef3c7'
       },
@@ -1403,9 +1404,9 @@
         group: 'self',
         groupLabel: 'Tự Thân',
         skillName: 'Hoán Đổi',
-        cooldown: 3,
+        cooldown: 4,
         validPhases: ['PREFLOP', 'FLOP', 'TURN'],
-        desc: 'Rút bí mật 1 lá từ bộ bài chưa chia, xem trước rồi chọn GIỮ (đổi lấy 1 lá tẩy trên tay) hoặc BỎ.',
+        desc: 'Rút bí mật 1 lá từ bộ bài chưa chia, xem trước rồi BẮT BUỘC đổi vào 1 trong 2 lá tẩy trên tay (không được giữ nguyên bài cũ). Trong cùng giai đoạn, chiêu của bạn luôn được xử lý trước chiêu Đánh Tráo của Kẻ Phá Rối nhắm vào bạn.',
         timingText: `Trước ${phaseLabel('RIVER')}`,
         badgeBg: '#e0fbfc'
       }
@@ -1749,8 +1750,9 @@
         roleDrawDeadline: 0,
         players: [createPlayerObject(currentUser.uid, playerName, false)],
         skillActions: [],
-        trapTargetUid: null,
+        trapTargetUids: [],
         trapCasterUid: null,
+        pendingDisrupts: [],
         resolution: null,
         logs: [{ id: Date.now(), html: `🎪 Phòng <strong>${code}</strong> đã mở cửa chào đón bởi <strong>${escapeHtml(playerName)}</strong>!`, tone: 'sunny' }]
       };
@@ -2148,9 +2150,9 @@
         if (r.status !== 'PLAYING') return false;
         const p = r.players.find(pl => pl.uid === uid);
         if (!p || !canPlayerCastSkillOnRoom(r, p)) return false;
-        const v = validateSkillTarget(r, p, payload && payload.targetUid);
+        const v = validateSkillTarget(r, p, payload && payload.targetUid, payload && payload.targetUids);
         if (!v.ok) return false; // mục tiêu sai: từ chối, KHÔNG tính là đã dùng chiêu, KHÔNG tốn hồi chiêu
-        executeSkillOnRoom(r, p, v.targetUid);
+        executeSkillOnRoom(r, p, v.targetUid, v.targetUids);
         return true;
       }
 
@@ -2158,11 +2160,14 @@
         if (r.status !== 'PLAYING') return false;
         const p = r.players.find(pl => pl.uid === uid);
         if (!p || !p.secretMagicianDraw) return false;
-        const idx = payload.swapIndex;
-        if (idx === 0 || idx === 1) {
-          p.cards[idx] = p.secretMagicianDraw;
-        }
+        // Bắt buộc hoán đổi: chỉ nhận swapIndex là 0 hoặc 1, mọi giá trị khác bị từ chối (vẫn giữ lá mới rút để chọn lại)
+        const idx = payload ? payload.swapIndex : undefined;
+        if (idx !== 0 && idx !== 1) return false;
+        if (!p.cards[idx]) return false;
+        p.cards[idx] = p.secretMagicianDraw;
         p.secretMagicianDraw = null;
+        // Ảo Thuật Gia đã xong -> giải phóng lệnh Đánh Tráo đang chờ (nếu có)
+        resolvePendingDisrupt(r, p.uid);
         return true;
       }
 
@@ -2383,6 +2388,10 @@
         r.carryOver = 0;
         r.pot = 0;
         r.resolution = null;
+        r.skillActions = [];
+        r.trapTargetUids = [];
+        r.trapCasterUid = null;
+        r.pendingDisrupts = [];
         r.players = r.players.filter(p => !p.left); // người đã rời giữa giải không quay lại phòng chờ
         r.players.forEach(p => {
           p.ready = p.isBot;
@@ -2532,8 +2541,9 @@
         roleDrawDeadline: 0,
         players,
         skillActions: [],
-        trapTargetUid: null,
+        trapTargetUids: [],
         trapCasterUid: null,
+        pendingDisrupts: [],
         resolution: null,
         logs: [{ id: Date.now(), html: '🧪 <strong>Chế độ chơi thử</strong>: bạn + 5 bot AI. Không giới hạn thời gian lượt đánh!', tone: 'sunny' }]
       };
@@ -2602,7 +2612,7 @@
         { t: 'Thử ngay!', b: '1) Đợi tới vòng <strong>Mở Bài (Flop)</strong> hoặc <strong>Mở Tiếp (Turn)</strong>.<br>2) Dùng chiêu lên 1 bot.<br>3) Bật <strong>🃏 Bài bot: HIỆN</strong> trên thanh tím để đối chiếu lá bạn vừa thấy.<br>4) Thử dùng khi đang cân nhắc Tố lớn để thấy thông tin đổi quyết định thế nào.' }
       ],
       ke_pha_roi: [
-        { t: 'Đánh tráo bài', b: 'Ở <strong>Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>, chọn 1 đối thủ: <strong>1 lá tẩy ngẫu nhiên</strong> của họ bị tráo bằng 1 lá lấy từ bộ bài chưa chia. Nạn nhân <strong>biết ngay</strong> lá nào đã đổi thành lá nào nhưng <strong>không biết ai làm</strong>. Bạn không biết lá mới tốt hay xấu — đây là canh bạc! Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Đánh tráo bài', b: 'Ở <strong>Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>, chọn 1 đối thủ: <strong>1 lá tẩy ngẫu nhiên</strong> của họ bị tráo bằng 1 lá lấy từ bộ bài chưa chia. Nạn nhân <strong>biết ngay</strong> lá nào đã đổi thành lá nào nhưng <strong>không biết ai làm</strong>. Bạn không biết lá mới tốt hay xấu — đây là canh bạc! Nếu nạn nhân là <strong>Ảo Thuật Gia</strong> thì chiêu Hoán Đổi của họ được xử lý <strong>trước</strong>, rồi mới tới Đánh Tráo của bạn. Hồi chiêu <strong>4 ván</strong>.' },
         { t: 'Cẩn thận Nhóm Chỉ Định', b: 'Bạn thuộc <strong>Nhóm Chỉ Định</strong>: nếu nạn nhân đang mang <strong>bẫy của Người Phản Đòn</strong>, bạn bị cướp <strong>100% điểm cược</strong> ván đó và lộ [Nhóm Chỉ Định]. Mẹo: nhắm người đang cược lớn (nhiều khả năng có bài mạnh) để phá bài của họ.' },
         { t: 'Thử ngay!', b: '1) Bật <strong>🃏 Bài bot: HIỆN</strong>.<br>2) Dùng chiêu lên 1 bot ở Mở Bài (Flop) hoặc Mở Tiếp (Turn) rồi xem 1 lá của họ đổi.<br>3) Quan sát cả khi bot khác dùng chiêu lên bạn — bạn sẽ nhận thông báo "Kẻ Phá Rối đã tráo lá…".' }
       ],
@@ -2612,9 +2622,9 @@
         { t: 'Thử ngay!', b: 'Chơi tới <strong>Chốt Cược (Pre-Showdown)</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
       ],
       ke_phan_don: [
-        { t: 'Đặt bẫy ở Chia Bài (Pre-Flop)', b: 'Chỉ dùng được ở <strong>Chia Bài (Pre-Flop)</strong> (đầu ván). Chọn <strong>bản thân</strong> hoặc <strong>1 người bất kỳ</strong> làm người "mang bẫy". Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>3 ván</strong>.' },
-        { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) đã nhắm đúng người mang bẫy → bạn cướp <strong>100% điểm cược</strong> của họ; bạn lộ vai, họ lộ [Nhóm Chỉ Định] (Chỉ Điểm thì lộ vai).<br><strong>Hụt</strong>: không ai nhắm → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, hồi chiêu còn <strong>2 ván</strong>.' },
-        { t: 'Thử ngay!', b: '1) Ở Chia Bài (Pre-Flop), thử đặt bẫy lên <strong>chính mình</strong> (ai sẽ soi bạn?), ván sau thử lên 1 bot cược nhiều.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
+        { t: 'Đặt bẫy ở Chia Bài (Pre-Flop)', b: 'Chỉ dùng được ở <strong>Chia Bài (Pre-Flop)</strong> (đầu ván). Chọn <strong>tối đa 2 người chơi khác nhau</strong> (có thể gồm cả <strong>bản thân</strong>) làm người "mang bẫy", rồi bấm <strong>Xác nhận đặt bẫy</strong>. Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) nhắm vào <strong>bất kỳ người mang bẫy</strong> → bạn cướp <strong>100% điểm cược</strong> của từng kẻ tấn công (mỗi kẻ bị cướp 1 lần); bạn lộ vai, họ lộ [Nhóm Chỉ Định] (Chỉ Điểm thì lộ vai).<br><strong>Hụt</strong>: không ai nhắm vào người mang bẫy nào → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, không lộ vai, hồi chiêu còn <strong>2 ván</strong>.' },
+        { t: 'Thử ngay!', b: '1) Ở Chia Bài (Pre-Flop), thử đặt bẫy lên <strong>chính mình + 1 bot cược nhiều</strong>, ván sau thử 2 bot khác nhau.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
       ],
       nha_tien_tri: [
         { t: 'Thấu thị lá bài chung', b: 'Bấm chiêu là dùng ngay, <strong>không cần chọn mục tiêu</strong>. Dùng ở Chia Bài (Pre-Flop) → thấy <strong>lá đầu của Mở Bài (Flop)</strong> sắp lật; ở Mở Bài (Flop) → thấy lá <strong>Mở Tiếp (Turn)</strong>; ở Mở Tiếp (Turn) → thấy lá <strong>Mở Lá Cuối (River)</strong>. Lá được ghim trên bàn để bạn nhìn lại. Hồi chiêu <strong>4 ván</strong>.' },
@@ -2622,9 +2632,9 @@
         { t: 'Thử ngay!', b: '1) Dùng ở <strong>Mở Tiếp (Turn)</strong> để biết lá Mở Lá Cuối (River) trước khi quyết định Theo / Tố / Tất tay.<br>2) Khi bàn lật, đối chiếu với lá bạn đã thấy.<br>3) Ván sau thử dùng ở Chia Bài (Pre-Flop) để thấy mức thông tin khác nhau.' }
       ],
       ao_thuat_gia: [
-        { t: 'Rút bài bí mật', b: 'Bấm chiêu (<strong>Chia Bài (Pre-Flop), Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>): bạn rút bí mật <strong>1 lá từ bộ bài chưa chia</strong>. Một cửa sổ hiện lá mới cùng 2 lá tẩy của bạn: chọn <strong>đổi</strong> 1 lá tẩy lấy lá mới, hoặc <strong>giữ nguyên bài cũ</strong>. Hồi chiêu <strong>3 ván</strong>.' },
-        { t: 'Cân nhắc đổi hay giữ', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>; chỉ bị mất cược nếu Kẻ Chỉ Điểm đoán trúng bạn đã dùng chiêu. Mẹo: lá mới cao hơn lá thấp nhất trên tay thì nên đổi; nếu bài tẩy đã đẹp (đôi, cùng chất, liền kề) thì cứ giữ.' },
-        { t: 'Thử ngay!', b: '1) Dùng chiêu ở <strong>Chia Bài (Pre-Flop)</strong> khi bài tẩy yếu (2 lá lẻ khác chất).<br>2) Thử cả hai lựa chọn qua các ván: <strong>Đổi</strong> và <strong>Giữ nguyên</strong>.<br>3) Xem bài ngửa ở Kết Quả để biết quyết định có đáng không.' }
+        { t: 'Rút bài bí mật', b: 'Bấm chiêu (<strong>Chia Bài (Pre-Flop), Mở Bài (Flop) hoặc Mở Tiếp (Turn)</strong>): bạn rút bí mật <strong>1 lá từ bộ bài chưa chia</strong>. Một cửa sổ hiện lá mới cùng 2 lá tẩy của bạn: bạn <strong>BẮT BUỘC đổi</strong> 1 trong 2 lá tẩy lấy lá mới (không còn lựa chọn giữ nguyên bài cũ). Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Chọn lá để đổi & thứ tự chiêu', b: 'Vai <strong>Tự Thân</strong>: không nhắm ai nên <strong>không dính bẫy Phản Đòn</strong>; chỉ bị mất cược nếu Kẻ Chỉ Điểm đoán trúng bạn đã dùng chiêu. Mẹo: nhìn lá mới rồi bỏ lá tẩy yếu hơn / ít ăn nhập với bài chung nhất.<br><strong>Thứ tự:</strong> nếu Kẻ Phá Rối cũng nhắm bạn trong cùng giai đoạn, chiêu <strong>Hoán Đổi của bạn xử lý trước</strong>, rồi mới tới Đánh Tráo.' },
+        { t: 'Thử ngay!', b: '1) Dùng chiêu ở <strong>Chia Bài (Pre-Flop)</strong> khi bài tẩy yếu (2 lá lẻ khác chất).<br>2) Thử đổi vào lá thứ nhất, ván sau thử lá thứ hai để thấy khác biệt.<br>3) Xem bài ngửa ở Kết Quả để biết quyết định có đáng không.' }
       ]
     };
 
@@ -2747,8 +2757,9 @@
       r.carryOver = 0;
       r.pot = carryIn;
       r.skillActions = [];
-      r.trapTargetUid = null;
+      r.trapTargetUids = [];
       r.trapCasterUid = null;
+      r.pendingDisrupts = [];
       r.resolution = null;
 
       const n = r.players.length;
@@ -2905,6 +2916,7 @@
     }
 
     function advancePhaseOnRoom(r) {
+      finalizeMagiciansAndDisrupts(r);
       r.players.forEach(p => {
         p.roundBet = 0;
         p.actedThisRound = false;
@@ -2971,17 +2983,29 @@
     }
 
     // Kiểm tra mục tiêu chiêu phía host (client có thể bị sửa nên không được tin)
-    function validateSkillTarget(r, caster, targetUid) {
+    function validateSkillTarget(r, caster, targetUid, targetUids) {
       // Vai Tự Thân (Tiên Tri, Ảo Thuật Gia) không có mục tiêu: bỏ qua mọi targetUid client gửi lên
       if (caster.roleId === 'nha_tien_tri' || caster.roleId === 'ao_thuat_gia') {
         return { ok: true, targetUid: null };
+      }
+      // Người Phản Đòn: đặt bẫy lên 1-2 người khác nhau còn sống trên bàn (có thể gồm bản thân)
+      if (caster.roleId === 'ke_phan_don') {
+        if (!Array.isArray(targetUids)) return { ok: false };
+        const uniq = [...new Set(targetUids)];
+        if (uniq.length < 1 || uniq.length > 2) return { ok: false };
+        for (const uid of uniq) {
+          if (typeof uid !== 'string' || !uid) return { ok: false };
+          const t = r.players.find(pl => pl.uid === uid);
+          if (!t || t.eliminated || t.left) return { ok: false };
+        }
+        return { ok: true, targetUid: null, targetUids: uniq };
       }
       if (typeof targetUid !== 'string' || !targetUid) return { ok: false };
       const target = r.players.find(p => p.uid === targetUid);
       if (!target || target.eliminated || target.left) return { ok: false };
 
-      // Người Phản Đòn được đặt bẫy lên chính mình; các vai Chỉ Định phải nhắm người khác
-      if (caster.roleId !== 'ke_phan_don' && target.uid === caster.uid) return { ok: false };
+      // Các vai Chỉ Định phải nhắm người khác
+      if (target.uid === caster.uid) return { ok: false };
 
       // Thiên Nhãn / Kẻ Phá Rối cần mục tiêu đang có bài; Kẻ Phá Rối cần bộ bài còn lá để đổi
       if (caster.roleId === 'thien_nhan' || caster.roleId === 'ke_pha_roi') {
@@ -2991,21 +3015,92 @@
       return { ok: true, targetUid: target.uid };
     }
 
-    function executeSkillOnRoom(r, caster, targetUid) {
+    // Áp dụng đòn Đánh Tráo lên 1 người chơi: tráo ngẫu nhiên 1 lá tẩy với 1 lá từ bộ bài chưa chia
+    function applyDisruptToPlayer(r, target) {
+      if (!target || !target.cards || target.cards.length === 0 || !r.deck || r.deck.length === 0) return;
+      const idx = Math.floor(Math.random() * target.cards.length);
+      const oldCard = target.cards[idx];
+      const newCard = r.deck.pop();
+      target.cards[idx] = newCard;
+      target.secretDisrupted = {
+        id: Date.now() + Math.random(),
+        handNumber: r.handNumber,
+        oldCard,
+        newCard
+      };
+    }
+
+    // Đánh Tráo nhắm Ảo Thuật Gia phải xử lý SAU chiêu Hoán Đổi của Ảo Thuật Gia (cùng giai đoạn)
+    function shouldDeferDisrupt(r, target) {
+      if (!target || target.roleId !== 'ao_thuat_gia') return false;
+      if (target.secretMagicianDraw) return true; // đang chờ chọn lá để đổi
+      return canPlayerCastSkillOnRoom(r, target); // chưa dùng chiêu, còn có thể dùng ở giai đoạn này
+    }
+
+    // Giải phóng các lệnh Đánh Tráo đang chờ Ảo Thuật Gia (gọi sau khi Hoán Đổi xong)
+    function resolvePendingDisrupt(r, magicianUid) {
+      if (!Array.isArray(r.pendingDisrupts) || r.pendingDisrupts.length === 0) return;
+      const mine = r.pendingDisrupts.filter(d => d.targetUid === magicianUid);
+      if (mine.length === 0) return;
+      r.pendingDisrupts = r.pendingDisrupts.filter(d => d.targetUid !== magicianUid);
+      const target = r.players.find(pl => pl.uid === magicianUid);
+      mine.forEach(() => applyDisruptToPlayer(r, target));
+    }
+
+    // Chọn lá tẩy để thay bằng lá mới rút: lá có hạng thấp hơn (hòa -> lá đầu)
+    function forcedMagicianSwapIndex(p) {
+      return p.cards[0].rank <= p.cards[1].rank ? 0 : 1;
+    }
+
+    // Bot Ảo Thuật Gia: bắt buộc đổi, chọn lá đổi sao cho bài tốt nhất có thể
+    function botMagicianSwapIndex(r, bot, drawn) {
+      const options = [0, 1].map(i => {
+        const hand = bot.cards.map((c, k) => (k === i ? drawn : c));
+        let score;
+        if (r.community.length >= 3) {
+          score = evaluateBestHand([...hand, ...r.community]).score;
+        } else {
+          const [a, b] = hand;
+          score = (a.rank === b.rank ? 30 : 0) + (a.suit === b.suit ? 4 : 0) +
+            (Math.abs(a.rank - b.rank) === 1 ? 2 : 0) + a.rank + b.rank;
+        }
+        return { i, score };
+      });
+      if (options[0].score === options[1].score) return forcedMagicianSwapIndex(bot);
+      return options[0].score > options[1].score ? 0 : 1;
+    }
+
+    // Hết giai đoạn / kết ván sớm: ép Ảo Thuật Gia chưa chọn phải đổi, rồi áp mọi lệnh Đánh Tráo còn chờ
+    function finalizeMagiciansAndDisrupts(r) {
+      r.players.forEach(p => {
+        if (p.secretMagicianDraw && p.cards && p.cards.length >= 2) {
+          p.cards[forcedMagicianSwapIndex(p)] = p.secretMagicianDraw;
+        }
+        p.secretMagicianDraw = null;
+      });
+      const pend = Array.isArray(r.pendingDisrupts) ? r.pendingDisrupts : [];
+      r.pendingDisrupts = [];
+      pend.forEach(d => applyDisruptToPlayer(r, r.players.find(pl => pl.uid === d.targetUid)));
+    }
+
+    function executeSkillOnRoom(r, caster, targetUid, targetUids) {
       const role = ROLES[caster.roleId];
       caster.usedSkillThisHand = true;
       caster.cooldown = role.cooldown;
+      if (!Array.isArray(r.pendingDisrupts)) r.pendingDisrupts = [];
 
-      r.skillActions.push({
+      const action = {
         casterUid: caster.uid,
         roleId: caster.roleId,
         targetUid: targetUid || null,
         phase: r.phase
-      });
+      };
+      if (caster.roleId === 'ke_phan_don') action.targetUids = targetUids || [];
+      r.skillActions.push(action);
 
       if (caster.roleId === 'ke_phan_don') {
         r.trapCasterUid = caster.uid;
-        r.trapTargetUid = targetUid || caster.uid;
+        r.trapTargetUids = (targetUids && targetUids.length > 0) ? [...targetUids] : [caster.uid];
       } else if (caster.roleId === 'thien_nhan') {
         const target = r.players.find(p => p.uid === targetUid);
         if (target && target.cards.length > 0) {
@@ -3020,16 +3115,12 @@
       } else if (caster.roleId === 'ke_pha_roi') {
         const target = r.players.find(p => p.uid === targetUid);
         if (target && target.cards.length > 0 && r.deck.length > 0) {
-          const idx = Math.floor(Math.random() * target.cards.length);
-          const oldCard = target.cards[idx];
-          const newCard = r.deck.pop();
-          target.cards[idx] = newCard;
-          target.secretDisrupted = {
-            id: Date.now() + Math.random(),
-            handNumber: r.handNumber,
-            oldCard,
-            newCard
-          };
+          if (shouldDeferDisrupt(r, target)) {
+            // Mục tiêu là Ảo Thuật Gia: chiêu Hoán Đổi của họ chạy trước, Đánh Tráo xếp hàng chờ
+            r.pendingDisrupts.push({ casterUid: caster.uid, targetUid: target.uid, phase: r.phase });
+          } else {
+            applyDisruptToPlayer(r, target);
+          }
         }
       } else if (caster.roleId === 'nha_tien_tri') {
         let nextCard = null;
@@ -3055,13 +3146,15 @@
         if (r.deck.length > 0) {
           const drawn = r.deck.pop();
           if (caster.isBot) {
-            const minIdx = caster.cards[0].rank <= caster.cards[1].rank ? 0 : 1;
-            if (drawn.rank > caster.cards[minIdx].rank) {
-              caster.cards[minIdx] = drawn;
-            }
+            // Bot cũng BẮT BUỘC đổi lá mới rút vào 1 trong 2 lá tẩy
+            caster.cards[botMagicianSwapIndex(r, caster, drawn)] = drawn;
+            resolvePendingDisrupt(r, caster.uid);
           } else {
-            caster.secretMagicianDraw = drawn;
+            caster.secretMagicianDraw = drawn; // Đánh Tráo (nếu có) chờ tới khi người chơi chọn lá
           }
+        } else {
+          // Hết bài để rút: Hoán Đổi coi như xong, giải phóng Đánh Tráo đang chờ
+          resolvePendingDisrupt(r, caster.uid);
         }
       }
     }
@@ -3082,9 +3175,18 @@
       if (canPlayerCastSkillOnRoom(r, bot) && Math.random() < 0.38) {
         const others = r.players.filter(p => !p.eliminated && !p.folded && p.uid !== bot.uid);
         if (bot.roleId === 'ke_phan_don') {
-          const candidates = r.players.filter(p => !p.eliminated && !p.folded);
-          const target = Math.random() < 0.5 ? bot : candidates[Math.floor(Math.random() * candidates.length)];
-          executeSkillOnRoom(r, bot, target.uid);
+          // Đặt bẫy tối đa 2 người khác nhau: ưu tiên bản thân + người nhiều điểm nhất, hoặc ngẫu nhiên
+          const candidates = r.players.filter(p => !p.eliminated && !p.folded && !p.left);
+          let picks = [];
+          if (Math.random() < 0.5) {
+            const richest = candidates.filter(p => p.uid !== bot.uid).sort((a, b) => b.points - a.points)[0];
+            picks = richest ? [bot, richest] : [bot];
+          } else {
+            const shuffled = [...candidates].sort(() => Math.random() - 0.5);
+            picks = shuffled.slice(0, Math.min(2, shuffled.length));
+          }
+          const uids = [...new Set(picks.map(p => p.uid))];
+          executeSkillOnRoom(r, bot, null, uids.length > 0 ? uids : [bot.uid]);
         } else if ((bot.roleId === 'thien_nhan' || bot.roleId === 'ke_pha_roi') && others.length > 0) {
           const target = others[Math.floor(Math.random() * others.length)];
           executeSkillOnRoom(r, bot, target.uid);
@@ -3147,6 +3249,7 @@
     }
 
     function runResolutionOnRoom(r) {
+      finalizeMagiciansAndDisrupts(r);
       r.phase = 'RESOLUTION';
       const step1Logs = [];
       const step2Logs = [];
@@ -3158,13 +3261,14 @@
       let winnerUids = [];
 
       // ---------- STEP 1: XỬ LÝ BẪY PHẢN ĐÒN ----------
-      if (r.trapCasterUid) {
-        const counterPlayer = r.players.find(p => p.uid === r.trapCasterUid);
-        const trappedUid = r.trapTargetUid;
+      const counterPlayer = r.trapCasterUid ? r.players.find(p => p.uid === r.trapCasterUid) : null;
+      if (counterPlayer) {
+        const trappedUids = Array.isArray(r.trapTargetUids) ? r.trapTargetUids : [];
 
+        // Bẫy kích hoạt nếu có hành động Nhóm Chỉ Định nhắm vào BẤT KỲ người mang bẫy (khác người đặt bẫy)
         const attackers = r.skillActions.filter(a => {
           const role = ROLES[a.roleId];
-          return role && role.group === 'targeting' && a.targetUid === trappedUid && a.casterUid !== counterPlayer.uid;
+          return role && role.group === 'targeting' && a.targetUid && trappedUids.includes(a.targetUid) && a.casterUid !== counterPlayer.uid;
         });
 
         if (attackers.length > 0) {
@@ -3937,6 +4041,16 @@
       document.getElementById('target-modal-title').textContent = `${role.icon} ${role.skillName} — Chọn Mục Tiêu`;
       document.getElementById('target-modal-desc').textContent = role.desc;
 
+      if (me.roleId === 'ke_phan_don') {
+        trapSelection = [];
+        document.getElementById('target-modal-title').textContent = `${role.icon} ${role.skillName} — Chọn tối đa 2 người`;
+        renderTrapTargetList();
+        document.getElementById('modal-target').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('target-select-count').classList.add('hidden');
+      document.getElementById('target-confirm-btn').classList.add('hidden');
+
       const list = document.getElementById('target-list');
       const candidates = roomData.players.filter(p => {
         if (p.eliminated) return false;
@@ -3959,6 +4073,67 @@
       `).join('');
 
       document.getElementById('modal-target').classList.remove('hidden');
+    }
+
+    // ---- Người Phản Đòn: chọn tối đa 2 người mang bẫy ----
+    let trapSelection = [];
+
+    function renderTrapTargetList() {
+      const me = getMe();
+      if (!me || !roomData) return;
+      const list = document.getElementById('target-list');
+      const candidates = roomData.players.filter(p => !p.eliminated && !p.left);
+      list.innerHTML = candidates.map(p => {
+        const on = trapSelection.includes(p.uid);
+        const roleTag = practice.active && practice.showRoles && p.roleId && p.uid !== me.uid
+          ? ` <span class="text-[10px] text-[#9b5de5]">(${ROLES[p.roleId].name}${p.usedSkillThisHand ? ' ✨ đã dùng chiêu' : ''})</span>` : '';
+        return `
+        <button onclick="toggleTrapTarget('${p.uid}')"
+          class="btn-chibi ${on ? 'btn-mint' : 'btn-cream'} w-full px-3.5 py-2.5 rounded-2xl flex items-center justify-between text-left">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 shrink-0">${getChibiSVG((p.revealState === 'revealed' || (practice.active && practice.showRoles)) && p.roleId ? p.roleId : 'mystery')}</div>
+            <div>
+              <div class="font-extrabold text-sm text-[#3a233c]">${escapeHtml(p.name)} ${p.uid === me.uid ? '(Bản thân)' : ''}${roleTag}</div>
+              <div class="text-[11px] font-bold text-[#6b4c6e]">Đã cược ván này: ${p.handBet.toLocaleString()} đ</div>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-xl ${on ? 'bg-white' : 'bg-[#ffe37d]'} border-2 border-[#3a233c] text-xs font-extrabold text-[#3a233c]">${on ? '✓ Đã chọn' : 'Chọn'}</span>
+        </button>`;
+      }).join('');
+      const count = document.getElementById('target-select-count');
+      count.textContent = `Đã chọn ${trapSelection.length}/2 người`;
+      count.classList.remove('hidden');
+      const btn = document.getElementById('target-confirm-btn');
+      btn.classList.remove('hidden');
+      btn.disabled = trapSelection.length === 0;
+      btn.style.opacity = trapSelection.length === 0 ? '0.5' : '1';
+    }
+
+    function toggleTrapTarget(uid) {
+      SFX.pop();
+      const i = trapSelection.indexOf(uid);
+      if (i >= 0) {
+        trapSelection.splice(i, 1);
+      } else {
+        if (trapSelection.length >= 2) {
+          showToast('Chỉ đặt bẫy được tối đa 2 người thôi nha~', 'sunny');
+          return;
+        }
+        trapSelection.push(uid);
+      }
+      renderTrapTargetList();
+    }
+
+    function confirmTrapTargets() {
+      if (trapSelection.length < 1 || trapSelection.length > 2) return;
+      const targetUids = [...trapSelection];
+      trapSelection = [];
+      closeTargetModal();
+      SFX.magic();
+      const me = getMe();
+      const role = me ? ROLES[me.roleId] : null;
+      sendAction('CAST_SKILL', { targetUids });
+      if (role) showToast(`✨ Đã kích hoạt ẩn ${role.skillName}!`, 'candy');
     }
 
     function confirmSkillTarget(targetUid) {
@@ -3985,10 +4160,11 @@
     }
 
     function sendMagicianChoice(swapIndex) {
+      if (swapIndex !== 0 && swapIndex !== 1) return; // bắt buộc chọn 1 trong 2 lá tẩy
       document.getElementById('modal-magician').classList.add('hidden');
       SFX.chime();
       sendAction('MAGICIAN_CHOICE', { swapIndex });
-      showToast(swapIndex === -1 ? 'Đã giữ nguyên bài cũ nha~' : '🎩 Úm ba la! Hoán đổi bài thành công!', 'mint');
+      showToast('🎩 Úm ba la! Hoán đổi bài thành công!', 'mint');
     }
 
     async function sendChatMessage(event, inputId) {
