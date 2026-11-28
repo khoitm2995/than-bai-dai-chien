@@ -259,11 +259,12 @@
     .flip-card-inner {
       position: relative;
       width: 100%;
-      min-height: 365px;
+      min-height: 500px;
       transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
       transform-style: preserve-3d;
     }
     .flip-card-inner.flipped { transform: rotateY(180deg); }
+    @media (min-width: 640px) { .flip-card-inner { min-height: 460px; } }
     .flip-face {
       position: absolute;
       inset: 0;
@@ -518,7 +519,7 @@
               </div>
               <p id="draw-role-desc" class="text-xs sm:text-sm text-[#3a233c] font-bold leading-relaxed bg-[#fef6e4] p-3 rounded-2xl border-2 border-[#3a233c]/25"></p>
             </div>
-            <div class="mt-2.5 pt-2 border-t-2 border-dashed border-[#3a233c]/20 flex items-center justify-between text-[11px] font-extrabold text-[#6b4c6e]">
+            <div class="mt-2.5 pt-2 border-t-2 border-dashed border-[#3a233c]/20 flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-[11px] font-extrabold text-[#6b4c6e]">
               <span>⏱️ Thời điểm dùng:</span>
               <strong id="draw-role-timing" class="text-[#269963]"></strong>
             </div>
@@ -659,6 +660,8 @@
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <span id="human-name-label" class="font-extrabold text-[#3a233c] text-sm sm:text-base">BẠN</span>
                     <span id="human-role-badge" class="px-2 py-0.5 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-[10px] font-extrabold"></span>
+                    <span id="human-dealer-badge" title="Người chia bài (Dealer)" class="hidden w-5 h-5 rounded-full bg-[#ff5c77] border-2 border-[#3a233c] text-white text-[12px] leading-none font-black items-center justify-center shadow-[0_2px_0_#3a233c]">D</span>
+                    <span id="human-reveal-tag" class="hidden px-2 py-0.5 rounded-full bg-[#ff5c77] border-2 border-[#3a233c] text-white text-[10px] font-extrabold animate-pulse"></span>
                   </div>
                   <div class="text-lg sm:text-xl font-black text-[#d98236]" id="human-points">10,000 đ</div>
                   <div class="text-[11px] font-bold text-[#6b4c6e] flex items-center gap-2">
@@ -677,17 +680,17 @@
 
             <!-- Betting Controls -->
             <div id="betting-controls" class="flex flex-col gap-2 w-full md:w-auto">
-              <div class="flex flex-wrap items-center justify-end gap-2">
-                <button id="btn-fold" onclick="sendBetAction('fold')" class="btn-chibi btn-coral px-4 py-2.5 rounded-2xl text-xs sm:text-sm">
+              <div class="flex flex-nowrap items-stretch justify-end gap-1.5 sm:gap-2">
+                <button id="btn-fold" onclick="sendBetAction('fold')" class="btn-chibi btn-coral flex-1 sm:flex-none px-2 sm:px-4 py-2.5 rounded-2xl text-[11px] sm:text-sm whitespace-nowrap">
                   Bỏ bài
                 </button>
-                <button id="btn-check-call" onclick="sendBetAction('call')" class="btn-chibi btn-mint px-4 py-2.5 rounded-2xl text-xs sm:text-sm min-w-[112px]">
+                <button id="btn-check-call" onclick="sendBetAction('call')" class="btn-chibi btn-mint flex-[1.3] sm:flex-none px-2 sm:px-4 py-2.5 rounded-2xl text-[11px] sm:text-sm sm:min-w-[112px] whitespace-nowrap">
                   Theo
                 </button>
-                <button id="btn-raise" onclick="sendBetAction('raise')" class="btn-chibi btn-sunny px-4 py-2.5 rounded-2xl text-xs sm:text-sm min-w-[105px]">
+                <button id="btn-raise" onclick="sendBetAction('raise')" class="btn-chibi btn-sunny flex-1 sm:flex-none px-2 sm:px-4 py-2.5 rounded-2xl text-[11px] sm:text-sm sm:min-w-[105px] whitespace-nowrap">
                   Tố
                 </button>
-                <button id="btn-allin" onclick="sendBetAction('allin')" class="btn-chibi btn-candy px-4 py-2.5 rounded-2xl text-xs sm:text-sm">
+                <button id="btn-allin" onclick="sendBetAction('allin')" class="btn-chibi btn-candy flex-1 sm:flex-none px-2 sm:px-4 py-2.5 rounded-2xl text-[11px] sm:text-sm whitespace-nowrap">
                   Tất tay!
                 </button>
               </div>
@@ -796,7 +799,10 @@
           <span class="text-[11px] font-extrabold uppercase tracking-widest text-[#f15bb5]">✨ Tổng Kết Bất Ngờ (3 Bước)</span>
           <h3 id="res-title" class="text-2xl font-extrabold text-[#3a233c]">Kết Quả Ván 1</h3>
         </div>
-        <div id="res-pot-badge" class="px-3.5 py-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-xs font-black shadow-[0_2px_0_#3a233c]"></div>
+        <div class="flex items-center gap-2">
+          <div id="res-pot-badge" class="px-3.5 py-1 rounded-full bg-[#ffe37d] border-2 border-[#3a233c] text-[#3a233c] text-xs font-black shadow-[0_2px_0_#3a233c]"></div>
+          <button onclick="hideResolutionBoard()" class="btn-chibi btn-cream px-3 py-1 rounded-xl text-[11px]" title="Ẩn bảng để xem bài trên bàn">👁️ Ẩn bảng</button>
+        </div>
       </div>
 
       <div id="res-steps" class="space-y-3 max-h-[56vh] overflow-y-auto pr-1 mb-5"></div>
@@ -808,6 +814,12 @@
         ⏳ Đang chờ Chủ phòng bắt đầu ván tiếp theo...
       </div>
     </div>
+  </div>
+
+  <!-- Thanh mở lại bảng kết quả khi người chơi đã bấm "Ẩn bảng" -->
+  <div id="res-reopen-bar" class="hidden fixed bottom-3 inset-x-0 z-40 flex items-center justify-center gap-2 px-3 pointer-events-none">
+    <button onclick="showResolutionBoard()" class="pointer-events-auto btn-chibi btn-candy px-4 py-2.5 rounded-2xl text-xs sm:text-sm">📋 Xem lại kết quả</button>
+    <button id="res-reopen-next" onclick="hostStartNextHand()" class="hidden pointer-events-auto btn-chibi btn-sunny px-4 py-2.5 rounded-2xl text-xs sm:text-sm">Sang ván tiếp →</button>
   </div>
 
   <!-- ==================== TOURNAMENT END MODAL ==================== -->
@@ -1387,9 +1399,9 @@
         skillName: 'Chỉ Điểm',
         cooldown: 4,
         missCooldown: 3,
-        missLabel: '3 nếu sai',
+        missLabel: '3 nếu sai/dính bẫy',
         validPhases: ['PRE_SHOWDOWN'],
-        desc: 'Chọn 1 đối thủ nghi ngờ đã dùng chiêu trong ván này. Đúng: cướp 100% điểm cược & lộ vai nạn nhân. Sai: phạt 50% điểm cược vào Pot, không lộ vai (CD giảm còn 3 ván).',
+        desc: 'Chỉ dùng được khi chưa úp bài và đã đặt cược. Chọn 1 đối thủ nghi ngờ đã dùng chiêu trong ván này. Đúng: cướp 100% điểm cược & lộ vai nạn nhân. Sai hoặc trúng người mang bẫy Phản Đòn: CD giảm còn 3 ván (sai thì phạt 50% điểm cược vào Pot, không lộ vai).',
         timingText: `${phaseLabel('PRE_SHOWDOWN')}, 10s cuối`,
         badgeBg: '#ffe5ec'
       },
@@ -2641,8 +2653,8 @@
         { t: 'Thử ngay!', b: '1) Bật <strong>🃏 Bài bot: HIỆN</strong>.<br>2) Dùng chiêu lên 1 bot ở Mở Bài (Flop) hoặc Mở Tiếp (Turn) rồi xem 1 lá của họ đổi.<br>3) Quan sát cả khi bot khác dùng chiêu lên bạn — bạn sẽ nhận thông báo "Kẻ Phá Rối đã tráo lá…".' }
       ],
       nguoi_chi_diem: [
-        { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Chốt Cược (Pre-Showdown)</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
-        { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược và lộ vai trước.' },
+        { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Chốt Cược (Pre-Showdown)</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). <strong>Điều kiện:</strong> bạn phải chưa úp bài và đã đặt cược trong ván. Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
+        { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược, lộ vai và hồi chiêu cũng giảm còn <strong>3 ván</strong>.' },
         { t: 'Thử ngay!', b: 'Chơi tới <strong>Chốt Cược (Pre-Showdown)</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
       ],
       ke_phan_don: [
@@ -3003,6 +3015,8 @@
       if (p.usedSkillThisHand || p.cooldown > 0) return false;
       const role = ROLES[p.roleId];
       if (!role) return false;
+      // Kẻ Chỉ Điểm chỉ dùng được khi còn trong ván (chưa úp bài) và đã đặt cược
+      if (p.roleId === 'nguoi_chi_diem' && (p.folded || !(p.handBet > 0))) return false;
       return role.validPhases.includes(r.phase);
     }
 
@@ -3303,6 +3317,14 @@
             if (att.roleId === 'nguoi_chi_diem') {
               snitchCaughtByTrap = true;
               attackerPlayer.revealState = 'revealed';
+              // Chỉ Điểm trúng người mang bẫy: hồi chiêu giảm còn 3 ván (như khi chỉ sai)
+              attackerPlayer.cooldown = ROLES.nguoi_chi_diem.missCooldown;
+              attackerPlayer.secretNotice = {
+                id: Date.now() + Math.random(),
+                text: `🎯 Bạn chỉ điểm trúng người mang bẫy Phản Đòn! Hồi chiêu giảm còn ${ROLES.nguoi_chi_diem.missCooldown} ván nha~`,
+                tone: 'sunny',
+                sound: 'boing'
+              };
             } else if (attackerPlayer.revealState === 'hidden') {
               attackerPlayer.revealState = 'targeting_group';
             }
@@ -3459,6 +3481,7 @@
         finalPot: remainingPot,
         carryOver,
         winnerUids,
+        community: r.community.map(c => ({ ...c })),
         step1Logs,
         step2Logs,
         step3Logs
@@ -3486,7 +3509,7 @@
       if (roomData.status === 'LOBBY') {
         hasFlippedRoleCard = false;
         lastShownProphetKey = null; lastShownDisruptId = null; lastShownNoticeId = null;
-        document.getElementById('modal-resolution').classList.add('hidden');
+        hideResolutionModal();
         document.getElementById('modal-victory').classList.add('hidden');
         renderLobby();
       } else if (roomData.status === 'ROLE_DRAW') {
@@ -3496,7 +3519,7 @@
         renderGameArena();
         checkPrivateNotifications();
       } else if (roomData.status === 'TOURNAMENT_END') {
-        document.getElementById('modal-resolution').classList.add('hidden');
+        hideResolutionModal();
         renderGameArena();
         renderTournamentVictory();
       }
@@ -3755,7 +3778,7 @@
               <div class="min-w-0 flex-1">
                 <div class="flex items-center justify-between gap-1">
                   <span class="font-extrabold text-[11px] text-[#3a233c] truncate">${escapeHtml(p.name)}</span>
-                  ${isDealer ? '<span class="w-4 h-4 rounded-full bg-[#ffe37d] border border-[#3a233c] text-[#3a233c] text-[9px] font-black flex items-center justify-center shrink-0">D</span>' : ''}
+                  ${isDealer ? '<span title="Người chia bài (Dealer)" class="w-5 h-5 rounded-full bg-[#ff5c77] border-2 border-[#3a233c] text-white text-[12px] leading-none font-black flex items-center justify-center shrink-0 shadow-[0_2px_0_#3a233c]">D</span>' : ''}
                 </div>
                 <div class="text-xs font-black text-[#d98236]">${p.points.toLocaleString()} đ</div>
               </div>
@@ -3775,6 +3798,19 @@
       document.getElementById('human-chibi-avatar').innerHTML = getChibiSVG(me.roleId || 'mystery');
       document.getElementById('human-name-label').textContent = `${me.name}`;
       document.getElementById('human-role-badge').textContent = myRole ? `${myRole.icon} ${myRole.name}` : '?';
+      const dealerBadge = document.getElementById('human-dealer-badge');
+      dealerBadge.classList.toggle('hidden', roomData.dealerIndex !== myIdx);
+      dealerBadge.classList.toggle('flex', roomData.dealerIndex === myIdx);
+      // Báo cho người chơi biết vai của mình đã bị lộ
+      const revealTag = document.getElementById('human-reveal-tag');
+      const avatarEl = document.getElementById('human-chibi-avatar');
+      const exposed = me.revealState === 'revealed' || me.revealState === 'targeting_group';
+      revealTag.classList.toggle('hidden', !exposed);
+      if (exposed) {
+        revealTag.textContent = me.revealState === 'revealed' ? '👁️ Vai đã bị lộ!' : '⚠️ Đã lộ [Nhóm Chỉ Định]';
+      }
+      avatarEl.classList.toggle('ring-4', exposed);
+      avatarEl.classList.toggle('ring-[#ff5c77]', exposed);
       document.getElementById('human-points').textContent = `${me.points.toLocaleString()} đ`;
       document.getElementById('human-bet-info').textContent = `Cược ván này: ${me.handBet.toLocaleString()} đ`;
 
@@ -3812,6 +3848,12 @@
         } else if (me.cooldown > 0) {
           skillNameEl.textContent = `Hồi chiêu: ${me.cooldown} ván`;
           skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
+        } else if (me.roleId === 'nguoi_chi_diem' && me.folded) {
+          skillNameEl.textContent = 'Đã úp bài';
+          skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
+        } else if (me.roleId === 'nguoi_chi_diem' && !(me.handBet > 0)) {
+          skillNameEl.textContent = 'Cần đặt cược';
+          skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
         } else if (!myRole.validPhases.includes(roomData.phase)) {
           skillNameEl.textContent = myRole.timingText;
           skillBtn.className = 'btn-chibi btn-cream px-3.5 py-2.5 rounded-2xl text-left min-w-[148px]';
@@ -3836,6 +3878,12 @@
       const maxTarget = me.roundBet + me.points;
       slider.min = minTarget;
       slider.max = Math.max(minTarget, maxTarget);
+      // Đưa thanh Mức tố về mức tối thiểu mỗi khi sang ván / giai đoạn mới / có người tố / tới lượt mình
+      const sliderKey = `${roomData.handNumber}_${roomData.phase}_${roomData.currentBet}_${isMyTurn ? 1 : 0}`;
+      if (sliderKey !== lastSliderKey) {
+        lastSliderKey = sliderKey;
+        slider.value = minTarget;
+      }
       if (Number(slider.value) < minTarget || Number(slider.value) > maxTarget) {
         slider.value = minTarget;
       }
@@ -3853,7 +3901,7 @@
       if (roomData.phase === 'RESOLUTION' && roomData.resolution) {
         renderResolutionModal(roomData.resolution);
       } else {
-        document.getElementById('modal-resolution').classList.add('hidden');
+        hideResolutionModal();
       }
 
       renderBattleLog(roomData.logs || []);
@@ -3919,6 +3967,7 @@
 
       if (lastCelebratedResHand !== res.handNumber) {
         lastCelebratedResHand = res.handNumber;
+        resolutionHidden = false;
         if (currentUser && res.winnerUids && res.winnerUids.includes(currentUser.uid)) {
           SFX.fanfare();
           if (res.finalPot >= 800) launchConfetti(55);
@@ -3940,6 +3989,12 @@
             ${res.step2Logs.length ? res.step2Logs.map(l => `<div>${l}</div>`).join('') : '<div class="text-[#6b4c6e] italic">Không có Chỉ Điểm hoặc án phạt nào xảy ra.</div>'}
           </div>
         </div>
+        <div class="p-3.5 rounded-2xl bg-[#fffdf7] border-2 border-[#3a233c]">
+          <div class="text-xs font-extrabold uppercase text-[#3a233c] mb-2">🃏 5 Lá Bài Chung Trên Bàn</div>
+          <div class="flex items-center justify-center gap-1.5 sm:gap-2">
+            ${(res.community || roomData.community || []).map(c => renderCardHTML(c, 'sm')).join('') || '<span class="text-xs text-[#6b4c6e] italic">Chưa có bài chung (ván kết thúc sớm).</span>'}
+          </div>
+        </div>
         <div class="p-3.5 rounded-2xl bg-[#d8f3dc] border-2 border-[#3a233c]">
           <div class="text-xs font-extrabold uppercase text-[#1b7a4e] mb-1.5">Bước 3: So Bài Poker & Chia Pot 🏆</div>
           <div class="text-xs sm:text-sm space-y-1 text-[#3a233c] font-bold">
@@ -3951,7 +4006,26 @@
       const hostFlag = isHost();
       document.getElementById('btn-next-hand').classList.toggle('hidden', !hostFlag);
       document.getElementById('guest-waiting-next').classList.toggle('hidden', hostFlag);
-      document.getElementById('modal-resolution').classList.remove('hidden');
+      document.getElementById('modal-resolution').classList.toggle('hidden', resolutionHidden);
+      document.getElementById('res-reopen-bar').classList.toggle('hidden', !resolutionHidden);
+      document.getElementById('res-reopen-next').classList.toggle('hidden', !(resolutionHidden && hostFlag));
+    }
+
+    let lastSliderKey = null;
+    let resolutionHidden = false;
+    function hideResolutionBoard() {
+      SFX.pop();
+      resolutionHidden = true;
+      if (roomData && roomData.resolution) renderResolutionModal(roomData.resolution);
+    }
+    function showResolutionBoard() {
+      SFX.pop();
+      resolutionHidden = false;
+      if (roomData && roomData.resolution) renderResolutionModal(roomData.resolution);
+    }
+    function hideResolutionModal() {
+      document.getElementById('modal-resolution').classList.add('hidden');
+      document.getElementById('res-reopen-bar').classList.add('hidden');
     }
 
     function renderTournamentVictory() {
@@ -4385,6 +4459,8 @@
     window.updateRaiseLabel = updateRaiseLabel;
     window.openRulesModal = openRulesModal;
     window.openRankingModal = openRankingModal;
+    window.hideResolutionBoard = hideResolutionBoard;
+    window.showResolutionBoard = showResolutionBoard;
     window.closeRankingModal = closeRankingModal;
     window.closeRulesModal = closeRulesModal;
     window.closeTargetModal = closeTargetModal;
