@@ -2659,12 +2659,12 @@
       ],
       nguoi_chi_diem: [
         { t: 'Chỉ Điểm đúng lúc', b: 'Chỉ dùng được ở <strong>Chốt Cược (Pre-Showdown)</strong> — cửa sổ chốt chiêu ngay trước khi ngửa bài (nút <strong>🎯 Dùng Chỉ Điểm</strong> nằm trên thanh đếm ngược; chơi thử có 30 giây). <strong>Điều kiện:</strong> bạn phải chưa úp bài và đã đặt cược trong ván. Chọn 1 đối thủ bạn nghi là <strong>đã dùng chiêu trong ván này</strong>. Hồi chiêu <strong>4 ván</strong>.' },
-        { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược, lộ vai và hồi chiêu cũng giảm còn <strong>3 ván</strong>.' },
+        { t: 'Đúng hay sai?', b: '<strong>Đúng</strong> → bạn cướp <strong>100% điểm cược</strong> của họ và lộ vai họ.<br><strong>Sai</strong> → bạn bị phạt <strong>50% điểm cược</strong> của chính mình vào Pot, không lộ vai, hồi chiêu giảm còn <strong>3 ván</strong>.<br>Bẫy Phản Đòn: nếu bạn chỉ thẳng người đang mang bẫy, bạn bị cướp cược, chỉ lộ [Nhóm Chỉ Định] (không lộ vai) và hồi chiêu giảm còn <strong>3 ván</strong>.' },
         { t: 'Thử ngay!', b: 'Chơi tới <strong>Chốt Cược (Pre-Showdown)</strong>. Bật <strong>👁️ Vai bot: HIỆN</strong>: bot nào có dấu <strong>✨</strong> là đã dùng chiêu ván này — đó chính là điều kiện để Chỉ Điểm trúng. Ván này chọn bot có ✨ (đúng), ván sau thử chọn bot không có ✨ (sai) để thấy khác biệt ở bảng Kết Quả. Khi tắt hiện vai, bạn phải đoán bằng nhật ký và thông báo.' }
       ],
       ke_phan_don: [
         { t: 'Đặt bẫy ở Chia Bài (Pre-Flop)', b: 'Chỉ dùng được ở <strong>Chia Bài (Pre-Flop)</strong> (đầu ván). Chọn <strong>tối đa 2 người chơi khác nhau</strong> (có thể gồm cả <strong>bản thân</strong>) làm người "mang bẫy", rồi bấm <strong>Xác nhận đặt bẫy</strong>. Bẫy ẩn hoàn toàn cho tới khi kết thúc ván. Hồi chiêu <strong>4 ván</strong>.' },
-        { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) nhắm vào <strong>bất kỳ người mang bẫy</strong> → bạn cướp <strong>100% điểm cược</strong> của từng kẻ tấn công (mỗi kẻ bị cướp 1 lần); bạn lộ vai, họ lộ [Nhóm Chỉ Định] (Chỉ Điểm thì lộ vai).<br><strong>Hụt</strong>: không ai nhắm vào người mang bẫy nào → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, không lộ vai, hồi chiêu còn <strong>2 ván</strong>.' },
+        { t: 'Bẫy trúng hay hụt?', b: '<strong>Trúng</strong>: có người thuộc <strong>Nhóm Chỉ Định</strong> (Thiên Nhãn, Phá Rối, Chỉ Điểm) nhắm vào <strong>bất kỳ người mang bẫy</strong> → bạn cướp <strong>100% điểm cược</strong> của từng kẻ tấn công (mỗi kẻ bị cướp 1 lần); bạn lộ vai, họ lộ [Nhóm Chỉ Định] (kể cả Chỉ Điểm: chỉ lộ nhóm, không lộ vai).<br><strong>Hụt</strong>: không ai nhắm vào người mang bẫy nào → bạn bị phạt <strong>50% điểm cược</strong> vào Pot, không lộ vai, hồi chiêu còn <strong>2 ván</strong>.' },
         { t: 'Thử ngay!', b: '1) Ở Chia Bài (Pre-Flop), thử đặt bẫy lên <strong>chính mình + 1 bot cược nhiều</strong>, ván sau thử 2 bot khác nhau.<br>2) Bật <strong>👁️ Vai bot: HIỆN</strong> để biết bot nào thuộc Nhóm Chỉ Định và đoán họ nhắm ai.<br>3) Xem <strong>Bước 1</strong> trong bảng Kết Quả để biết bẫy trúng hay hụt.' }
       ],
       nha_tien_tri: [
@@ -3321,7 +3321,8 @@
             if (!attackerPlayer) return;
             if (att.roleId === 'nguoi_chi_diem') {
               snitchCaughtByTrap = true;
-              attackerPlayer.revealState = 'revealed';
+              // Chỉ lộ [Nhóm Chỉ Định], không lộ đích danh vai Kẻ Chỉ Điểm
+              if (attackerPlayer.revealState === 'hidden') attackerPlayer.revealState = 'targeting_group';
               // Chỉ Điểm trúng người mang bẫy: hồi chiêu giảm còn 3 ván (như khi chỉ sai)
               attackerPlayer.cooldown = ROLES.nguoi_chi_diem.missCooldown;
               attackerPlayer.secretNotice = {
@@ -3333,9 +3334,7 @@
             } else if (attackerPlayer.revealState === 'hidden') {
               attackerPlayer.revealState = 'targeting_group';
             }
-            const tagHtml = att.roleId === 'nguoi_chi_diem'
-              ? '<span class="text-[#ff5c77] font-extrabold">(Kẻ Chỉ Điểm)</span>'
-              : '<span class="text-[#ff5c77] font-extrabold">[Nhóm Chỉ Định]</span>';
+            const tagHtml = '<span class="text-[#ff5c77] font-extrabold">[Nhóm Chỉ Định]</span>';
             const stealAmt = attackerPlayer.handBet;
             if (!stolenFromUids.has(attackerPlayer.uid) && stealAmt > 0) {
               stolenFromUids.add(attackerPlayer.uid);
