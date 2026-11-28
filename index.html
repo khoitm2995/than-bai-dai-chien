@@ -563,7 +563,7 @@
         <div id="hud-turn-timer" class="hidden px-3 py-1 rounded-full bg-[#ff8fa3] border-2 border-[#3a233c] text-white text-xs font-extrabold shadow-[0_2px_0_#3a233c]">
           ⏱️ 25s
         </div>
-        <div id="hud-phase" class="px-3 py-1 rounded-full bg-[#6ee7b7] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold uppercase tracking-wide shadow-[0_2px_0_#3a233c]">
+        <div id="hud-phase" class="hidden px-3 py-1 rounded-full bg-[#6ee7b7] border-2 border-[#3a233c] text-[#3a233c] text-xs font-extrabold uppercase tracking-wide shadow-[0_2px_0_#3a233c]">
           Chia Bài (Pre-Flop)
         </div>
         <button onclick="toggleMute()" class="btn-chibi btn-cream px-2.5 py-1.5 rounded-xl text-xs" title="Âm thanh">
@@ -607,6 +607,9 @@
           <!-- Oval Mint-Emerald Table -->
           <div class="order-2 poker-table w-full max-w-[820px] min-h-[240px] sm:min-h-0 sm:h-[385px] rounded-[120px] sm:rounded-[170px] flex flex-col items-center justify-center p-3 sm:p-4">
 
+            <!-- Giai đoạn ván (chữ trên mặt bàn) -->
+            <div id="table-phase" class="mb-1.5 z-10 text-[11px] sm:text-sm font-extrabold uppercase tracking-[0.18em] text-white text-center" style="text-shadow: 0 2px 0 #3a233c, 0 0 6px rgba(58,35,60,0.45);"></div>
+
             <!-- Pot Display -->
             <div class="mb-3 px-4 py-1.5 rounded-full bg-[#fffdf7] border-[2.5px] border-[#3a233c] shadow-[0_4px_0_#3a233c] flex items-center gap-2 z-10">
               <span class="text-xs text-[#6b4c6e] uppercase font-extrabold">🪙 Pot Tổng:</span>
@@ -639,9 +642,9 @@
             </div>
           </div>
 
-          <div class="order-3 flex sm:contents justify-center items-start gap-1.5 pt-9 px-1">
-            <div id="seat-1" class="hidden sm:absolute sm:left-3 sm:bottom-[15%] z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
-            <div id="seat-5" class="hidden sm:absolute sm:right-3 sm:bottom-[15%] z-10 flex-1 min-w-0 max-w-[170px] sm:flex-none sm:max-w-none sm:w-[178px]"></div>
+          <div class="order-3 flex sm:contents justify-between items-start gap-1.5 pt-9 px-1">
+            <div id="seat-1" class="hidden sm:absolute sm:left-3 sm:bottom-[15%] z-10 w-[44%] min-w-0 sm:max-w-none sm:w-[178px]"></div>
+            <div id="seat-5" class="hidden sm:absolute sm:right-3 sm:bottom-[15%] z-10 w-[44%] min-w-0 sm:max-w-none sm:w-[178px]"></div>
           </div>
         </div>
 
@@ -672,10 +675,12 @@
               </div>
 
               <!-- Skill Button -->
+              <div class="w-full sm:w-auto flex justify-center [&>button]:text-center">
               <button id="btn-skill" onclick="openSkillAction()" class="btn-chibi px-3.5 py-2.5 rounded-2xl text-left flex flex-col justify-center min-w-[148px]">
                 <div class="text-[10px] uppercase tracking-wider font-extrabold opacity-90" id="skill-btn-sub">Kỹ năng</div>
                 <div class="text-xs sm:text-sm font-extrabold leading-tight" id="skill-btn-name">Sẵn sàng</div>
               </button>
+              </div>
             </div>
 
             <!-- Betting Controls -->
@@ -3672,6 +3677,7 @@
       document.getElementById('hud-hand').textContent = `Ván ${roomData.handNumber} / ${roomData.maxHands}`;
       document.getElementById('hud-blind').textContent = `Blind: ${sb} / ${bb}`;
       document.getElementById('hud-phase').textContent = phaseLabel(roomData.phase);
+      document.getElementById('table-phase').textContent = phaseLabel(roomData.phase);
       document.getElementById('table-pot').textContent = `${roomData.pot.toLocaleString()} đ`;
 
       // Community cards
